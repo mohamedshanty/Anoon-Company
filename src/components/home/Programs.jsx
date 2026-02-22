@@ -7,6 +7,7 @@ import Sparks from "../ui/Sparks";
 import ProgramCard from "../ui/ProgramCard";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import Stars from "../ui/Stars";
+import SectionHeader from "../ui/SectionHeader";
 
 export default function Programs() {
   const headerRef = useRef(null);
@@ -76,38 +77,28 @@ export default function Programs() {
       id="programs"
       className="py-24 bg-transparent relative overflow-hidden"
     >
-      {/* Background Decorative Glows */}
-      <div className="absolute inset-0 pointer-events-none -z-10">
-        <div className="absolute top-[20%] left-[-10%] w-[40%] h-[40%] bg-blue-600/10 blur-[120px] rounded-full" />
-        <div className="absolute bottom-[20%] right-[-10%] w-[35%] h-[35%] bg-brand-orange/5 blur-[100px] rounded-full" />
-      </div>
-
       <div className="main-container">
-        <div
-          ref={headerRef}
-          className="text-center max-w-4xl mx-auto mb-20 relative"
-        >
-          <Stars count={25} zIndex={-5} opacity={0.8} />
-
-          <h1 className="text-brand-white font-bold text-6xl md:text-5xl mb-6 block tracking-tight">
-            Our Programs
-          </h1>
-          <h3 className="text-2xl md:text-5xl lg:text-6xl font-bold mb-10 leading-tight whitespace-nowrap">
-            <span className="text-brand-sky">Tailor</span>{" "}
-            <span className="text-brand-orange">Crafted</span>{" "}
-            <span className="text-brand-sky">For The</span>{" "}
-            <span className="text-brand-orange">Tech Sector</span>
-          </h3>
-          <p className="text-brand-white/80 text-lg md:text-xl font-medium leading-relaxed max-w-2xl mx-auto">
-            At Anoon LLC, we believe there is no shame in falling
-            <br className="hidden md:block" />
-            only in staying down , We help people rise by giving them the skills
-            to build again.
-            <br className="hidden md:block" />
-            We don't just offer a second chance, we offer the tools to create a
-            new life.
-          </p>
-        </div>
+        <SectionHeader
+          title="Our Programs"
+          subtitle={{
+            highlightedWords: [
+              { text: "Tailor", color: "text-brand-sky" },
+              { text: "Crafted", color: "text-brand-orange" },
+              { text: "For The", color: "text-brand-sky" },
+              { text: "Tech Sector", color: "text-brand-orange" },
+            ],
+          }}
+          description={[
+            "At Anoon LLC, we believe there is no shame in falling",
+            "only in staying down , We help people rise by giving them the skills",
+            "to build again.",
+            "We don't just offer a second chance, we offer the tools to create a",
+            "new life.",
+          ]}
+          starsCount={25}
+          maxWidth="4xl"
+          align="center"
+        />
 
         <div
           ref={cardsContainerRef}

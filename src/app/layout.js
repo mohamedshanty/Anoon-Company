@@ -1,10 +1,12 @@
 import { Alexandria } from "next/font/google";
 import "./globals.css";
 import { PREMIUM_GRADIENT } from "@/lib/constants";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 const alexandria = Alexandria({
   subsets: ["latin", "arabic"],
-  weight: ["100","200","300","400", "500", "600", "700", "800", "900"], 
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
   variable: "--font-alexandria",
   display: "swap",
 });
@@ -27,8 +29,13 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en">
-      <body className={`${alexandria.variable} antialiased`} style={backgroundStyle}>
-        {children}
+      <body
+        className={`${alexandria.variable} antialiased`}
+        style={backgroundStyle}
+      >
+        <Navbar />
+        <main className="relative z-10">{children}</main>
+        <Footer />
       </body>
     </html>
   );

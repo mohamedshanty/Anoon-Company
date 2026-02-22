@@ -134,11 +134,7 @@ export default function Teams() {
             &#8592;
           </button>
 
-          <div
-            ref={gridRef}
-            className="grid grid-cols-5 gap-8 justify-items-center items-start"
-            style={{ width: "100%", maxWidth: 1200 }}
-          >
+          <div ref={gridRef} className="flex w-full h-[333px]">
             {members
               .slice(startIndex, startIndex + 5)
               .concat(
@@ -150,18 +146,18 @@ export default function Teams() {
                 <div
                   key={`${startIndex}-${idx}`}
                   ref={(el) => (cardRefs.current[idx] = el)}
-                  className="flex flex-col items-center group w-full"
+                  className="flex flex-col items-center justify-center group gap-3"
                   onMouseEnter={() => handleMouseEnter(idx)}
                   onMouseLeave={() => handleMouseLeave(idx)}
                 >
-                  <div className="mb-4 flex justify-center">
+                  <div className="mb-4 flex justify-center items-center w-full">
                     <div className="w-full h-full flex items-center justify-center">
                       <Image
                         src={member.image}
                         alt={member.name}
-                        width={500} // optional max width
-                        height={300} // optional
-                        className="w-full h-auto object-cover"
+                        width={100} // optional max width
+                        height={333} // optional
+                        className="w-full h-full object-cover"
                         priority={idx < 2}
                       />
                     </div>
