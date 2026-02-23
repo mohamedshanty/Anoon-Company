@@ -25,6 +25,8 @@ export default function Impact({
   patternDirection = "diagonal",
   patternOpacity = "opacity-100",
   patternTranslateY = "-translate-y-30",
+  // إضافة prop جديد للنص الإضافي
+  additionalText = "",
 }) {
   const container = useRef(null);
   const leftSide = useRef(null);
@@ -61,13 +63,19 @@ export default function Impact({
 
       <div className="main-container">
         {/* Our Impact - في سطر منفصل */}
-        <div className="text-left mb-16">
+        <div className="text-left mb-20">
           <h2
             className={`font-bold tracking-tight text-5xl md:text-6xl lg:text-7xl ${titleClassName}`}
           >
             <span className="text-brand-sky">{title.firstWord}</span>{" "}
             <span className="text-brand-orange">{title.secondWord}</span>
           </h2>
+
+          {additionalText && (
+            <h2 className="text-2xl md:text-3xl lg:text-5xl font-semibold text-white mt-5">
+              {additionalText}
+            </h2>
+          )}
         </div>
 
         <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
@@ -110,7 +118,7 @@ export default function Impact({
                     <div className="text-3xl md:text-4xl font-bold text-brand-orange">
                       {stat.value}
                     </div>
-                    <div className="text-lg font-medium text-brand-sky">
+                    <div className="text-lg font-light text-brand-sky">
                       {stat.label}
                     </div>
                   </div>

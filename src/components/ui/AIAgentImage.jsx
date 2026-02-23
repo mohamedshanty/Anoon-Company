@@ -1,0 +1,35 @@
+"use client";
+import Image from "next/image";
+
+export default function AIAgentImage({ className = "" }) {
+  return (
+    <div
+      className={`relative w-[550px] h-[550px] flex items-center justify-center ${className}`}
+    >
+      {/* Light Glow */}
+      <div className="absolute inset-0 -z-10 flex items-center justify-center">
+        <div className="w-[140%] h-[140%] rounded-full bg-[radial-gradient(circle,rgba(120,200,255,0.4)_0%,rgba(40,120,255,0.5)_50%,transparent_70%)] blur-[90px] animate-pulse" />
+      </div>
+
+      {/* Rotating Circle */}
+      <div className="absolute inset-0 animate-spin-slow">
+        <Image
+          src="/images/Circle.png"
+          alt="Rotating Circle"
+          fill
+          className="object-contain"
+        />
+      </div>
+
+      {/* AI Brain */}
+      <div className="relative w-[62%] h-[62%] z-10">
+        <Image
+          src="/images/Ai.png"
+          alt="AI Brain"
+          fill
+          className="object-contain drop-shadow-[0_0_45px_rgba(96,180,255,0.55)]"
+        />
+      </div>
+    </div>
+  );
+}

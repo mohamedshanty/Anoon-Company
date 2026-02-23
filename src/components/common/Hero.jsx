@@ -8,12 +8,11 @@ import {
   LayoutGrid,
   MessageSquare,
 } from "lucide-react";
-import Button from "../ui/Button";
 import { gsap } from "@/lib/gsap-setup";
 import { useGSAP } from "@gsap/react";
 import Stars from "../ui/Stars";
 
-export default function Hero({ variant = "main" }) {
+export default function Hero({ children }) {
   const container = useRef(null);
   const titleRef = useRef(null);
   const subtitleRef = useRef(null);
@@ -27,33 +26,41 @@ export default function Hero({ variant = "main" }) {
     () => {
       if (!isMounted) return;
 
-      if (!titleRef.current || !subtitleRef.current || !buttonsRef.current) {
-        return;
-      }
-
-      const titleChildren = titleRef.current.children;
-      const subtitleChildren = subtitleRef.current.children;
-      const buttonChildren = buttonsRef.current.children;
-
-      gsap.set(
-        [titleChildren, subtitleChildren, buttonChildren, iconsRef.current],
-        {
-          opacity: 0,
-          y: 30,
-          scale: 0.9,
-        },
+      const title = container.current?.querySelector('[data-hero="title"]');
+      const subtitle = container.current?.querySelector(
+        '[data-hero="subtitle"]',
       );
+      const buttons = container.current?.querySelector('[data-hero="buttons"]');
+
+      const titleChildren = title?.children;
+      const subtitleChildren = subtitle?.children;
+      const buttonChildren = buttons?.children;
+
+      if (titleChildren) {
+        gsap.set(titleChildren, { opacity: 0, y: 30, scale: 0.9 });
+      }
+      if (subtitleChildren) {
+        gsap.set(subtitleChildren, { opacity: 0, y: 30, scale: 0.9 });
+      }
+      if (buttonChildren) {
+        gsap.set(buttonChildren, { opacity: 0, y: 30, scale: 0.9 });
+      }
+      gsap.set(iconsRef.current, { opacity: 0, y: 30, scale: 0.9 });
 
       const tl = gsap.timeline();
 
-      tl.to(titleChildren, {
-        y: 0,
-        opacity: 1,
-        duration: 0.8,
-        stagger: 0.2,
-        ease: "power2.out",
-      })
-        .to(
+      if (titleChildren) {
+        tl.to(titleChildren, {
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          stagger: 0.2,
+          ease: "power2.out",
+        });
+      }
+
+      if (subtitleChildren) {
+        tl.to(
           subtitleChildren,
           {
             y: 0,
@@ -63,8 +70,11 @@ export default function Hero({ variant = "main" }) {
             ease: "power2.out",
           },
           "-=0.4",
-        )
-        .to(
+        );
+      }
+
+      if (buttonChildren) {
+        tl.to(
           buttonChildren,
           {
             scale: 1,
@@ -74,20 +84,43 @@ export default function Hero({ variant = "main" }) {
             ease: "back.out(1.7)",
           },
           "-=0.3",
-        )
-        .to(
-          iconsRef.current,
-          {
-            scale: 1,
-            opacity: 1,
-            duration: 0.6,
-            stagger: 0.1,
-            ease: "back.out(1.7)",
-          },
-          "-=0.4",
         );
+      }
+      const actions = container.current?.querySelector('[data-hero="actions"]');
+      const actionsChildren = actions?.children;
+
+      if (actionsChildren) {
+        gsap.set(actionsChildren, { opacity: 0, y: 30, scale: 0.95 });
+      }
+
+      if (actionsChildren) {
+        tl.to(
+          actionsChildren,
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 0.6,
+            stagger: 0.15,
+            ease: "power2.out",
+          },
+          "-=0.3",
+        );
+      }
+
+      tl.to(
+        iconsRef.current,
+        {
+          scale: 1,
+          opacity: 1,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: "back.out(1.7)",
+        },
+        "-=0.4",
+      );
     },
-    { scope: container, dependencies: [isMounted, variant] },
+    { scope: container, dependencies: [isMounted] },
   );
 
   const floatingIcons = [
@@ -108,7 +141,7 @@ export default function Hero({ variant = "main" }) {
   return (
     <section
       ref={container}
-      className="relative flex items-center justify-center py-36 overflow-hidden"
+      className="relative flex items-center justify-center py-36 overflow-hidden min-h-[600px]"
     >
       {/* Background */}
       <div className="absolute inset-0 pointer-events-none">
@@ -131,100 +164,53 @@ export default function Hero({ variant = "main" }) {
       ))}
 
       <div className="container mx-auto px-6 text-center relative z-10">
-        {/* TITLE */}
-        <h1
-          ref={titleRef}
-          className="font-bold text-white mb-5 flex flex-col items-center"
-        >
-          {variant === "tamkeen" ? (
-            <>
-              <span>Enabling</span>
-
-              <span className="text-brand-orange">The Future Generation</span>
-
-              <span className="flex items-center gap-4 flex-wrap justify-center">
-                <span>With</span>
-
-                {/* Tamkeen Image */}
-                <Image
-                  src="/images/tamkeen-image.png"
-                  alt="Tamkeen"
-                  width={200}
-                  height={80}
-                  className="object-contain"
-                  priority
-                />
-              </span>
-            </>
-          ) : (
-            <>
-              <span>Rising</span>
-              <span className="text-brand-orange">From The Ashes</span>
-              <span>
-                To Build <span className="text-brand-sky">Better Future</span>
-              </span>
-            </>
-          )}
-        </h1>
-
-        {/* Description */}
-        {/* Description */}
-        <div ref={subtitleRef} className="max-w-4xl mx-auto space-y-4 mb-4">
-          {variant === "main" ? (
-            <>
-              <p className="text-subtitle">
-                We Don't Just Build Software,{" "}
-                <span className="text-brand-orange">
-                  We Build The Human Spirit
-                </span>
-              </p>
-              <p className="text-subtitle">
-                The <span className="text-brand-orange">Past</span> is behind
-                and the{" "}
-                <span className="text-brand-orange">Future Is Ours</span>
-              </p>
-              <p className="text-subtitle">
-                We Don't make excuses{" "}
-                <span className="text-brand-orange">We Rise</span>
-              </p>
-            </>
-          ) : (
-            <p className="text-subtitle text-white/80">
-              Buildings can be broken, but the human Spirit remain Ignited. We
-              didn't wait, We just did it because while aid sustains the body,
-              knowledge reclaims the future. The war took Everything, but
-              couldn't take our skills. We are building the minds that will
-              rebuild this land.
-            </p>
-          )}
-        </div>
-
-        {/* BUTTONS */}
-        <div
-          ref={buttonsRef}
-          className="flex flex-col sm:flex-row gap-6 justify-center"
-        >
-          {variant === "tamkeen" ? (
-            <>
-              <Button variant="outline" color="orange">
-                Visit Our Website
-              </Button>
-              <Button variant="outline" color="sky">
-                Donate Now
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button variant="outline" color="orange">
-                Explore Our Services
-              </Button>
-              <Button variant="outline" color="sky">
-                Book A Free Meeting
-              </Button>
-            </>
-          )}
-        </div>
+        {children}
       </div>
     </section>
   );
 }
+
+// Sub-components للاستخدام السهل
+Hero.Title = function HeroTitle({ children, className = "" }) {
+  return (
+    <h1
+      data-hero="title"
+      className={`font-bold text-white mb-5 flex flex-col items-center ${className}`}
+    >
+      {children}
+    </h1>
+  );
+};
+
+Hero.Subtitle = function HeroSubtitle({ children, className = "" }) {
+  return (
+    <div
+      data-hero="subtitle"
+      className={`max-w-3xl mx-auto space-y-4 mb-4 ${className}`}
+    >
+      {children}
+    </div>
+  );
+};
+
+Hero.Buttons = function HeroButtons({ children, className = "" }) {
+  return (
+    <div
+      data-hero="buttons"
+      className={`flex flex-col sm:flex-row gap-6 justify-center ${className}`}
+    >
+      {children}
+    </div>
+  );
+};
+
+Hero.Actions = function HeroActions({ children, className = "" }) {
+  return (
+    <div
+      data-hero="actions"
+      className={`mt-14 flex justify-center ${className}`}
+    >
+      {children}
+    </div>
+  );
+};

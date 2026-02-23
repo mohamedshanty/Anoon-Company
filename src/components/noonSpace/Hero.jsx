@@ -2,9 +2,7 @@
 
 import Hero from "@/components/common/Hero";
 import Button from "@/components/ui/Button";
-import Image from "next/image";
-
-export default function TamkeenHero() {
+export default function SpaceNoonHero() {
   return (
     <Hero>
       <Hero.Title>
@@ -12,33 +10,26 @@ export default function TamkeenHero() {
         <span className="text-brand-orange">The Future Generation</span>
         <span className="flex items-center gap-4 flex-wrap justify-center">
           <span>With</span>
-          <Image
-            src="/images/tamkeen-image.png"
-            alt="Tamkeen"
-            width={200}
-            height={80}
-            className="object-contain"
-            priority
-          />
+          <span className="font-thin">
+            <span className="text-brand-orange">Space Noon</span>
+          </span>
         </span>
       </Hero.Title>
 
       <Hero.Subtitle>
         <p className="text-subtitle text-white/80">
-          Buildings can be broken, but the human Spirit remain Ignited. We
-          didn't wait, We just did it because while aid sustains the body,
-          knowledge reclaims the future. The war took Everything, but couldn't
-          take our skills. We are building the minds that will rebuild this
-          land.
+          Empowering students and professionals with the tools and the platform
+          by providing a co-working space that they can work in safe, quiet
+          space with the ability to network
         </p>
       </Hero.Subtitle>
 
       <Hero.Buttons>
         <Button variant="outline" color="orange">
-          Visit Our Website
+          Explore Our Services
         </Button>
         <Button variant="outline" color="sky">
-          Donate Now
+          Visit Our Space
         </Button>
       </Hero.Buttons>
     </Hero>

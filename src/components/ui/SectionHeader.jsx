@@ -49,6 +49,19 @@ export default function SectionHeader({
   const renderSubtitle = () => {
     if (!subtitle) return null;
 
+    if (typeof subtitle === "string") {
+      return (
+        <h3
+          className={cn(
+            "text-2xl md:text-5xl lg:text-6xl font-bold mb-10 leading-tight whitespace-nowrap",
+            subtitleClassName,
+          )}
+        >
+          {subtitle}
+        </h3>
+      );
+    }
+
     return (
       <h3
         className={cn(
@@ -57,7 +70,7 @@ export default function SectionHeader({
         )}
       >
         {subtitle.prefix && <span>{subtitle.prefix} </span>}
-        {subtitle.highlightedWords.map((word, idx) => (
+        {subtitle.highlightedWords?.map((word, idx) => (
           <span key={idx} className={word.color}>
             {word.text}{" "}
           </span>
@@ -71,7 +84,7 @@ export default function SectionHeader({
     <div
       ref={headerRef}
       className={cn(
-        "mb-20 relative",
+        "relative",
         alignClasses[align],
         maxWidthClasses[maxWidth],
         className,
@@ -79,30 +92,52 @@ export default function SectionHeader({
     >
       <Stars count={starsCount} zIndex={-5} opacity={0.8} />
 
-      <h1
+      {/* العنوان الرئيسي - Our Space */}
+      <h2
         className={cn(
-          "text-brand-white font-bold text-6xl md:text-5xl mb-6 block tracking-tight",
+          "text-brand-white font-bold text-2xl md:text-3xl mb-4 tracking-wide",
           titleClassName,
         )}
       >
         {title}
-      </h1>
+      </h2>
 
+      {/* العنوان الفرعي - Your Future Network */}
       {renderSubtitle()}
 
-      <div
-        className={cn(
-          "text-brand-white/80 text-lg md:text-xl font-medium leading-relaxed",
-          descriptionClassName,
-        )}
-      >
-        {description.map((line, idx) => (
-          <p key={idx} className={idx < description.length - 1 ? "mb-2" : ""}>
-            {line}
-            {idx < description.length - 1 && <br className="hidden md:block" />}
-          </p>
-        ))}
-      </div>
+      {/* الوصف مع تأثير التدرج */}
+      {description && (
+        <div className={cn("relative max-w-2xl mx-auto", descriptionClassName)}>
+          {/* النص مع التدرج */}
+          <div className="relative">
+            {Array.isArray(description) ? (
+              description.map((line, idx) => (
+                <p
+                  key={idx}
+                  className={cn(
+                    "text-base md:text-lg",
+                    idx < description.length - 1 ? "mb-4" : "",
+                  )}
+                >
+                  {line}
+                </p>
+              ))
+            ) : (
+              <p
+                className={cn(
+                  "text-base md:text-lg",
+                  "bg-gradient-to-b from-white via-white/90 to-white/40 bg-clip-text text-transparent",
+                )}
+              >
+                {description}
+              </p>
+            )}
+          </div>
+
+          {/* طبقة تدرج إضافية في الأسفل لمزيد من التأثير */}
+          <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-brand-dark to-transparent pointer-events-none" />
+        </div>
+      )}
     </div>
   );
 }

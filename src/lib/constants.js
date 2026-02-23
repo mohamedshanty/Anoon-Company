@@ -1,1 +1,2 @@
-export const PREMIUM_GRADIENT = "linear-gradient(90deg, #112469 0%, #162a77 15%, #182c74 30%, #203c8b 45%, #24336c 60%, #243267 75%, #1b2c69 100%)";
+export const PREMIUM_GRADIENT =
+  "linear-gradient(90deg, #101C55FA 0%, #16256AFD 5%, #16256A 30%, #1F306C 45%,#203D8C 60%, #1F306C 75%, #101C55 100%)";

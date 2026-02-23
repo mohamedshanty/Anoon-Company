@@ -5,6 +5,7 @@ import Image from "next/image";
 import Button from "../ui/Button";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import PatternBackground from "../ui/PatternBackground";
+import AIAgentImage from "../ui/AIAgentImage";
 
 export default function AIAgent() {
   const leftSide = useRef(null);
@@ -45,7 +46,6 @@ export default function AIAgent() {
 
       {/* Background Pattern */}
       <PatternBackground direction="default" translateY="-translate-y-30" />
-
 
       <div className="main-container">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
@@ -101,33 +101,7 @@ export default function AIAgent() {
             ref={rightSide}
             className="w-full lg:w-[50%] relative order-1 lg:order-2 flex justify-center lg:justify-end"
           >
-            <div className="relative w-[550px] h-[550px] flex items-center justify-center">
-              {/* Light Glow */}
-              {/* CSS Glow Background */}
-              <div className="absolute inset-0 -z-10 flex items-center justify-center">
-                <div className="w-[140%] h-[140%] rounded-full bg-[radial-gradient(circle,rgba(120,200,255,0.4)_0%,rgba(40,120,255,0.5)_50%,transparent_70%)] blur-[90px] animate-pulse" />
-              </div>
-
-              {/* Rotating Circle */}
-              <div className="absolute inset-0 animate-spin-slow">
-                <Image
-                  src="/images/Circle.png"
-                  alt="Rotating Circle"
-                  fill
-                  className="object-contain"
-                />
-              </div>
-
-              {/* AI Brain */}
-              <div className="relative w-[62%] h-[62%] z-10">
-                <Image
-                  src="/images/Ai.png"
-                  alt="AI Brain"
-                  fill
-                  className="object-contain drop-shadow-[0_0_45px_rgba(96,180,255,0.55)]"
-                />
-              </div>
-            </div>
+            <AIAgentImage />
           </div>
         </div>
       </div>
