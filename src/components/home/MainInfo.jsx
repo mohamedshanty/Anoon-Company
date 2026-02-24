@@ -1,30 +1,33 @@
 "use client";
 
 import InfoSection from "@/components/common/InfoSection";
+import { useTranslation } from "react-i18next";
 
 export default function MianInfoSection() {
+  const { t } = useTranslation();
+
   return (
     <InfoSection
       id="anoon"
       layout="image-right"
       backgroundGlow="default"
       image="/images/whoWeAre.png"
-      imageAlt="Anoon illustration"
+      imageAlt={t("who_we_are_page.subtitle")}
     >
       <InfoSection.Header>
         <InfoSection.Subtitle className="text-brand-white">
-          Who We Are
+          {t("who_we_are_page.subtitle")}
         </InfoSection.Subtitle>
         <InfoSection.Title>
           <InfoSection.TitleLine
-            text="We Don't Just Build"
-            highlight="Software"
+            text={t("who_we_are_page.title_line1_text")}
+            highlight={t("who_we_are_page.title_line1_highlight")}
             color="text-brand-sky"
             highlightColor="text-brand-orange"
           />
           <InfoSection.TitleLine
-            text="We Help People"
-            highlight="Dream"
+            text={t("who_we_are_page.title_line2_text")}
+            highlight={t("who_we_are_page.title_line2_highlight")}
             color="text-brand-sky"
             highlightColor="text-brand-orange"
           />
@@ -32,25 +35,24 @@ export default function MianInfoSection() {
       </InfoSection.Header>
 
       <InfoSection.Description>
-        Anoon LLC doesn't just build software. When the world went dark, we
-        stayed. We met our mission head-on in Gaza by offering a future. We
-        equipped students with the technical mastery to rise, because they can
-        take everything else, but they can't take what you know.
+        {t("who_we_are_page.description")}
       </InfoSection.Description>
 
       <InfoSection.Features>
         <InfoSection.Feature
           icon="/images/missile.png"
-          title="Tech Solution"
-          text="We deliver scalable, secure & impact-oriented systems."
+          title={t("who_we_are_page.feature1_title")}
+          text={t("who_we_are_page.feature1_desc")}
           color="text-brand-orange"
+          ctaText={t("who_we_are_page.feature1_cta") || "Know More"}
         />
         <InfoSection.Feature
           icon="/images/Lump.png"
-          title="Social"
-          text="Our Programs provide infrastructure and skills."
+          title={t("who_we_are_page.feature2_title")}
+          text={t("who_we_are_page.feature2_desc")}
           color="text-brand-sky"
           className="lg:-mr-12 xl:-mr-16"
+          ctaText={t("who_we_are_page.feature2_cta") || "Know More"}
         />
       </InfoSection.Features>
     </InfoSection>

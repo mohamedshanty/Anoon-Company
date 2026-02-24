@@ -2,39 +2,42 @@
 
 import Hero from "@/components/common/Hero";
 import Button from "@/components/ui/Button";
+import { useTranslation } from "react-i18next";
 
 export default function MainHero() {
+  const { t } = useTranslation();
+
   return (
     <Hero>
       <Hero.Title>
-        <span>Rising</span>
-        <span className="text-brand-orange">From The Ashes</span>
+        <span>{t("hero.title_rising")}</span>
+        <span className="text-brand-orange">{t("hero.title_ashes")}</span>
         <span>
-          To Build <span className="text-brand-sky">Better Future</span>
+          {t("hero.title_build")} <span className="text-brand-sky">{t("hero.title_future")}</span>
         </span>
       </Hero.Title>
 
       <Hero.Subtitle>
         <p className="text-subtitle">
-          We Don't Just Build Software,{" "}
-          <span className="text-brand-orange">We Build The Human Spirit</span>
+          {t("hero.subtitle_spirit")}
+          <span className="text-brand-orange">{t("hero.subtitle_spirit_highlight")}</span>
         </p>
         <p className="text-subtitle">
-          The <span className="text-brand-orange">Past</span> is behind and the{" "}
-          <span className="text-brand-orange">Future Is Ours</span>
+          {t("hero.subtitle_ours")}
+          <span className="text-brand-orange">{t("hero.subtitle_ours_highlight")}</span>
         </p>
         <p className="text-subtitle">
-          We Don't make excuses{" "}
-          <span className="text-brand-orange">We Rise</span>
+          {t("hero.subtitle_rise")}
+          <span className="text-brand-orange">{t("hero.subtitle_rise_highlight")}</span>
         </p>
       </Hero.Subtitle>
 
       <Hero.Buttons>
         <Button variant="outline" color="orange">
-          Explore Our Services
+          {t("hero.button_services")}
         </Button>
         <Button variant="outline" color="sky">
-          Book A Free Meeting
+          {t("hero.button_meeting")}
         </Button>
       </Hero.Buttons>
     </Hero>

@@ -3,6 +3,8 @@ import "./globals.css";
 import { PREMIUM_GRADIENT } from "@/lib/constants";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { I18nProvider } from "./providers";
+import "../i18n";
 
 const alexandria = Alexandria({
   subsets: ["latin", "arabic"],
@@ -28,14 +30,16 @@ export default function RootLayout({ children }) {
   };
 
   return (
-    <html lang="en">
+    <html lang="en" dir="ltr">
       <body
         className={`${alexandria.variable} antialiased`}
         style={backgroundStyle}
       >
-        <Navbar />
-        <main className="relative z-10">{children}</main>
-        <Footer />
+        <I18nProvider>
+          <Navbar />
+          <main className="relative z-10">{children}</main>
+          <Footer />
+        </I18nProvider>
       </body>
     </html>
   );

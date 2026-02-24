@@ -1,25 +1,27 @@
+"use client"
+
 import Testimonials from "../common/Testimonials";
 import SectionHeader from "../ui/SectionHeader";
+import { useTranslation } from "react-i18next";
 
 const SuccessStories = () => {
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === 'ar';
+
   return (
     <section className="py-24 bg-transparent relative overflow-hidden">
       <div className="main-container">
         <SectionHeader
-          title="Success Stories"
+          title={t("success_stories.title")}
           subtitle={{
             highlightedWords: [
-              { text: "From The", color: "text-brand-sky" },
-              { text: "Ashes", color: "text-brand-orange" },
-              { text: "We", color: "text-brand-sky" },
-              { text: "Rise Again", color: "text-brand-orange" },
+              { text: t("success_stories.subtitle.from_the"), color: "text-brand-sky" },
+              { text: t("success_stories.subtitle.ashes"), color: "text-brand-orange" },
+              { text: t("success_stories.subtitle.we"), color: "text-brand-sky" },
+              { text: t("success_stories.subtitle.rise_again"), color: "text-brand-orange" },
             ],
           }}
-          description={[
-            "Because it's important to celebrate our student & freelancer who have suffered",
-            "but kept going and surpass their limit and kept moving toward the light",
-            "in the dark days",
-          ]}
+          description={t("success_stories.description", { returnObjects: true })}
           starsCount={20}
           maxWidth="3xl"
           align="center"

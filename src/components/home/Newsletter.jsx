@@ -2,8 +2,11 @@
 
 import Image from "next/image";
 import Stars from "../ui/Stars";
+import { useTranslation } from "react-i18next";
 
 const Newsletter = () => {
+  const { t } = useTranslation();
+
   return (
     <section className="relative flex items-center justify-center p-6 overflow-visible my-20">
       <Stars />
@@ -58,16 +61,15 @@ const Newsletter = () => {
             {/* القسم الأيمن: المحتوى النصي */}
             <div className="w-full md:w-1/2">
               <h5 className="font-bold tracking-[0.05em] text-gray-900 uppercase mb-2">
-                Get Our Weekly
+                {t("newsletter.badge")}
               </h5>
               <h4 className="font-bold tracking-[0.2em] text-brand-sky uppercase leading-[0.9] mb-8">
-                Newsletter
+                {t("newsletter.title")}
               </h4>
 
               <div className="text-gray-600 text-[19px] mb-8 max-w-sm">
-                Get weekly updates on the newest design stories, case studies
-                and tips right in your mailbox.
-                <p className="font-medium text-gray-900 mt-2">Subscribe now!</p>
+                {t("newsletter.description")}
+                <p className="font-medium text-gray-900 mt-2">{t("newsletter.cta")}</p>
               </div>
             </div>
           </div>
@@ -75,16 +77,16 @@ const Newsletter = () => {
           <div className="flex flex-col sm:flex-row items-stretch border-[1px] border-gray-200 rounded-md overflow-hidden shadow-sm">
             <input
               type="email"
-              placeholder="Email Address"
+              placeholder={t("newsletter.placeholder")}
               className="flex-grow px-5 py-4 outline-none text-gray-700 placeholder-gray-300 text-sm"
             />
             <button className="bg-brand-sky hover:bg-[#58a4e8] cursor-pointer text-white font-bold px-10 py-4 transition-all uppercase text-xs tracking-widest whitespace-nowrap">
-              Subscribe
+              {t("newsletter.button")}
             </button>
           </div>
           {/* النص السفلي الصغير */}
           <p className="text-center text-[16px] text-gray-300 italic mt-5">
-            Your email is safe with us, we don't spam.
+            {t("newsletter.footer")}
           </p>
         </div>
       </div>

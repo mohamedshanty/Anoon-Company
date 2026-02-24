@@ -2,34 +2,46 @@
 
 import Hero from "@/components/common/Hero";
 import Button from "@/components/ui/Button";
+import { useTranslation } from "react-i18next";
+
 export default function SpaceNoonTrainingHero() {
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === "ar";
+
   return (
     <Hero>
       <Hero.Title>
-        <span>Enabling</span>
-        <span className="text-brand-orange">The Future Generation</span>
+        <span>{t("tech_training.hero.title_part1", "Enabling")}</span>
+        <span className="text-brand-orange">
+          {t("tech_training.hero.title_highlight", "The Future Generation")}
+        </span>
         <span className="flex items-center gap-4 flex-wrap justify-center">
-          <span>With</span>
+          <span>{t("tech_training.hero.title_part2", "With")}</span>
           <span className="font-thin">
-            <span className="text-brand-orange">Tech Training</span>
+            <span className="text-brand-orange">
+              {t("tech_training.hero.title_brand", "Tech Training")}
+            </span>
           </span>
         </span>
       </Hero.Title>
 
       <Hero.Subtitle>
-        <p className="text-subtitle text-white/80">
-          Empowering students and professionals with cutting-edge skills to
-          shape the digital future inside Palestine & Gaza . skills to shape the
-          digital future inside
+        <p
+          className={`text-subtitle text-white/80 ${isRTL ? "text-right" : ""}`}
+        >
+          {t(
+            "tech_training.hero.subtitle",
+            "Empowering students and professionals with cutting-edge skills to shape the digital future inside Palestine & Gaza.",
+          )}
         </p>
       </Hero.Subtitle>
 
       <Hero.Buttons>
         <Button variant="outline" color="orange">
-          Explore Our Services
+          {t("tech_training.hero.button1", "Explore Our Services")}
         </Button>
         <Button variant="outline" color="sky">
-          Visit Our Space
+          {t("tech_training.hero.button2", "Visit Our Space")}
         </Button>
       </Hero.Buttons>
     </Hero>

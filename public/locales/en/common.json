@@ -1,0 +1,439 @@
+{
+  "nav": {
+    "about": "About Us",
+    "programs": "Programs",
+    "agency": "Tech Agency",
+    "impact": "Our Impact",
+    "team": "Our Team",
+    "partner": "Our Partner",
+    "contact": "Contact Us",
+    "support": "Support Us",
+    "dropdown": {
+      "tamkeen": "Tamkeen",
+      "anoon": "Anoon"
+    }
+  },
+  "hero": {
+    "title_rising": "Rising",
+    "title_ashes": "From The Ashes",
+    "title_build": "To Build",
+    "title_future": "Better Future",
+    "subtitle_spirit": "We Don't Just Build Software, ",
+    "subtitle_spirit_highlight": "We Build The Human Spirit",
+    "subtitle_ours": "The Past is behind and the ",
+    "subtitle_ours_highlight": "Future Is Ours",
+    "subtitle_rise": "We Don't make excuses ",
+    "subtitle_rise_highlight": "We Rise",
+    "button_services": "Explore Our Services",
+    "button_meeting": "Book A Free Meeting"
+  },
+  "programs_page": {
+    "title": "Our Programs",
+    "subtitle_words": [
+      { "text": "Tailor", "color": "text-brand-sky" },
+      { "text": "Crafted", "color": "text-brand-orange" },
+      { "text": "For The", "color": "text-brand-sky" },
+      { "text": "Tech Sector", "color": "text-brand-orange" }
+    ],
+    "description": [
+      "At Anoon LLC, we believe there is no shame in falling.",
+      "only in staying down. We help people rise by giving them the skills to build again.",
+      "We don't just offer a second chance, we offer the tools to create a new life."
+    ],
+    "cards": [
+      {
+        "title_prefix": "The Future is",
+        "title_highlight1": "Built",
+        "title_middle": "by Those Who",
+        "title_highlight2": "Learn",
+        "logo_alt": "Tamkeen Logo",
+        "description": "We Believe That Knowledge can't be taken away and student is the future. With Our Work & our partner We make a change and still do.",
+        "primary_btn": "Support Us",
+        "secondary_btn": "Know More"
+      },
+      {
+        "title_prefix": "The Building Can",
+        "title_highlight1": "Fall",
+        "title_middle": "But your Skills",
+        "title_highlight2": "Won't",
+        "logo_alt": "Noon Hub Logo",
+        "description": "Knowledge is the only thing that they can't take away from us. We can be destroyed but our mind will shape the future, our thoughts fly high without a limit.",
+        "primary_btn": "Book A Meeting",
+        "secondary_btn": "Know More"
+      }
+    ]
+  },
+  "success_stories": {
+    "title": "Success Stories",
+    "subtitle": {
+      "from_the": "From The",
+      "ashes": "Ashes",
+      "we": "We",
+      "rise_again": "Rise Again"
+    },
+    "description": [
+      "Because it's important to celebrate our student & freelancer who have suffered",
+      "but kept going and surpass their limit and kept moving toward the light",
+      "in the dark days"
+    ]
+  },
+  "testimonials": {
+    "quote_alt": "quote",
+    "alla": {
+      "name": "Alla Abu Hamaza",
+      "role": "Front End Development",
+      "quote": "Thank You Tamkeen I didn't just make money i was able to achieve my dreams, i know that i have the skill but you give me the tools and platform and the network i need it was a lovely journey, yes it was tough but we made it through together"
+    },
+    "yazan": {
+      "name": "Yazan Deher",
+      "role": "UI UX Designer",
+      "quote": "I Believe That i was my destiny, i am amazing UX Designer yet i learned a lot of empathy from the staff i needed a place to feel where i belong and i found it here, Now i am in a better place, happy where i am and still rising and i will never give up"
+    }
+  },
+     "impact_page": {
+    "title": {
+      "first_word": "Our",
+      "second_word": "Impact"
+    },
+    "subtitle": {
+      "line1": "Our 2 years of",
+      "line2": {
+        "prefix": "",
+        "highlight": "Achievements"
+      }
+    },
+    "description": "We didn't wait for permission. While the world watched in silence, we chose to build. Alongside those who truly stood by us, we carved a path through the impossible. We didn't just bring frameworks; we brought the tools for our people to reclaim their own future. We are still here, we are still building, and our will is stronger than any struggle.",
+    "additional_text": "We Are Going To Be The Different"
+  },
+  "stats": {
+    "freelancers": "Freelancer & Student",
+    "success": "Freelancer Success",
+    "courses": "Technical Courses",
+    "workspace": "Work Space",
+    "roadmaps": "Roadmap"
+  },
+  "who_we_are_page": {
+    "subtitle": "Who We Are",
+    "title_line1_text": "We Don't Just Build",
+    "title_line1_highlight": "Software",
+    "title_line2_text": "We Help People",
+    "title_line2_highlight": "Dream",
+    "description": "Anoon LLC doesn't just build software. When the world went dark, we stayed. We met our mission head-on in Gaza by offering a future. We equipped students with the technical mastery to rise, because they can take everything else, but they can't take what you know.",
+    "feature1_title": "Tech Solution",
+    "feature1_desc": "We deliver scalable, secure & impact-oriented systems.",
+    "feature2_title": "Social",
+    "feature2_desc": "Our Programs provide infrastructure and skills."
+  },
+  "ai_agent": {
+    "title_main": "AI Agent",
+    "title_sub": "Development",
+    "intelligent": "Intelligent",
+    "software": "Software",
+    "for_better": "For Better",
+    "business": "Business",
+    "features": [
+      "Quick Service",
+      "AI Agent Development",
+      "Data-driven decision support"
+    ],
+    "btn_meeting": "Book A Meeting",
+    "btn_more": "Know More"
+  },
+  "faq": {
+    "title": "FAQ",
+    "subtitle": "Learn More About Us",
+    "questions": [
+      {
+        "q": "Is Anoon a charity or a company?",
+        "a": "Anoon is a social enterprise, not a charity. We combine education and technical solutions for sustainable impact."
+      },
+      {
+        "q": "Do you work with international partners?",
+        "a": "Yes, we collaborate with international organizations to expand our reach and impact."
+      },
+      {
+        "q": "What makes your workspace different?",
+        "a": "We Don't Offer just desks, we offer a \"rehabilitation\" approach providing the routine, peer support, and stability needed to work professionally in a conflict zone. After all that we provide freelancing training so it could compete in the Modern day world."
+      }
+    ]
+  },
+  "get_in_touch": {
+    "title": "Get in",
+    "title_highlight": "Touch",
+    "subtitle": "Your Opinion is what makes the difference",
+    "form": {
+      "name": "Name *",
+      "email": "Email",
+      "phone": "Phone number *",
+      "find_us": "How did you find us?",
+      "google": "Google",
+      "friend": "Friend",
+      "social": "Social Media",
+      "send": "SEND NOW"
+    },
+    "contact": {
+      "phone": "PHONE",
+      "email": "EMAIL"
+    }
+  },
+  "partners": {
+    "title": "Our Partner",
+    "subtitle": "Working Together to Make Progress"
+  },
+  "teams": {
+    "title": "Our Teams",
+    "subtitle": "When everything fell, we stood up."
+  },
+  "newsletter": {
+    "badge": "Get Our Weekly",
+    "title": "Newsletter",
+    "description": "Get weekly updates on the newest design stories, case studies and tips right in your mailbox.",
+    "cta": "Subscribe now!",
+    "placeholder": "Email Address",
+    "button": "Subscribe",
+    "footer": "Your email is safe with us, we don't spam."
+  },
+  "tamkeen": {
+     "hero": {
+      "title_part1": "Enabling",
+      "title_highlight": "The Future Generation",
+      "title_part2": "With",
+      "logo_alt": "Tamkeen",
+      "subtitle": "Buildings can be broken, but the human Spirit remain Ignited. We didn't wait, We just did it because while aid sustains the body, knowledge reclaims the future. The war took Everything, but couldn't take our skills. We are building the minds that will rebuild this land.",
+      "button1": "Visit Our Website",
+      "button2": "Donate Now"
+    },
+     "who_we_are": {
+      "image_alt": "Tamkeen illustration",
+      "subtitle": "Who We Are",
+      "title_line1": {
+        "text": "When",
+        "highlight": "Everybody",
+        "after": "Needed Help"
+      },
+      "title_line2": {
+        "text": "We",
+        "highlight": "Were",
+        "after": "There"
+      },
+      "description": "Tamkeen is dedicated to providing clarity and hope. We strive to help every student recognize their worth, go beyond their limits and become the best version of themselves for the sake of a better future by providing work space that is modern, high quality and saves their time & money.",
+      "cta": "Know More"
+    },
+    "impact": {
+      "additional": "We Are Going To Be The Different",
+      "stats": {
+        "yearly_student": "Yearly Student"
+      }
+    }
+  },
+   "noon_hub": {
+    "hero": {
+      "title_part1": "Providing",
+      "title_part2_prefix": "A",
+      "title_highlight1": "Safe Place",
+      "title_part2_middle": "For",
+      "title_part2": "Everyone",
+      "title_part3": "With",
+      "title_highlight2_prefix": "N",
+      "title_highlight2_middle": "oo",
+      "title_highlight2_suffix": "n Hub",
+      "subtitle": "Noon Hub is a place Designed for your needs, the friends you know the people you admire, Every body focusing on get things done, Learn more, network more and Focus With Us",
+      "button": "Explore Our Services"
+    },
+    "info": {
+      "image_alt": "Network illustration",
+      "title_line1": "We Provide More",
+      "title_line2_prefix": "Than A",
+      "title_highlight": "Space",
+      "title_line2_suffix": "We Offer",
+      "title_line3": "Your Future Network",
+      "description": "Your Network is everything, no matter how Professional you are if you don't have the right people it doesn't matter, with us we give you the network of your dream",
+      "cta": "Visit Our Location"
+    },
+     "our_space": {
+      "title": "Our Space",
+      "subtitle_words": [
+        "Your",
+        "Future",
+        "Network"
+      ],
+      "description": "We provide everything your need in our space. We give you the skill you have to acquire to get in the digital work space with professional guidance regarding Freelancing & Networking, and the platform to be able to achieve it.",
+      "button": "Visit Our Location"
+    },
+    "tech_training": {
+    "training": {
+      "title": "Training Programs",
+      "subtitle_words": [
+        "Your",
+        "Way",
+        "For The",
+        "Market Need"
+      ],
+      "description": "We give you the tools you need to start your journey as graphic design, from the design fundamental, using the professional software.",
+      "card": {
+        "title": "Graphic Design Course",
+        "description": "We give you the tools you need to start your journey as graphic design, from the design fundamental, using the professional software for the business, and we give you the guidance for showcasing your portfolio and the freelance to start your journey not just a skills.",
+        "image_alt": "Graphic Design Course",
+        "button": "Visit Us"
+      }
+    }
+  }
+  },
+  "space_noon": {
+    "hero": {
+      "title_part1": "Enabling",
+      "title_highlight": "The Future Generation",
+      "title_part2": "With",
+      "title_brand": "Space Noon",
+      "subtitle": "Empowering students and professionals with the tools and the platform by providing a co-working space that they can work in safe, quiet space with the ability to network.",
+      "button1": "Explore Our Services",
+      "button2": "Visit Our Space"
+    },
+     "problem": {
+      "image_alt": "Problem illustration",
+      "title_line1": "What is",
+      "title_line2_part1": "The",
+      "title_line2_part2": "That Face Us",
+      "highlight": "Problem",
+      "question_mark": "??",
+      "description": "We don't have the place that have all what student & Freelancer needs, starting from quiet place, to standard electricity, we don't have the networking event in good prices."
+    },
+    "our_space": {
+      "title": "Our Space",
+      "subtitle_words": ["Your", "Future", "Network"],
+      "description": "We provide everything your need in our space. We give you the skill you have to acquire to get in the digital work space with professional guidance regarding Freelancing & Networking, and the platform to be able to achieve it.",
+      "button": "Visit Our Location"
+    }
+  },
+  "tech_training": {
+    "hero": {
+      "badge": "The New Area Of Technology",
+      "title_part1": "Creating",
+      "title_part2": "Next Generation Solution",
+      "title_part3_prefix": "With",
+      "title_highlight": "Tech Agency",
+      "prompt_placeholder": "Ask about our services, projects, or how we can help you!",
+      "prompt_button": "Ask Now"
+    },
+    "ai_prompt": {
+      "placeholder": "Ask The AI Anything",
+      "attach_file": "Attach file",
+      "button": "Ask Our AI",
+      "helper": "Attach file or ask anything about our services"
+    },
+    "intelligent_solution": {
+      "title_part1": "Complex Problem Requires",
+      "title_highlight": "Intelligent Solution",
+      "description": "As technology advances, workloads are increasing and manual processes are no longer efficient. Integrating AI agents into the workplace is the most effective way to save time, reduce costs, and improve productivity.",
+      "button": "Book A Free Consulting"
+    },
+   "problem": {
+      "image_alt": "Problem illustration",
+      "title_line1": "What is",
+      "title_line2_part1": "The",
+      "title_line2_part2": "That Face Us",
+      "highlight": "Problem",
+      "question_mark": "??",
+      "description": "We have a generation that have suffered from the war financially and don't have any skill but the desire and the capability to learn."
+    },
+     "training": {
+      "title": "Our Training Programs",
+      "subtitle_words": [
+        "Tailor",
+        "Crafted",
+        "For The",
+        "Tech Sector"
+      ],
+      "description": "We give you the tools you need to start your journey as graphic design, from the design fundamental, using the professional software for the business, and we give you the guidance for showcasing your portfolio and the freelance to start your journey not just a skills.",
+      "card": {
+        "title": "Graphic Design Course",
+        "description": "We give you the tools you need to start your journey as graphic design, from the design fundamental, using the professional software for the business, and we give you the guidance for showcasing your portfolio and the freelance to start your journey not just a skills.",
+        "image_alt": "Graphic Design Course",
+        "button": "Visit Us"
+      }
+    }
+  },
+  "tech_agency": {
+    "hero": {
+      "badge": "The New Area Of Technology",
+      "title_part1": "Creating",
+      "title_part2": "Next Generation Solution",
+      "title_part3": "With",
+      "title_highlight": "Tech Agency",
+      "prompt_placeholder": "Ask about our services, projects, or how we can help you!",
+      "prompt_button": "Ask Now"
+    },
+    "intelligent_solution": {
+      "title": "Complex Problem Requires",
+      "title_highlight": "Intelligent Solution",
+      "description": "As technology advances, workloads are increasing and manual processes are no longer efficient. Integrating AI agents into the workplace is the most effective way to save time, reduce costs, and improve productivity.",
+      "button": "Book A Free Consulting"
+    },
+    "learn_more": {
+      "image_alt": "Knowledge Book",
+      "title_part1": "Learn More About",
+      "title_highlight": "Artificial Intelligent",
+      "description": "Want to understand how AI is shaping the future of business? Our AI Development Blog breaks down the latest trends, tools, and real-world strategies behind building powerful AI systems and intelligent agents. Whether you're a founder, developer, or tech enthusiast, discover practical insights that help you stay ahead in the AI revolution. Read, learn, and build smarter with AI.",
+      "button": "Read Now"
+    },
+    "our_services": {
+      "image_alt": "Our Services",
+      "title_prefix": "Our",
+      "title_highlight": "Services",
+      "subtitle": "AI Agents Development",
+      "description": "As business complexity grows, developing AI agents has become essential for building scalable and efficient operations. Investing in AI agent development enables organizations to automate tasks, optimize decision-making, and create sustainable competitive advantages.",
+      "button": "Book A Meeting"
+    }
+  },
+  "blog": {
+   "hero": {
+      "title_part1": "Learn More",
+      "title_part2": "Everyday About",
+      "title_highlight": "Artificial Intelligence"
+    },
+    "tabs": {
+      "section": "Section"
+    },
+    "article": {
+      "introduction": "Introduction",
+      "publication_date": "Publication Date",
+      "category": "Category",
+      "reading_time": "Reading Time",
+      "author": "Author Name",
+      "table_of_contents": "Table of Contents",
+      "similar_articles": "Similar Articles",
+      "read_more": "Read More"
+    },
+    "categories": {
+      "environment": "Environment",
+      "politics": "Politics",
+      "healthcare": "Healthcare"
+    },
+    "authors": {
+      "jane_smith": "Jane Smith",
+      "john_doe": "John Doe",
+      "emily_walker": "Dr. Emily Walker"
+    }
+  },
+  "footer": {
+    "logo_alt": "Anoon",
+    "description": "OurStudio is a digital agency UI/UX Design and Website Development located in Ohio, United States of America.",
+    "get_in_touch": "Get in Touch",
+    "address": {
+      "line1": "8819 Ohio St. South Gate,",
+      "line2": "CA 90280"
+    },
+    "email": "info@anoonsolutions.com",
+    "phone": {
+      "formatted": "+1 386-688-3295"
+    },
+    "social_description": "We build innovative digital solutions that help shape the future.",
+    "newsletter": {
+      "title": "Join a Newsletter",
+      "label": "Your Email",
+      "placeholder": "Enter Your Email",
+      "button": "Subscribe"
+    },
+    "copyright": "Copyright ANoon LLC"
+  }
+}

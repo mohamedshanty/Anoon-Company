@@ -4,14 +4,12 @@ import { useRef, useEffect, useState } from "react";
 import Image from "next/image";
 import { gsap } from "@/lib/gsap-setup";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-// استيراد Swiper
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Autoplay, EffectCoverflow } from "swiper/modules";
+import { Navigation, EffectCoverflow } from "swiper/modules";
+import { useTranslation } from "react-i18next";
 
-// استيراد أنماط Swiper
 import "swiper/css";
 import "swiper/css/navigation";
-import "swiper/css/autoplay";
 import "swiper/css/effect-coverflow";
 
 // ===== DATA =====
@@ -39,9 +37,18 @@ const members = [
 ];
 
 export default function Teams() {
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === 'ar';
+
   const headerRef = useRef(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [swiper, setSwiper] = useState(null);
+  const [swiperKey, setSwiperKey] = useState(0); // لإعادة تهيئة السلايدر عند تغيير اللغة
+
+  // إعادة تهيئة السلايدر عند تغيير اللغة
+  useEffect(() => {
+    setSwiperKey(prev => prev + 1);
+  }, [i18n.language]);
 
   // ===== SCROLL REVEAL =====
   useScrollReveal({
@@ -73,29 +80,50 @@ export default function Teams() {
     }
   };
 
+  // ترجمة الأدوار
+  const getTranslatedRole = (role) => {
+    const roles = {
+      "CTO": t("teams.roles.cto", "CTO"),
+      "CEO": t("teams.roles.ceo", "CEO"),
+      "Lead Developer": t("teams.roles.lead_developer", "Lead Developer"),
+      "Designer": t("teams.roles.designer", "Designer"),
+      "Marketing": t("teams.roles.marketing", "Marketing"),
+      "Product Manager": t("teams.roles.product_manager", "Product Manager"),
+      "Developer": t("teams.roles.developer", "Developer"),
+    };
+    return roles[role] || role;
+  };
+
   return (
     <section id="teams" className="py-24 relative overflow-hidden">
       <div className="main-container relative z-10">
         {/* ===== HEADER ===== */}
-        <div ref={headerRef} className="text-center max-w-3xl mx-auto mb-16">
-          <h1 className="text-white font-bold text-4xl mb-5">Our Teams</h1>
+        <div
+          ref={headerRef}
+          className={`text-center max-w-3xl mx-auto mb-16 ${isRTL ? 'rtl' : ''}`}
+        >
+          <h1 className="text-white font-bold text-4xl mb-5">
+            {t("teams.title", "Our Teams")}
+          </h1>
           <p className="text-white text-lg font-light">
-            When everything fell, we stood up.
+            {t("teams.subtitle", "When everything fell, we stood up.")}
           </p>
         </div>
 
         {/* ===== CENTERED SWIPER SLIDER ===== */}
-        <div className="slider-container">
+        <div className={`slider-container ${isRTL ? 'rtl-slider' : ''}`}>
           <Swiper
-            modules={[Navigation, Autoplay, EffectCoverflow]}
+            key={swiperKey} // مفتاح لإعادة التهيئة عند تغيير اللغة
+            modules={[Navigation, EffectCoverflow]}
             slidesPerView={"auto"}
             centeredSlides={true}
             loop={true}
             speed={800}
             effect={"coverflow"}
             grabCursor={true}
+            dir={isRTL ? 'rtl' : 'ltr'} // اتجاه السلايدر
             coverflowEffect={{
-              rotate: 15,
+              rotate: isRTL ? -15 : 15, // عكس اتجاه الدوران في RTL
               stretch: 0,
               depth: 200,
               modifier: 2.5,
@@ -104,11 +132,6 @@ export default function Teams() {
             navigation={{
               nextEl: ".swiper-button-next",
               prevEl: ".swiper-button-prev",
-            }}
-            autoplay={{
-              delay: 4000,
-              disableOnInteraction: false,
-              pauseOnMouseEnter: true,
             }}
             keyboard={{
               enabled: true,
@@ -161,7 +184,7 @@ export default function Teams() {
                           {member.name}
                         </h5>
                         <p className="text-gray-300 text-sm font-medium">
-                          {member.role}
+                          {getTranslatedRole(member.role)}
                         </p>
                       </div>
                     </div>
@@ -171,14 +194,18 @@ export default function Teams() {
             ))}
           </Swiper>
 
-          {/* Custom Navigation Arrows */}
-          <div className="navigation-wrapper">
-            <button className="swiper-button-prev">
+          {/* Custom Navigation Arrows - معكوسة في RTL */}
+          <div className={`navigation-wrapper ${isRTL ? 'rtl-navigation' : ''}`}>
+            <button
+              className="swiper-button-prev"
+              aria-label={isRTL ? "السابقة" : "Previous slide"}
+            >
               <svg
                 className="w-6 h-6"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                style={{ transform: isRTL ? 'rotate(180deg)' : 'none' }}
               >
                 <path
                   strokeLinecap="round"
@@ -188,12 +215,16 @@ export default function Teams() {
                 />
               </svg>
             </button>
-            <button className="swiper-button-next">
+            <button
+              className="swiper-button-next"
+              aria-label={isRTL ? "التالية" : "Next slide"}
+            >
               <svg
                 className="w-6 h-6"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                style={{ transform: isRTL ? 'rotate(180deg)' : 'none' }}
               >
                 <path
                   strokeLinecap="round"
@@ -218,6 +249,15 @@ export default function Teams() {
           max-width: 1400px;
           margin: 0 auto;
           padding: 40px 60px;
+        }
+
+        /* أنماط RTL */
+        .rtl-slider {
+          direction: rtl;
+        }
+
+        .rtl-navigation {
+          direction: ltr; /* للحفاظ على اتجاه الأزرار */
         }
 
         :global(.teams-swiper) {

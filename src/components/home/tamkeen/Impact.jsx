@@ -1,55 +1,61 @@
+"use client"
+
+import { LineChart, Briefcase, Star, User } from "lucide-react";
 import Impact from "@/components/common/Impact";
-import { Briefcase } from "lucide-react";
-import { LineChart } from "lucide-react";
-import { Star } from "lucide-react";
-import { User } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const ImpactSection = () => {
+  const { t } = useTranslation();
+
   const secondPageStats = [
     {
       id: "freelancers",
-      icon: <User className="w-10 h-10 text-brand-orange" />,
+      icon: <User className="text-brand-orange" />,
       value: "11,000",
-      label: "Freelancer & Student",
+      label: t("stats.freelancers"),
     },
     {
       id: "success",
-      icon: <Star className="w-10 h-10 text-brand-orange" />,
+      icon: <Star className="text-brand-orange" />,
       value: "50 %",
-      label: "Freelancer Success",
+      label: t("stats.success"),
     },
     {
       id: "courses",
-      icon: <LineChart className="w-10 h-10 text-brand-orange" />,
-      value: "3 Roadmap",
-      label: "Technical Courses",
+      icon: <LineChart className="text-brand-orange" />,
+      value: "3 ",
+      label: t("stats.courses"),
     },
     {
       id: "workspace",
-      icon: <Briefcase className="w-10 h-10 text-brand-orange" />,
+      icon: <Briefcase className="text-brand-orange" />,
       value: "400",
-      label: "Yearly Student",
+      label: t("tamkeen.impact.stats.yearly_student"),
     },
   ];
 
   return (
-    <Impact
-      title={{
-        firstWord: "Our",
-        secondWord: "Impact",
-      }}
-      subtitle={{
-        line1: "Our 2 years of",
-        line2: {
-          prefix: "",
-          highlight: "Achievements",
-        },
-      }}
-      description="Fly So High, We Reach The Sky and now its time to go beyond. We are, we help, we care and we are proud of that."
-      stats={secondPageStats}
-      patternDirection="grid"
-      patternOpacity="opacity-75"
-    />
+    <Impact patternDirection="grid" patternOpacity="opacity-75" className="pt-10">
+      <Impact.Title>
+        <span className="text-brand-sky">{t("impact_page.title.first_word")}</span>
+        <span className="text-brand-orange">{t("impact_page.title.second_word")}</span>
+      </Impact.Title>
+
+      <Impact.AdditionalText>
+        {t("tamkeen.impact.additional")}
+      </Impact.AdditionalText>
+
+      <Impact.Subtitle>
+        <div>{t("impact_page.subtitle.line1")}</div>
+        <div className="text-brand-orange">{t("impact_page.subtitle.line2.highlight")}</div>
+      </Impact.Subtitle>
+
+      <Impact.Description>
+        {t("impact_page.description")}
+      </Impact.Description>
+
+      <Impact.Stats stats={secondPageStats} />
+    </Impact>
   );
 };
 

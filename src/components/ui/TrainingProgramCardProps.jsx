@@ -1,4 +1,7 @@
+"use client";
+
 import React from "react";
+import { useTranslation } from "react-i18next";
 import Button from "../ui/Button";
 import Image from "next/image";
 
@@ -14,11 +17,15 @@ const TrainingProgramCard = ({
   onButtonClick,
   imageWidth = 400,
   imageHeight = 250,
+  isRTL = false,
 }) => {
+  const { i18n } = useTranslation();
+  const rtl = isRTL || i18n?.language === 'ar';
+
   const renderTitle = () => {
     if (titleLines && titleLines.length > 0) {
       return (
-        <h4 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
+        <h4 className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 ${rtl ? 'text-right' : ''}`}>
           {titleLines.map((line, index) => (
             <React.Fragment key={index}>
               {line}
@@ -30,42 +37,48 @@ const TrainingProgramCard = ({
     }
 
     return (
-      <h4 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
+      <h4 className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 ${rtl ? 'text-right' : ''}`}>
         {title}
       </h4>
     );
   };
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6" dir={rtl ? 'rtl' : 'ltr'}>
       <div className="shadow-[0_0_6px_rgba(255,255,255,0.6)] rounded-xl overflow-hidden">
-        <div className="flex flex-col md:flex-row items-start gap-8 p-10">
-          {/* Image */}
-          <div className="flex justify-center">
-            <Image
-              src={imageSrc}
-              alt={imageAlt}
-              width={imageWidth}
-              height={imageHeight}
-              className="rounded-xl object-cover"
-            />
+        <div className={`flex flex-col md:flex-row items-start gap-6 sm:gap-8 p-6 sm:p-8 lg:p-10 ${rtl ? 'md:flex-row' : ''
+          }`}>
+          {/* Image - Responsive sizing */}
+          <div className="flex justify-center w-full md:w-1/2">
+            <div className="relative w-full max-w-[350px] sm:max-w-[400px] md:max-w-full">
+              <Image
+                src={imageSrc}
+                alt={imageAlt}
+                width={imageWidth}
+                height={imageHeight}
+                className="rounded-xl object-cover w-full h-auto"
+                sizes="(max-width: 640px) 100vw, (max-width: 768px) 80vw, (max-width: 1024px) 50vw, 400px"
+              />
+            </div>
           </div>
 
           {/* Content */}
-          <div className="md:w-1/2 text-white h-full flex flex-col justify-between">
+          <div className={`w-full md:w-1/2 text-white h-full flex flex-col justify-between ${rtl ? 'text-right' : ''
+            }`}>
             <div>
               {renderTitle()}
-
-              <p className="text-gray-300 text-lg leading-8 max-w-[415px]">
+              <p className={`text-gray-300 text-sm sm:text-base md:text-lg leading-6 sm:leading-7 md:leading-8 ${rtl ? 'text-right' : ''
+                }`}>
                 {description}
               </p>
             </div>
 
-            <div className="mt-10">
+            <div className={`mt-6 sm:mt-8 md:mt-10 flex ${rtl ? 'justify-start' : 'justify-start'
+              }`}>
               <Button
                 variant={buttonVariant}
                 color={buttonColor}
-                className="px-8 py-3 rounded-full"
+                className="px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base rounded-full w-full sm:w-auto"
                 onClick={onButtonClick}
               >
                 {buttonText}

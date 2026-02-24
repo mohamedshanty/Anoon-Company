@@ -4,14 +4,19 @@ import { useRef, useEffect, useState } from "react";
 import Image from "next/image";
 import { gsap } from "@/lib/gsap-setup";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useTranslation } from "react-i18next";
 import Stars from "../ui/Stars";
 
 export default function Partners() {
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === 'ar';
+
   const container = useRef(null);
   const headerRef = useRef(null);
   const scrollRef = useRef(null);
   const animationRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [imageSize, setImageSize] = useState({ width: 150, height: 150 });
 
   useScrollReveal({
     ref: headerRef,
@@ -27,14 +32,45 @@ export default function Partners() {
     { name: "ArtVenue", image: "/images/partner4.png" },
   ];
 
-  // Initialize animation
+  // Adjust image size based on screen width
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width < 640) {
+        setImageSize({ width: 100, height: 100 });
+      } else if (width < 768) {
+        setImageSize({ width: 120, height: 120 });
+      } else if (width < 1024) {
+        setImageSize({ width: 150, height: 150 });
+      } else {
+        setImageSize({ width: 180, height: 180 });
+      }
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Initialize animation with responsive duration
   useEffect(() => {
     if (!scrollRef.current) return;
 
+    // Adjust animation speed based on screen size
+    const getDuration = () => {
+      const width = window.innerWidth;
+      if (width < 640) return 25; // Slower on mobile for better visibility
+      if (width < 1024) return 20;
+      return 18;
+    };
+
+    // عكس اتجاه الحركة في RTL
+    const xPercent = isRTL ? 50 : -50;
+
     animationRef.current = gsap.to(scrollRef.current, {
-      xPercent: -50,
+      xPercent: xPercent,
       repeat: -1,
-      duration: 18,
+      duration: getDuration(),
       ease: "linear",
     });
 
@@ -43,7 +79,25 @@ export default function Partners() {
         animationRef.current.kill();
       }
     };
-  }, []);
+  }, [isRTL]); // إضافة isRTL كـ dependency
+
+  // تحديث الحركة عند تغيير اللغة
+  useEffect(() => {
+    if (animationRef.current && scrollRef.current) {
+      // إعادة تعيين الحركة مع الاتجاه الجديد
+      animationRef.current.kill();
+
+      const xPercent = isRTL ? 50 : -50;
+      const duration = getDuration();
+
+      animationRef.current = gsap.to(scrollRef.current, {
+        xPercent: xPercent,
+        repeat: -1,
+        duration: duration,
+        ease: "linear",
+      });
+    }
+  }, [isRTL]);
 
   // Handle hover
   const handleMouseEnter = () => {
@@ -60,51 +114,62 @@ export default function Partners() {
     }
   };
 
+  // دالة مساعدة لحساب المدة
+  const getDuration = () => {
+    const width = window.innerWidth;
+    if (width < 640) return 25;
+    if (width < 1024) return 20;
+    return 18;
+  };
+
   return (
     <section
       id="partner"
       ref={container}
-      className="py-24 relative overflow-hidden"
+      className="py-16 md:py-20 lg:py-24 relative overflow-hidden"
+      dir={isRTL ? 'rtl' : 'ltr'}
     >
       <Stars count={30} />
 
       <div className="main-container">
-        <div ref={headerRef} className="text-center mb-16">
-          <h2 className="text-white font-bold text-5xl md:text-6xl mb-2">
-            Our Partner
+        <div
+          ref={headerRef}
+          className={`text-center mb-12 md:mb-16 px-4 ${isRTL ? 'rtl' : ''}`}
+        >
+          <h2 className="text-white font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-2">
+            {t("partners.title", "Our Partner")}
           </h2>
-          <h3 className="text-3xl md:text-4xl font-bold text-[#6EC1FF] mb-4">
-            Working Together to Make Progress
+          <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-[#6EC1FF] mb-4">
+            {t("partners.subtitle", "Working Together to Make Progress")}
           </h3>
         </div>
 
-        <div className="w-full flex justify-center">
+        <div className="w-full flex justify-center px-4 sm:px-6">
           <div
             className="relative w-full max-w-4xl overflow-hidden group"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
           >
-            {/* Gradient overlays */}
-            <div className="absolute left-0 top-0 bottom-0 w-32 to-transparent z-10 pointer-events-none"></div>
-            <div className="absolute right-0 top-0 bottom-0 w-32 to-transparent z-10 pointer-events-none"></div>
-
             <div
               ref={scrollRef}
-              className="flex gap-24 items-center w-[200%]"
+              className={`flex items-center w-[200%] mt-10 ${isRTL ? 'flex-row' : ''}`}
               style={{ willChange: "transform" }}
             >
               {[...partners, ...partners].map((partner, idx) => (
                 <div
-                  key={idx}
-                  className="flex flex-col items-center transition-all duration-300 hover:scale-110"
+                  key={`${partner.name}-${idx}`}
+                  className="flex flex-col items-center transition-all duration-300 hover:scale-110 min-w-[120px] sm:min-w-[150px] md:min-w-[180px] lg:min-w-[200px]"
                 >
                   <Image
                     src={partner.image}
                     alt={partner.name}
-                    width={200}
-                    height={200}
-                    className="mb-2 object-contain"
+                    width={imageSize.width}
+                    height={imageSize.height}
+                    className="mb-2 object-contain w-auto h-auto"
+                    priority={idx < 4}
                   />
+                  {/* إضافة اسم الشريك للـ ARIA (اختياري) */}
+                  <span className="sr-only">{partner.name}</span>
                 </div>
               ))}
             </div>

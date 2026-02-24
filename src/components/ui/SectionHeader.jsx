@@ -53,7 +53,7 @@ export default function SectionHeader({
       return (
         <h3
           className={cn(
-            "text-2xl md:text-5xl lg:text-6xl font-bold mb-10 leading-tight whitespace-nowrap",
+            "font-bold mb-6 md:mb-8 lg:mb-10 leading-tight",
             subtitleClassName,
           )}
         >
@@ -62,29 +62,37 @@ export default function SectionHeader({
       );
     }
 
-    return (
-      <h3
-        className={cn(
-          "text-2xl md:text-5xl lg:text-6xl font-bold mb-10 leading-tight whitespace-nowrap",
-          subtitleClassName,
-        )}
-      >
-        {subtitle.prefix && <span>{subtitle.prefix} </span>}
-        {subtitle.highlightedWords?.map((word, idx) => (
-          <span key={idx} className={word.color}>
-            {word.text}{" "}
-          </span>
-        ))}
-        {subtitle.suffix && <span>{subtitle.suffix}</span>}
-      </h3>
-    );
+    // معالجة highlightedWords إذا كانت مصفوفة من الكائنات
+    if (subtitle.highlightedWords && Array.isArray(subtitle.highlightedWords)) {
+      return (
+        <h3
+          className={cn(
+            "font-bold mb-6 md:mb-8 lg:mb-10 leading-tight text-xl md:text-2xl lg:text-3xl",
+            subtitleClassName,
+          )}
+        >
+          {subtitle.prefix && <span>{subtitle.prefix} </span>}
+          {subtitle.highlightedWords.map((word, idx) => (
+            <span
+              key={idx}
+              className={`${word.color || 'text-brand-sky'} text-3xl md:text-4xl lg:text-5xl font-bold`}
+            >
+              {word.text}{" "}
+            </span>
+          ))}
+          {subtitle.suffix && <span>{subtitle.suffix}</span>}
+        </h3>
+      );
+    }
+
+    return null;
   };
 
   return (
     <div
       ref={headerRef}
       className={cn(
-        "relative",
+        "relative w-full",
         alignClasses[align],
         maxWidthClasses[maxWidth],
         className,
@@ -92,50 +100,38 @@ export default function SectionHeader({
     >
       <Stars count={starsCount} zIndex={-5} opacity={0.8} />
 
-      {/* العنوان الرئيسي - Our Space */}
+      {/* العنوان الرئيسي */}
       <h2
         className={cn(
-          "text-brand-white font-bold text-2xl md:text-3xl mb-4 tracking-wide",
+          "text-brand-white font-bold mb-3 md:mb-4 tracking-wide",
           titleClassName,
         )}
       >
         {title}
       </h2>
 
-      {/* العنوان الفرعي - Your Future Network */}
+      {/* العنوان الفرعي */}
       {renderSubtitle()}
 
-      {/* الوصف مع تأثير التدرج */}
+      {/* الوصف */}
       {description && (
-        <div className={cn("relative max-w-2xl mx-auto", descriptionClassName)}>
-          {/* النص مع التدرج */}
-          <div className="relative">
+        <div className={cn("relative w-full", descriptionClassName)}>
+          <div className="space-y-2 md:space-y-3">
             {Array.isArray(description) ? (
               description.map((line, idx) => (
                 <p
                   key={idx}
-                  className={cn(
-                    "text-base md:text-lg",
-                    idx < description.length - 1 ? "mb-4" : "",
-                  )}
+                  className="text-sm md:text-base lg:text-lg text-white/80 leading-relaxed"
                 >
                   {line}
                 </p>
               ))
             ) : (
-              <p
-                className={cn(
-                  "text-base md:text-lg",
-                  "bg-gradient-to-b from-white via-white/90 to-white/40 bg-clip-text text-transparent",
-                )}
-              >
+              <p className="text-sm md:text-base lg:text-lg text-white/80 leading-relaxed">
                 {description}
               </p>
             )}
           </div>
-
-          {/* طبقة تدرج إضافية في الأسفل لمزيد من التأثير */}
-          <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-brand-dark to-transparent pointer-events-none" />
         </div>
       )}
     </div>
