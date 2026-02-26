@@ -1,18 +1,18 @@
-import { useGSAP } from "@gsap/react";
-import { gsap } from "@/lib/gsap-setup";
+import { useAnimation } from "./useAnimation";
 
 /**
- * Custom hook for scroll-triggered reveal animations using GSAP
+ * Custom hook for scroll-triggered reveal animations
+ * Now a wrapper around the more flexible useAnimation hook
  * 
  * @param {Object} options - Configuration options
  * @param {React.RefObject} options.ref - Reference to the element(s) to animate
- * @param {string} options.animation - Type of animation ('fade-in', 'slide-up', 'slide-left', 'slide-right', 'scale-up')
+ * @param {string} options.animation - Type of animation
  * @param {number} options.duration - Animation duration in seconds
  * @param {number} options.delay - Initial delay in seconds
  * @param {number} options.stagger - Stagger time between multiple elements
- * @param {string} options.start - ScrollTrigger start position (e.g. 'top 85%')
+ * @param {string} options.start - ScrollTrigger start position
  * @param {boolean} options.once - Whether the animation should only play once
- * @param {boolean} options.isChildren - If true, animates children of the ref instead of the ref itself
+ * @param {boolean} options.isChildren - If true, ensures children are targeted if stagger isn't enough
  */
 export const useScrollReveal = ({
   ref,
@@ -24,46 +24,19 @@ export const useScrollReveal = ({
   once = true,
   isChildren = false,
 } = {}) => {
-  useGSAP(() => {
-    if (!ref.current) return;
-
-    const target = isChildren ? ref.current.children : ref.current;
-    if (!target) return;
-
-    const vars = {
-      opacity: 0,
-      duration,
-      delay,
-      stagger,
-      scrollTrigger: {
-        trigger: ref.current,
-        start,
-        toggleActions: once ? "play none none none" : "play reverse play reverse",
-      }
-    };
-
-    switch (animation) {
-      case "slide-up":
-        vars.y = 50;
-        break;
-      case "slide-down":
-        vars.y = -50;
-        break;
-      case "slide-left":
-        vars.x = 50;
-        break;
-      case "slide-right":
-        vars.x = -50;
-        break;
-      case "scale-up":
-        vars.scale = 0.8;
-        break;
-      case "fade-in":
-      default:
-        // Already handling opacity: 0
-        break;
-    }
-
-    gsap.from(target, vars);
-  }, { scope: ref });
+  // Map 'animation' to 'type' and handle 'isChildren' logic
+  // If isChildren is true, we force stagger to be at least a very small value if it's 0,
+  // or useAnimation's target logic will handle it if we pass a target override
+  
+  useAnimation({
+    ref,
+    type: animation === "fade-in" ? "fade" : animation,
+    duration,
+    delay,
+    stagger: stagger || (isChildren ? 0.1 : 0),
+    start,
+    once,
+  });
 };
+
+export default useScrollReveal;

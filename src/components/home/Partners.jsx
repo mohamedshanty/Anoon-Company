@@ -3,13 +3,14 @@
 import { useRef, useEffect, useState } from "react";
 import Image from "next/image";
 import { gsap } from "@/lib/gsap-setup";
-import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useAnimation } from "@/hooks/useAnimation";
+import { useRTL } from "@/hooks/useRTL";
 import { useTranslation } from "react-i18next";
 import Stars from "../ui/Stars";
 
 export default function Partners() {
-  const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const { t } = useTranslation();
+  const { isRTL, dir } = useRTL();
 
   const container = useRef(null);
   const headerRef = useRef(null);
@@ -18,10 +19,9 @@ export default function Partners() {
   const [isHovered, setIsHovered] = useState(false);
   const [imageSize, setImageSize] = useState({ width: 150, height: 150 });
 
-  useScrollReveal({
+  useAnimation({
     ref: headerRef,
-    animation: "slide-up",
-    isChildren: true,
+    type: "slide-up",
     stagger: 0.1,
   });
 
@@ -64,7 +64,7 @@ export default function Partners() {
       return 18;
     };
 
-    // عكس اتجاه الحركة في RTL
+    // Use raw value: RTL = scroll right (+50), LTR = scroll left (-50)
     const xPercent = isRTL ? 50 : -50;
 
     animationRef.current = gsap.to(scrollRef.current, {
@@ -79,7 +79,7 @@ export default function Partners() {
         animationRef.current.kill();
       }
     };
-  }, [isRTL]); // إضافة isRTL كـ dependency
+  }, [isRTL]);
 
   // تحديث الحركة عند تغيير اللغة
   useEffect(() => {
@@ -127,14 +127,14 @@ export default function Partners() {
       id="partner"
       ref={container}
       className="py-16 md:py-20 lg:py-24 relative overflow-hidden"
-      dir={isRTL ? 'rtl' : 'ltr'}
+      dir={dir}
     >
       <Stars count={30} />
 
       <div className="main-container">
         <div
           ref={headerRef}
-          className={`text-center mb-12 md:mb-16 px-4 ${isRTL ? 'rtl' : ''}`}
+          className={`text-center mb-12 md:mb-16 px-4`}
         >
           <h2 className="text-white font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-2">
             {t("partners.title", "Our Partner")}

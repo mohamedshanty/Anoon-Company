@@ -3,10 +3,12 @@
 import Hero from "@/components/common/Hero";
 import Button from "@/components/ui/Button";
 import { useTranslation } from "react-i18next";
+import { useRTL } from "@/hooks/useRTL";
+import Link from "next/link";
 
 export default function SpaceNoonHero() {
-  const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const { t } = useTranslation();
+  const { isRTL } = useRTL();
 
   return (
     <Hero>
@@ -32,12 +34,17 @@ export default function SpaceNoonHero() {
       </Hero.Subtitle>
 
       <Hero.Buttons>
-        <Button variant="outline" color="orange">
-          {t("space_noon.hero.button1", "Explore Our Services")}
-        </Button>
-        <Button variant="outline" color="sky">
-          {t("space_noon.hero.button2", "Visit Our Space")}
-        </Button>
+
+        <Link href={""}>
+          <Button variant="outline" color="orange">
+            {t("space_noon.hero.button1", "Explore Our Services")}
+          </Button>
+        </Link>
+        <Link href={""}>
+          <Button variant="outline" color="sky">
+            {t("space_noon.hero.button2", "Visit Our Space")}
+          </Button>
+        </Link>
       </Hero.Buttons>
     </Hero>
   );

@@ -4,84 +4,87 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Heart, MessageCircle } from "lucide-react";
-
-const sections = [
-  { id: 1, title: "Section 1" },
-  { id: 2, title: "Section 2" },
-  { id: 3, title: "Section 3" },
-  { id: 4, title: "Section 4" },
-  { id: 5, title: "Section 5" },
-];
-
-// Example articles for each section
-const articles = {
-  1: [
-    {
-      id: 1,
-      title: "Learn more about ai",
-      description:
-        "World leaders gathered at the Global Climate Summit to discuss urgent climate action, emissions reductions, and renewable energy targets.",
-      category: "Environment",
-      date: "October 10, 2023",
-      author: "Jane Smith",
-      image: "/images/blogImage.png",
-      likes: "1.4k",
-      comments: 204,
-      slug: "1", // ← غيرنا slug إلى "1" ليتوافق مع الرابط /techBlog/1
-    },
-  ],
-  2: [
-    {
-      id: 2,
-      title: "A Decisive Victory for Progressive Policies",
-      description: "",
-      category: "Politics",
-      date: "October 12, 2023",
-      author: "John Doe",
-      image: "/images/blogImage.png",
-      likes: "1.4k",
-      comments: 204,
-      slug: "2", // ← غيرنا إلى "2"
-    },
-    {
-      id: 3,
-      title: "A Decisive Victory for Progressive Policies",
-      description: "",
-      category: "Politics",
-      date: "October 12, 2023",
-      author: "John Doe",
-      image: "/images/blogImage.png",
-      likes: "1.4k",
-      comments: 204,
-      slug: "3", // ← غيرنا إلى "3"
-    },
-    {
-      id: 4,
-      title: "A Decisive Victory for Progressive Policies",
-      description: "",
-      category: "Politics",
-      date: "October 12, 2023",
-      author: "John Doe",
-      image: "/images/blogImage.png",
-      likes: "1.4k",
-      comments: 204,
-      slug: "4", // ← غيرنا إلى "4"
-    },
-  ],
-  3: [],
-  4: [],
-  5: [],
-};
+import { useTranslation } from "react-i18next";
+import { useRTL } from "@/hooks/useRTL";
 
 export default function TabsSection() {
-  const [activeSection, setActiveSection] = useState(1);
+  const { t } = useTranslation();
+  const { isRTL, dir } = useRTL();
+  const [activeSection, setActiveSection] = useState("ins");
+
+  const sections = [
+    { id: "ins", title: t("blog.tabs.sections.ins", "AI Insights") },
+    { id: "tre", title: t("blog.tabs.sections.tre", "Tech Trends") },
+    { id: "fut", title: t("blog.tabs.sections.fut", "Future Tech") },
+    { id: "inn", title: t("blog.tabs.sections.inn", "Innovation") },
+    { id: "gui", title: t("blog.tabs.sections.gui", "Guides") },
+  ];
+
+  // Example articles for each section
+  const articles = {
+    ins: [
+      {
+        id: 1,
+        title: t("blog.tabs.articles.ins_1.title", "Learn more about AI"),
+        description: t("blog.tabs.articles.ins_1.description", "World leaders gathered at the Global Climate Summit to discuss urgent climate action, emissions reductions, and renewable energy targets."),
+        category: t("blog.categories.environment", "Environment"),
+        date: "October 10, 2023",
+        author: t("blog.authors.jane_smith", "Jane Smith"),
+        image: "/images/blogImage.png",
+        likes: "1.4k",
+        comments: 204,
+        slug: "1",
+      },
+    ],
+    tre: [
+      {
+        id: 2,
+        title: t("blog.tabs.articles.tre_1.title", "A Decisive Victory for Progressive Policies"),
+        description: "",
+        category: t("blog.categories.politics", "Politics"),
+        date: "October 12, 2023",
+        author: t("blog.authors.john_doe", "John Doe"),
+        image: "/images/blogImage.png",
+        likes: "1.4k",
+        comments: 204,
+        slug: "2",
+      },
+      {
+        id: 3,
+        title: t("blog.tabs.articles.tre_1.title", "A Decisive Victory for Progressive Policies"),
+        description: "",
+        category: t("blog.categories.politics", "Politics"),
+        date: "October 12, 2023",
+        author: t("blog.authors.john_doe", "John Doe"),
+        image: "/images/blogImage.png",
+        likes: "1.4k",
+        comments: 204,
+        slug: "3",
+      },
+      {
+        id: 4,
+        title: t("blog.tabs.articles.tre_1.title", "A Decisive Victory for Progressive Policies"),
+        description: "",
+        category: t("blog.categories.politics", "Politics"),
+        date: "October 12, 2023",
+        author: t("blog.authors.john_doe", "John Doe"),
+        image: "/images/blogImage.png",
+        likes: "1.4k",
+        comments: 204,
+        slug: "4",
+      },
+    ],
+    fut: [],
+    inn: [],
+    gui: [],
+  };
 
   return (
-    <section className="py-24 relative overflow-hidden">
+    <section className="py-24 relative overflow-hidden" dir={dir}>
       {/* Background Effects */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-20 right-20 w-[45%] h-[45%] bg-blue-600/10 blur-[120px] rounded-full" />
-        <div className="absolute bottom-20 left-20 w-[35%] h-[35%] bg-brand-orange/10 blur-[100px] rounded-full" />
+        <div className={`absolute top-20 ${isRTL ? 'left-20' : 'right-20'} w-[45%] h-[45%] bg-blue-600/10 blur-[120px] rounded-full`} />
+        <div className={`absolute bottom-20 ${isRTL ? 'right-20' : 'left-20'} w-[35%] h-[35%] bg-brand-orange/10 blur-[100px] rounded-full`} />
       </div>
 
       <div className="main-container relative z-10">
@@ -91,11 +94,10 @@ export default function TabsSection() {
             <button
               key={sec.id}
               onClick={() => setActiveSection(sec.id)}
-              className={`px-6 py-2.5 rounded-full border transition-all duration-300 ${
-                activeSection === sec.id
-                  ? "bg-brand-sky border-brand-sky text-white shadow-lg shadow-brand-sky/20"
-                  : "border-white/20 text-white/70 hover:bg-white/10 hover:border-white/30"
-              }`}
+              className={`px-6 py-2.5 rounded-full border transition-all duration-300 cursor-pointer ${activeSection === sec.id
+                ? "bg-brand-sky border-brand-sky text-white shadow-lg shadow-brand-sky/20"
+                : "border-white/20 text-white/70 hover:bg-white/10 hover:border-white/30"
+                }`}
             >
               {sec.title}
             </button>
@@ -105,7 +107,7 @@ export default function TabsSection() {
         {/* Articles Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {articles[activeSection] && articles[activeSection].length > 0 ? (
-            articles[activeSection].map((article, index) => (
+            articles[activeSection].map((article) => (
               <div
                 key={article.id}
                 className="group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-500 hover:shadow-xl hover:shadow-brand-sky/5"
@@ -127,20 +129,20 @@ export default function TabsSection() {
                 <div className="p-5 space-y-4">
                   {/* Title - جعل العنوان قابلاً للنقر */}
                   <Link href={`/techBlog/${article.slug}`}>
-                    <h3 className="text-xl font-semibold text-white group-hover:text-brand-sky transition-colors cursor-pointer hover:text-brand-sky">
+                    <h3 className={`text-xl font-semibold text-white group-hover:text-brand-sky transition-colors cursor-pointer hover:text-brand-sky ${isRTL ? 'text-right' : 'text-left'}`}>
                       {article.title}
                     </h3>
                   </Link>
 
                   {/* Description - Only for first article */}
                   {article.description && (
-                    <p className="text-white/70 text-sm leading-relaxed">
+                    <p className={`text-white/70 text-sm leading-relaxed ${isRTL ? 'text-right' : 'text-left'}`}>
                       {article.description}
                     </p>
                   )}
 
                   {/* Meta Info */}
-                  <div className="flex flex-wrap items-center gap-2 text-xs text-white/50">
+                  <div className={`flex flex-wrap items-center gap-2 text-xs text-white/50 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <span className="px-2 py-1 bg-white/10 rounded-full">
                       {article.category}
                     </span>
@@ -151,7 +153,7 @@ export default function TabsSection() {
                   </div>
 
                   {/* Stats */}
-                  <div className="flex items-center gap-4 text-sm">
+                  <div className={`flex items-center gap-4 text-sm ${isRTL ? 'flex-row-reverse' : ''}`}>
                     <div className="flex items-center gap-1 text-white/60">
                       <Heart className="w-4 h-4 text-red-400" />
                       <span>{article.likes}</span>
@@ -167,7 +169,7 @@ export default function TabsSection() {
                     href={`/techBlog/${article.slug}`}
                     className="block w-full py-2.5 px-4 rounded-xl border border-brand-sky/30 text-brand-sky hover:bg-brand-sky hover:text-white transition-all duration-300 font-medium text-center cursor-pointer"
                   >
-                    Read More
+                    {t("blog.article.read_more", "Read More")}
                   </Link>
                 </div>
               </div>
@@ -175,7 +177,7 @@ export default function TabsSection() {
           ) : (
             <div className="col-span-full text-center py-20">
               <p className="text-white/50 text-lg">
-                No articles available in this section.
+                {t("blog.tabs.no_articles", "No articles available in this section.")}
               </p>
             </div>
           )}
@@ -184,3 +186,4 @@ export default function TabsSection() {
     </section>
   );
 }
+

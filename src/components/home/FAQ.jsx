@@ -1,14 +1,15 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { useScrollReveal } from "@/hooks/useScrollReveal";
-import { ChevronRight, ChevronLeft } from "lucide-react"; // إضافة ChevronLeft
+import { useAnimation } from "@/hooks/useAnimation";
+import { useRTL } from "@/hooks/useRTL";
+import { ChevronRight, ChevronLeft } from "lucide-react";
 import PatternBackground from "../ui/PatternBackground";
 import { gsap } from "@/lib/gsap-setup";
 import { useTranslation } from "react-i18next";
 
 export default function FAQ() {
-  const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const { t } = useTranslation();
+  const { isRTL, dir, rotate } = useRTL();
 
   const headerRef = useRef(null);
   const itemsContainerRef = useRef(null);
@@ -21,23 +22,23 @@ export default function FAQ() {
     setIsMounted(true);
   }, []);
 
-  // GSAP Animations for FAQ items
+  // GSAP Animations for FAQ items - أسرع
   useEffect(() => {
     if (!isMounted) return;
 
-    // Animate FAQ items on mount
+    // Animate FAQ items on mount - speeds أسرع
     gsap.fromTo(
       faqItemsRef.current,
       {
-        y: 50,
+        y: 30, // مسافة أقل
         opacity: 0,
       },
       {
         y: 0,
         opacity: 1,
-        duration: 0.8,
-        stagger: 0.2,
-        ease: "power3.out",
+        duration: 0.4, // من 0.8 إلى 0.4
+        stagger: 0.1, // من 0.2 إلى 0.1
+        ease: "power2.out", // easing أسرع
         scrollTrigger: {
           trigger: itemsContainerRef.current,
           start: "top 80%",
@@ -53,43 +54,43 @@ export default function FAQ() {
     };
   }, [isMounted]);
 
-  // Animate when opening/closing FAQ items
+  // Animate when opening/closing FAQ items - أسرع
   useEffect(() => {
     if (!isMounted || openIndex === -1) return;
 
-    // Animate the answer content
+    // Animate the answer content - أسرع
     gsap.fromTo(
       `.faq-answer-${openIndex}`,
       {
-        y: -20,
+        y: -15, // مسافة أقل
         opacity: 0,
       },
       {
         y: 0,
         opacity: 1,
-        duration: 0.5,
-        ease: "back.out(1.2)",
+        duration: 0.3, // من 0.5 إلى 0.3
+        ease: "power2.out", // easing أسرع
       },
     );
 
-    // Animate the arrow - rotate based on RTL
+    // Animate the arrow - أسرع
     gsap.to(arrowRefs.current[openIndex], {
-      rotation: isRTL ? -90 : 90, // عكس الاتجاه في RTL
-      duration: 0.4,
-      ease: "power2.inOut",
+      rotation: rotate(90),
+      duration: 0.25, // من 0.4 إلى 0.25
+      ease: "power1.inOut", // easing أبسط
     });
 
-    // Animate the arrow pulse
+    // Animate the arrow pulse - أسرع
     gsap.to(arrowRefs.current[openIndex], {
-      scale: 1.1,
-      duration: 0.2,
-      ease: "power2.out",
+      scale: 1.08, // تغيير أقل
+      duration: 0.12, // من 0.2 إلى 0.12
+      ease: "power1.out",
       yoyo: true,
       repeat: 1,
     });
   }, [openIndex, isMounted, isRTL]);
 
-  // Handle arrow rotation when closing
+  // Handle arrow rotation when closing - أسرع
   useEffect(() => {
     if (!isMounted) return;
 
@@ -101,51 +102,51 @@ export default function FAQ() {
     });
   }, [isMounted]);
 
-  // Scroll reveal for header
-  useScrollReveal({
+  // Scroll reveal for header using the new useAnimation hook - أسرع
+  useAnimation({
     ref: headerRef,
-    animation: "slide-up",
-    isChildren: true,
-    stagger: 0.1,
+    type: "slide-up",
+    stagger: 0.05, // من 0.1 إلى 0.05
+    delay: 0, // إزالة التأخير
     disabled: !isMounted,
   });
 
   const faqs = t("faq.questions", { returnObjects: true }) || [];
 
-  // Function to handle click and manage rotation
+  // Function to handle click and manage rotation - أسرع
   const handleQuestionClick = (index) => {
     // If closing the current open item
     if (openIndex === index) {
-      // Rotate arrow back to 0
+      // Rotate arrow back to 0 - أسرع
       gsap.to(arrowRefs.current[index], {
         rotation: 0,
-        duration: 0.4,
-        ease: "power2.inOut",
+        duration: 0.25, // من 0.4 إلى 0.25
+        ease: "power1.inOut",
       });
       setOpenIndex(-1);
     }
     // If opening a new item
     else {
-      // If there was a previously open item, rotate its arrow back to 0
+      // If there was a previously open item, rotate its arrow back to 0 - أسرع
       if (openIndex !== -1 && arrowRefs.current[openIndex]) {
         gsap.to(arrowRefs.current[openIndex], {
           rotation: 0,
-          duration: 0.4,
-          ease: "power2.inOut",
+          duration: 0.25, // من 0.4 إلى 0.25
+          ease: "power1.inOut",
         });
       }
       setOpenIndex(index);
     }
   };
 
-  // اختيار الأيقونة المناسبة حسب اللغة
+  // Pick the chevron icon based on direction
   const ArrowIcon = isRTL ? ChevronLeft : ChevronRight;
 
   return (
     <section
       id="faq"
       className="relative py-16 md:py-20 lg:py-24 overflow-hidden"
-      dir={isRTL ? 'rtl' : 'ltr'}
+      dir={dir}
     >
       <div className="absolute inset-0 pointer-events-none -z-20 opacity-100">
         <PatternBackground
@@ -177,7 +178,7 @@ export default function FAQ() {
               <div
                 key={index}
                 ref={(el) => (faqItemsRef.current[index] = el)}
-                className={`rounded-2xl md:rounded-3xl bg-white text-brand-sky font-bold text-lg md:text-xl lg:text-2xl flex flex-col transition-all duration-300 shadow-lg hover:shadow-xl ${openIndex === index ? "ring-2 ring-brand-sky" : ""
+                className={`rounded-2xl md:rounded-3xl bg-white text-brand-sky font-bold text-lg md:text-xl lg:text-2xl flex flex-col transition-all duration-200 shadow-lg hover:shadow-xl ${openIndex === index ? "ring-2 ring-brand-sky" : ""
                   }`}
               >
                 <button
@@ -185,26 +186,25 @@ export default function FAQ() {
                   className={`w-full flex items-center justify-between px-4 md:px-6 lg:px-8 py-4 md:py-5 lg:py-6 ${isRTL ? 'text-right' : 'text-left'
                     } focus:outline-none group`}
                 >
-                  <h5 className="text-brand-sky transition-all duration-300 text-sm sm:text-base md:text-lg lg:text-xl flex-1">
+                  <h5 className="text-brand-sky transition-all duration-200 text-sm sm:text-base md:text-lg lg:text-xl flex-1">
                     {faq.q}
                   </h5>
 
                   {/* Arrow button with dynamic colors and rotation */}
                   <div
                     ref={(el) => (arrowRefs.current[index] = el)}
-                    className={`rounded-full w-8 h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 flex items-center justify-center shadow-md transition-all duration-300 ${openIndex === index
-                      ? "bg-brand-sky" // Blue background when open
-                      : "bg-white" // White background when closed
+                    className={`rounded-full w-8 h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 flex items-center justify-center shadow-md transition-all duration-200 ${openIndex === index
+                      ? "bg-brand-sky"
+                      : "bg-white"
                       }`}
                     style={{
-                      transform: `rotate(${openIndex === index ? (isRTL ? -90 : 90) : 0
-                        }deg)`,
+                      transform: `rotate(${openIndex === index ? rotate(90) : 0}deg)`,
                     }}
                   >
                     <ArrowIcon
-                      className={`w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 transition-all duration-300 ${openIndex === index
-                        ? "text-white" // White arrow when open
-                        : "text-gray-400" // Gray arrow when closed
+                      className={`w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 transition-all duration-200 ${openIndex === index
+                        ? "text-white"
+                        : "text-gray-400"
                         }`}
                     />
                   </div>
@@ -212,7 +212,7 @@ export default function FAQ() {
 
                 {/* Animated answer section with GSAP */}
                 <div
-                  className={`overflow-hidden transition-all duration-500 ease-in-out ${openIndex === index
+                  className={`overflow-hidden transition-all duration-300 ease-in-out ${openIndex === index
                     ? "max-h-96 opacity-100"
                     : "max-h-0 opacity-0"
                     }`}

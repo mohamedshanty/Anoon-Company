@@ -14,16 +14,20 @@ const alexandria = Alexandria({
 });
 
 export const metadata = {
-  title: "annon",
-  description: "Welcome to annon, a simple and anonymous pastebin service.",
+  title: "Anoon",
+  description: "Welcome to Anoon, a simple and anonymous pastebin service.",
+  icons: {
+    icon: "/images/logo.png",
+    apple: "/images/logo.png",
+  },
 };
 
 export default function RootLayout({ children }) {
   const backgroundStyle = {
-    background: `
-      ${PREMIUM_GRADIENT},
-      repeating-linear-gradient(45deg, rgba(255,255,255,0.01) 0px, rgba(255,255,255,0.01) 1px, transparent 1px, transparent 2px)
-    `,
+    backgroundImage: `
+    ${PREMIUM_GRADIENT},
+    repeating-linear-gradient(45deg, rgba(255,255,255,0.01) 0px, rgba(255,255,255,0.01) 1px, transparent 1px, transparent 2px)
+  `,
     backgroundBlendMode: "overlay",
     backgroundAttachment: "fixed",
     minHeight: "100vh",

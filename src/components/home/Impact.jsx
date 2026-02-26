@@ -37,7 +37,7 @@ export default function ImpactSection() {
   return (
     <Impact patternDirection="diagonal" className="pt-10">
       <Impact.Title>
-        <span className="text-brand-sky">{t("impact_page.title.first_word")}</span>
+        <span className="text-brand-sky">{t("impact_page.title.first_word")}</span>{" "}
         <span className="text-brand-orange">{t("impact_page.title.second_word")}</span>
       </Impact.Title>
 
@@ -46,8 +46,8 @@ export default function ImpactSection() {
       </Impact.AdditionalText>
 
       <Impact.Subtitle>
-        <div>{t("impact_page.subtitle.line1")}</div>
-        <div className="text-brand-orange">{t("impact_page.subtitle.line2.highlight")}</div>
+        <h4>{t("impact_page.subtitle.line1")}</h4>
+        <h4 className="text-brand-orange">{t("impact_page.subtitle.line2.highlight")}</h4>
       </Impact.Subtitle>
 
       <Impact.Description>

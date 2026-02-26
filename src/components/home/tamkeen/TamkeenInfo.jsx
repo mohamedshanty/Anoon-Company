@@ -2,11 +2,12 @@
 
 import InfoSection from "@/components/common/InfoSection";
 import { useTranslation } from "react-i18next";
+import { useRTL } from "@/hooks/useRTL";
 import { useEffect } from "react";
 
 export default function TamkeenHelpSection() {
   const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const { isRTL } = useRTL();
 
   // تشخيص المشكلة
   useEffect(() => {
@@ -59,6 +60,8 @@ export default function TamkeenHelpSection() {
         ctaText={t("tamkeen.who_we_are.cta")}
         variant="outline"
         color="sky"
+        href="/https://tamkeeninsan.org/"
+        external={true}
       />
     </InfoSection>
   );

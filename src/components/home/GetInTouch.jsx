@@ -18,117 +18,117 @@ const GetInTouch = () => {
   const buttonRef = useRef(null);
 
   useEffect(() => {
-    // Create a timeline for better control
+    // Create a timeline for better control - مع speeds أسرع
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: sectionRef.current,
-        start: "top 70%",
+        start: "top 80%", // بدأ مبكراً قليلاً
         end: "bottom 20%",
         toggleActions: "play none none reverse",
       },
     });
 
-    // Animate title
+    // Animate title - أسرع
     tl.fromTo(
       titleRef.current,
       {
-        y: 50,
+        y: 30, // مسافة أقل
         opacity: 0,
       },
       {
         y: 0,
         opacity: 1,
-        duration: 0.8,
-        ease: "power3.out",
+        duration: 0.4, // من 0.8 إلى 0.4
+        ease: "power2.out", // easing أسرع
       },
     )
-      // Animate subtitle
+      // Animate subtitle - أسرع وتأخير أقل
       .fromTo(
         subtitleRef.current,
         {
-          y: 30,
+          y: 20, // مسافة أقل
           opacity: 0,
         },
         {
           y: 0,
           opacity: 1,
-          duration: 0.6,
-          ease: "power3.out",
+          duration: 0.3, // من 0.6 إلى 0.3
+          ease: "power2.out",
         },
-        "-=0.4",
+        "-=0.2", // تأخير أقل (كان -=0.4)
       )
-      // Animate form inputs with stagger
+      // Animate form inputs with stagger - أسرع
       .fromTo(
         formInputsRef.current,
         {
-          x: -50,
+          x: -30, // مسافة أقل
           opacity: 0,
         },
         {
           x: 0,
           opacity: 1,
-          duration: 0.6,
-          stagger: 0.15,
-          ease: "back.out(1.2)",
+          duration: 0.3, // من 0.6 إلى 0.3
+          stagger: 0.08, // stagger أقل (كان 0.15)
+          ease: "power2.out",
         },
-        "-=0.2",
+        "-=0.1", // تأخير أقل
       )
-      // Animate button with pulse effect
+      // Animate button with pulse effect - أسرع
       .fromTo(
         buttonRef.current,
         {
-          scale: 0.9,
+          scale: 0.95, // مقياس أقرب للطبيعي
           opacity: 0,
         },
         {
           scale: 1,
           opacity: 1,
-          duration: 0.5,
-          ease: "back.out(2)",
+          duration: 0.3, // من 0.5 إلى 0.3
+          ease: "back.out(1.5)", // back out أقوى
         },
       )
-      // Animate contact info
+      // Animate contact info - أسرع
       .fromTo(
         contactInfoRef.current,
         {
-          y: 30,
+          y: 20, // مسافة أقل
           opacity: 0,
         },
         {
           y: 0,
           opacity: 1,
-          duration: 0.6,
-          ease: "power3.out",
+          duration: 0.3, // من 0.6 إلى 0.3
+          ease: "power2.out",
         },
-        "-=0.2",
+        "-=0.1", // تأخير أقل
       )
-      // Animate map with rotation and scale
+      // Animate map with rotation and scale - أسرع
       .fromTo(
         mapRef.current,
         {
-          rotationY: 15,
-          scale: 0.8,
+          rotationY: 10, // دوران أقل
+          scale: 0.9, // مقياس أقرب
           opacity: 0,
         },
         {
           rotationY: 0,
           scale: 1,
           opacity: 1,
-          duration: 1,
+          duration: 0.5, // من 1.0 إلى 0.5
           ease: "power2.out",
         },
-        "-=0.4",
+        "-=0.2", // تأخير أقل
       );
 
-    // Add hover animation for form inputs
+    // Add hover animation for form inputs - مع speeds أسرع
     formInputsRef.current.forEach((input) => {
       if (input) {
         input.addEventListener("focus", () => {
           gsap.to(input, {
-            scale: 1.02,
+            scale: 1.01, // تغيير أقل
             borderColor: "#38bdf8",
-            duration: 0.3,
-            ease: "power2.out",
+            duration: 0.15, // من 0.3 إلى 0.15
+            ease: "power1.out", // easing أبسط
           });
         });
 
@@ -136,21 +136,21 @@ const GetInTouch = () => {
           gsap.to(input, {
             scale: 1,
             borderColor: "rgba(255,255,255,0.3)",
-            duration: 0.3,
-            ease: "power2.out",
+            duration: 0.15, // من 0.3 إلى 0.15
+            ease: "power1.out",
           });
         });
       }
     });
 
-    // Add hover animation for button
+    // Add hover animation for button - أسرع
     if (buttonRef.current) {
       buttonRef.current.addEventListener("mouseenter", () => {
         gsap.to(buttonRef.current, {
-          scale: 1.05,
-          boxShadow: "0 10px 25px -5px rgba(56, 189, 248, 0.5)",
-          duration: 0.3,
-          ease: "power2.out",
+          scale: 1.03, // تغيير أقل
+          boxShadow: "0 8px 20px -5px rgba(56, 189, 248, 0.4)",
+          duration: 0.15, // من 0.3 إلى 0.15
+          ease: "power1.out",
         });
       });
 
@@ -158,29 +158,29 @@ const GetInTouch = () => {
         gsap.to(buttonRef.current, {
           scale: 1,
           boxShadow: "none",
-          duration: 0.3,
-          ease: "power2.out",
+          duration: 0.15, // من 0.3 إلى 0.15
+          ease: "power1.out",
         });
       });
     }
 
-    // Add hover animation for contact info items
+    // Add hover animation for contact info items - أسرع
     const contactItems = contactInfoRef.current?.children;
     if (contactItems) {
       Array.from(contactItems).forEach((item) => {
         item.addEventListener("mouseenter", () => {
           gsap.to(item, {
-            x: 10,
-            duration: 0.3,
-            ease: "power2.out",
+            x: 5, // حركة أقل
+            duration: 0.15, // من 0.3 إلى 0.15
+            ease: "power1.out",
           });
         });
 
         item.addEventListener("mouseleave", () => {
           gsap.to(item, {
             x: 0,
-            duration: 0.3,
-            ease: "power2.out",
+            duration: 0.15, // من 0.3 إلى 0.15
+            ease: "power1.out",
           });
         });
       });
@@ -249,24 +249,12 @@ const GetInTouch = () => {
                 placeholder={t("get_in_touch.form.phone")}
                 className="w-full p-3 md:p-4 rounded-md bg-transparent border border-white/30 placeholder-gray-400 outline-none text-sm md:text-base transition-all duration-300 focus:border-brand-sky focus:ring-1 focus:ring-brand-sky"
               />
-              <select
+              <textarea
                 ref={(el) => (formInputsRef.current[3] = el)}
-                defaultValue=""
-                className="w-full p-3 md:p-4 rounded-md bg-transparent border border-white/30 outline-none text-sm md:text-base text-gray-400 transition-all duration-300 focus:border-brand-sky focus:ring-1 focus:ring-brand-sky"
-              >
-                <option value="" disabled>
-                  {t("get_in_touch.form.find_us")}
-                </option>
-                <option value="google" className="text-brand-blue bg-white">
-                  {t("get_in_touch.form.google")}
-                </option>
-                <option value="friend" className="text-brand-blue bg-white">
-                  {t("get_in_touch.form.friend")}
-                </option>
-                <option value="social" className="text-brand-blue bg-white">
-                  {t("get_in_touch.form.social")}
-                </option>
-              </select>
+                placeholder={t("get_in_touch.form.find_us")}
+                rows={4}
+                className="w-full p-3 md:p-4 rounded-md bg-transparent border border-white/30 placeholder-gray-400 outline-none text-sm md:text-base transition-all duration-300 focus:border-brand-sky focus:ring-1 focus:ring-brand-sky resize-none"
+              />
 
               <button
                 ref={buttonRef}
@@ -274,16 +262,16 @@ const GetInTouch = () => {
                 className="w-full py-3 md:py-4 bg-brand-sky hover:bg-brand-sky/90 rounded-md font-semibold text-sm md:text-base transition-all duration-300 relative overflow-hidden group"
               >
                 <span className="relative z-10">{t("get_in_touch.form.send")}</span>
-                <div className="absolute inset-0 bg-white/20 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
+                <div className="absolute inset-0 bg-white/20 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
               </button>
             </form>
 
             {/* Contact Info */}
-            <div ref={contactInfoRef} className="space-y-3 md:space-y-4">
+            <div ref={contactInfoRef}>
               <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-8 lg:gap-16">
                 <div className="flex items-center gap-3 md:gap-4 group cursor-pointer">
                   <Phone
-                    className="text-white group-hover:text-brand-sky transition-colors duration-300"
+                    className="text-white group-hover:text-brand-sky transition-colors duration-200"
                     size={20}
                   />
                   <div>
@@ -295,7 +283,7 @@ const GetInTouch = () => {
                 </div>
                 <div className="flex items-center gap-3 md:gap-4 group cursor-pointer">
                   <Mail
-                    className="text-white group-hover:text-brand-sky transition-colors duration-300"
+                    className="text-white group-hover:text-brand-sky transition-colors duration-200" // من 300 إلى 200
                     size={20}
                   />
                   <div>
@@ -316,14 +304,15 @@ const GetInTouch = () => {
           >
             <iframe
               title="Company Location"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.0921962908023!2d106.82496491476962!3d-6.202044195495702!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f5d5a5e0efb1%3A0x5c4a6f23456789ab!2sKebon%20Melati!5e0!3m2!1sen!2sid!4v1600000000000!5m2!1sen!2sid"
+              src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d850.3676314386595!2d34.4542017!3d31.5112344!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14fd7f68c560acb1%3A0xac8bdddab409dad6!2sSun%20Revolt%20Co!5e0!3m2!1sar!2s!4v1772023326422!5m2!1sar!2s"
               width="100%"
               height="100%"
               style={{ border: 0 }}
               allowFullScreen=""
               loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
               className="w-full h-full"
-            ></iframe>
+            />
           </div>
         </div>
       </div>

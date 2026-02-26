@@ -2,6 +2,7 @@
 
 import Hero from "@/components/common/Hero";
 import Button from "@/components/ui/Button";
+import Link from "next/link";
 import { useTranslation } from "react-i18next";
 
 export default function SpaceNoonTrainingHero() {
@@ -37,12 +38,16 @@ export default function SpaceNoonTrainingHero() {
       </Hero.Subtitle>
 
       <Hero.Buttons>
-        <Button variant="outline" color="orange">
-          {t("tech_training.hero.button1", "Explore Our Services")}
-        </Button>
-        <Button variant="outline" color="sky">
-          {t("tech_training.hero.button2", "Visit Our Space")}
-        </Button>
+        <Link href="https://maps.app.goo.gl/ars1q5FHPEMyP1zo6" target="_blank" rel="noopener noreferrer">
+          <Button variant="outline" color="orange">
+            {t("tech_training.hero.button1", "Explore Our Services")}
+          </Button>
+        </Link>
+        <Link href="https://maps.app.goo.gl/ars1q5FHPEMyP1zo6" target="_blank" rel="noopener noreferrer">
+          <Button variant="outline" color="sky">
+            {t("tech_training.hero.button2", "Visit Our Space")}
+          </Button>
+        </Link>
       </Hero.Buttons>
     </Hero>
   );

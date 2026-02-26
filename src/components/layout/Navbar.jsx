@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { ChevronDown, Menu, X } from "lucide-react";
 import Image from "next/image";
@@ -9,7 +10,9 @@ import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Navbar() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const pathname = usePathname();
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [programsDropdownOpen, setProgramsDropdownOpen] = useState(false);
@@ -34,6 +37,11 @@ export default function Navbar() {
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
+  // Set RTL/LTR direction based on language
+  useEffect(() => {
+    document.documentElement.dir = i18n.language === "ar" ? "rtl" : "ltr";
+  }, [i18n.language]);
+
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
     if (mobileMenuOpen) {
@@ -46,14 +54,49 @@ export default function Navbar() {
     };
   }, [mobileMenuOpen]);
 
+  const handleSectionClick = (e, sectionId) => {
+    e.preventDefault();
+    setMobileMenuOpen(false);
+
+    if (pathname === "/" || pathname === "/") {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        const offset = 80;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
+      }
+    } else {
+      const lang = i18n.language === "ar" ? "/" : "";
+      router.push(`${lang}/#${sectionId}`);
+    }
+  };
+
+  const handleProgramClick = (e, href) => {
+    e.preventDefault();
+    setMobileMenuOpen(false);
+    setProgramsDropdownOpen(false);
+
+    router.push(href);
+  };
+
   const navLinks = [
-    { name: t("nav.about"), href: "#about" },
-    { name: t("nav.programs"), href: "#programs", hasDropdown: true },
-    { name: t("nav.agency"), href: "#agency" },
-    { name: t("nav.impact"), href: "#impact" },
-    { name: t("nav.team"), href: "#teams" },
-    { name: t("nav.partner"), href: "#partner" },
-    { name: t("nav.contact"), href: "#contact" },
+    { name: t("nav.about"), href: "#about", sectionId: "about" },
+    {
+      name: t("nav.programs"),
+      href: "#programs",
+      hasDropdown: true,
+      sectionId: "programs",
+    },
+    { name: t("nav.agency"), href: "#agency", sectionId: "agency" },
+    { name: t("nav.impact"), href: "#impact", sectionId: "impact" },
+    { name: t("nav.team"), href: "#teams", sectionId: "teams" },
+    { name: t("nav.partner"), href: "#partner", sectionId: "partner" },
+    { name: t("nav.contact"), href: "#contact", sectionId: "contact" },
   ];
 
   return (
@@ -72,53 +115,52 @@ export default function Navbar() {
     >
       <div className="main-container flex items-center justify-between px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20">
         {/* Logo */}
-        <Link href="/" className="flex items-center group flex-shrink-0">
+        <Link href="/" className="flex items-center group shrink-0">
           <Image
             src="/images/logo.png"
             alt="Logo"
             width={90}
             height={40}
-            className={`w-auto h-7 sm:h-8 md:h-10 transition-transform duration-300 group-hover:scale-110 ${!scrolled ? "drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]" : ""
+            className={`w-auto h-7 sm:h-8 md:h-10 transition-transform duration-300 ${!scrolled ? "drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]" : ""
               }`}
           />
         </Link>
 
         {/* Desktop Navigation - Only visible above 1535px */}
         {isLargeScreen && (
-          <div className="flex items-center gap-4 xl:gap-6">
+          <div className="flex-1 flex items-center justify-center gap-1 xl:gap-2 mx-4 lg:mx-8">
             {navLinks.map((link) =>
               link.name === t("nav.programs") ? (
-                <div className="relative group" key={link.name}>
-                  <Link
-                    href={link.href}
-                    className="text-white text-sm xl:text-base font-medium hover:text-white/90 transition-colors duration-200 flex items-center whitespace-nowrap"
-                  >
-                    {link.name}
-                    <ChevronDown className="w-3.5 h-3.5 ml-1 rtl:mr-1 rtl:ml-0" />
-                  </Link>
-                  <div className="absolute left-0 rtl:left-auto rtl:right-0 top-full mt-2 w-40 bg-white rounded-xl shadow-lg opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto hover:opacity-100 hover:pointer-events-auto transition-opacity duration-200 z-50">
-                    <Link
-                      href="/programs/tamkeen"
-                      className="block px-4 py-2.5 text-brand-blue hover:bg-blue-50 font-medium text-sm rounded-t-xl"
-                    >
-                      {t("nav.dropdown.tamkeen")}
-                    </Link>
-                    <Link
-                      href="/programs/anoon"
-                      className="block px-4 py-2.5 text-brand-blue hover:bg-blue-50 font-medium text-sm rounded-b-xl"
-                    >
-                      {t("nav.dropdown.anoon")}
-                    </Link>
+                <div className="relative group flex-1" key={link.name}>
+                  <button className="text-white text-sm xl:text-base font-medium hover:text-white/90 transition-colors duration-200 flex items-center justify-center whitespace-nowrap px-2 py-2 min-w-[80px] lg:min-w-[100px] w-full cursor-pointer">
+                    <span>{link.name}</span>
+                    <ChevronDown className="w-3.5 h-3.5 ltr:ml-1 rtl:mr-1 shrink-0" />
+                  </button>
+                  <div className="absolute left-1/2 -translate-x-1/2 top-full w-40 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible pointer-events-none group-hover:pointer-events-auto transition-all duration-200 z-50">
+                    <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+                      <button
+                        onClick={(e) => handleProgramClick(e, "/tamkeen")}
+                        className="block w-full px-4 py-2.5 text-brand-blue hover:bg-blue-50 font-medium text-sm text-center cursor-pointer transition-colors"
+                      >
+                        {t("nav.dropdown.tamkeen")}
+                      </button>
+                      <button
+                        onClick={(e) => handleProgramClick(e, "/noonHub")}
+                        className="block w-full px-4 py-2.5 text-brand-blue hover:bg-blue-50 font-medium text-sm text-center cursor-pointer transition-colors"
+                      >
+                        {t("nav.dropdown.anoon")}
+                      </button>
+                    </div>
                   </div>
                 </div>
               ) : (
-                <Link
+                <button
                   key={link.name}
-                  href={link.href}
-                  className="text-white/80 hover:text-white font-normal transition-colors duration-200 text-sm xl:text-base whitespace-nowrap"
+                  onClick={(e) => handleSectionClick(e, link.sectionId)}
+                  className="text-white/80 hover:text-white font-normal transition-colors duration-200 text-sm xl:text-base whitespace-nowrap px-2 py-2 text-center flex-1 min-w-[60px] lg:min-w-[80px] cursor-pointer"
                 >
                   {link.name}
-                </Link>
+                </button>
               ),
             )}
           </div>
@@ -132,7 +174,7 @@ export default function Navbar() {
         )}
 
         {/* Right side actions */}
-        <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
+        <div className="flex items-center gap-2 md:gap-3 shrink-0">
           {/* Support Us Button - Hidden on mobile, visible on tablet and desktop */}
           <Link
             href="/support"
@@ -150,7 +192,7 @@ export default function Navbar() {
           {/* Menu Button - Visible on all screens below 1535px */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className={`text-white p-1.5 hover:bg-white/10 rounded-lg transition-colors ${isLargeScreen ? "hidden" : "flex"
+            className={`text-white p-1.5 hover:bg-white/10 rounded-lg transition-colors cursor-pointer ${isLargeScreen ? "hidden" : "flex"
               }`}
             aria-label="Toggle menu"
           >
@@ -186,9 +228,9 @@ export default function Navbar() {
               <div key={link.name} className="mb-1 md:mb-2">
                 <button
                   onClick={() => setProgramsDropdownOpen(!programsDropdownOpen)}
-                  className="flex items-center justify-between w-full text-left text-white/90 hover:text-white py-2.5 md:py-3 px-3 md:px-4 hover:bg-white/10 rounded-lg transition-colors text-sm md:text-base"
+                  className="flex items-center justify-between w-full text-left rtl:text-right text-white/90 hover:text-white py-2.5 md:py-3 px-3 md:px-4 hover:bg-white/10 rounded-lg transition-colors text-sm md:text-base cursor-pointer"
                 >
-                  {link.name}
+                  <span>{link.name}</span>
                   <ChevronDown
                     className={`w-4 h-4 md:w-5 md:h-5 transition-transform duration-200 ${programsDropdownOpen ? "rotate-180" : ""
                       }`}
@@ -198,33 +240,30 @@ export default function Navbar() {
                   className={`overflow-hidden transition-all duration-200 ${programsDropdownOpen ? "max-h-40" : "max-h-0"
                     }`}
                 >
-                  <div className="pl-6 md:pl-8 rtl:pr-6 rtl:pl-0 mt-1 space-y-1">
-                    <Link
-                      href="/programs/tamkeen"
-                      className="block text-white/70 hover:text-white py-2 md:py-2.5 px-3 md:px-4 hover:bg-white/10 rounded-lg transition-colors text-sm md:text-base"
-                      onClick={() => setMobileMenuOpen(false)}
+                  <div className="ltr:pl-6 rtl:pr-6 mt-1 space-y-1">
+                    <button
+                      onClick={(e) => handleProgramClick(e, "/tamkeen")}
+                      className="block w-full text-left rtl:text-right text-white/70 hover:text-white py-2 md:py-2.5 px-3 md:px-4 hover:bg-white/10 rounded-lg transition-colors text-sm md:text-base cursor-pointer"
                     >
                       {t("nav.dropdown.tamkeen")}
-                    </Link>
-                    <Link
-                      href="/programs/anoon"
-                      className="block text-white/70 hover:text-white py-2 md:py-2.5 px-3 md:px-4 hover:bg-white/10 rounded-lg transition-colors text-sm md:text-base"
-                      onClick={() => setMobileMenuOpen(false)}
+                    </button>
+                    <button
+                      onClick={(e) => handleProgramClick(e, "/noonHub")}
+                      className="block w-full text-left rtl:text-right text-white/70 hover:text-white py-2 md:py-2.5 px-3 md:px-4 hover:bg-white/10 rounded-lg transition-colors text-sm md:text-base cursor-pointer"
                     >
                       {t("nav.dropdown.anoon")}
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </div>
             ) : (
-              <Link
+              <button
                 key={link.name}
-                href={link.href}
-                className="text-white/90 hover:text-white py-2.5 md:py-3 px-3 md:px-4 hover:bg-white/10 rounded-lg transition-colors text-sm md:text-base mb-1 md:mb-2"
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={(e) => handleSectionClick(e, link.sectionId)}
+                className="text-left rtl:text-right text-white/90 hover:text-white py-2.5 md:py-3 px-3 md:px-4 hover:bg-white/10 rounded-lg transition-colors text-sm md:text-base mb-1 md:mb-2 w-full cursor-pointer"
               >
                 {link.name}
-              </Link>
+              </button>
             ),
           )}
 

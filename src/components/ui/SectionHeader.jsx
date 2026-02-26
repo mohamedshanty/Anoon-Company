@@ -1,9 +1,9 @@
-"use client";
+"use clinet";
 
 import { useRef } from "react";
-import { useScrollReveal } from "@/hooks/useScrollReveal";
 import Stars from "./Stars";
 import { cn } from "@/lib/utils";
+import useAnimation from "@/hooks/useAnimation";
 
 const maxWidthClasses = {
   sm: "max-w-sm",
@@ -37,10 +37,9 @@ export default function SectionHeader({
 }) {
   const headerRef = useRef(null);
 
-  useScrollReveal({
+  useAnimation({
     ref: headerRef,
-    animation: "slide-up",
-    isChildren: true,
+    type: "slide-up",
     stagger: 0.15,
     delay: animationDelay,
     disabled: !withAnimation,
@@ -62,7 +61,6 @@ export default function SectionHeader({
       );
     }
 
-    // معالجة highlightedWords إذا كانت مصفوفة من الكائنات
     if (subtitle.highlightedWords && Array.isArray(subtitle.highlightedWords)) {
       return (
         <h3
@@ -73,10 +71,7 @@ export default function SectionHeader({
         >
           {subtitle.prefix && <span>{subtitle.prefix} </span>}
           {subtitle.highlightedWords.map((word, idx) => (
-            <span
-              key={idx}
-              className={`${word.color || 'text-brand-sky'} text-3xl md:text-4xl lg:text-5xl font-bold`}
-            >
+            <span key={idx} className={word.color || "text-brand-sky"}>
               {word.text}{" "}
             </span>
           ))}
@@ -110,12 +105,15 @@ export default function SectionHeader({
         {title}
       </h2>
 
-      {/* العنوان الفرعي */}
       {renderSubtitle()}
 
-      {/* الوصف */}
       {description && (
-        <div className={cn("relative w-full", descriptionClassName)}>
+        <div
+          className={cn(
+            "relative w-full sm:w-[90%] md:w-[80%] lg:w-[70%] mx-auto px-4 sm:px-6",
+            descriptionClassName,
+          )}
+        >
           <div className="space-y-2 md:space-y-3">
             {Array.isArray(description) ? (
               description.map((line, idx) => (

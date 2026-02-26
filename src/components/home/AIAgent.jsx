@@ -3,32 +3,35 @@ import { useRef } from "react";
 import { Check } from "lucide-react";
 import Image from "next/image";
 import Button from "../ui/Button";
-import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useAnimation } from "@/hooks/useAnimation";
+import { useRTL } from "@/hooks/useRTL";
 import PatternBackground from "../ui/PatternBackground";
 import AIAgentImage from "../ui/AIAgentImage";
 
 import { useTranslation } from "react-i18next";
+import Link from "next/link";
 
 export default function AIAgent() {
   const { t, ready } = useTranslation();
+  const { isRTL, dir, translateX } = useRTL();
   const leftSide = useRef(null);
   const rightSide = useRef(null);
   const featuresRef = useRef(null);
 
-  useScrollReveal({
+  // Slide left/right respects RTL: text side always slides in from the content side
+  useAnimation({
     ref: leftSide,
-    animation: "slide-left",
+    type: "slide-left",
   });
 
-  useScrollReveal({
+  useAnimation({
     ref: rightSide,
-    animation: "slide-right",
+    type: "slide-right",
   });
 
-  useScrollReveal({
+  useAnimation({
     ref: featuresRef,
-    animation: "slide-up",
-    isChildren: true,
+    type: "slide-up",
     stagger: 0.15,
     start: "top 75%",
   });
@@ -100,20 +103,24 @@ export default function AIAgent() {
             </div>
 
             <div className="pt-4 md:pt-6 lg:pt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-5 lg:gap-6">
-              <Button
-                variant="filled"
-                color="sky"
-                className="w-full sm:w-auto px-4 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3 text-sm sm:text-base md:text-lg"
-              >
-                {t("ai_agent.btn_meeting")}
-              </Button>
-              <Button
-                variant="outline"
-                color="sky"
-                className="w-full sm:w-auto px-4 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3 text-sm sm:text-base md:text-lg"
-              >
-                {t("ai_agent.btn_more")}
-              </Button>
+              <Link href={"https://meet.google.com"} target="_blank" rel="noopener noreferrer">
+                <Button
+                  variant="filled"
+                  color="sky"
+                  className="w-full sm:w-auto px-4 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3 text-sm sm:text-base md:text-lg"
+                >
+                  {t("ai_agent.btn_meeting")}
+                </Button>
+              </Link>
+              <Link href={"/techAgency"}>
+                <Button
+                  variant="outline"
+                  color="sky"
+                  className="w-full sm:w-auto px-4 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3 text-sm sm:text-base md:text-lg"
+                >
+                  {t("ai_agent.btn_more")}
+                </Button>
+              </Link>
             </div>
           </div>
 

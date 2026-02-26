@@ -2,26 +2,26 @@
 
 import { useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useRouter } from "next/navigation"; // للتنقل
 import ProgramCard from "../ui/ProgramCard";
-import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useAnimation } from "@/hooks/useAnimation";
 import SectionHeader from "../ui/SectionHeader";
 
 export default function Programs() {
   const { t, ready } = useTranslation();
+  const router = useRouter(); // للتنقل البرمجي
   const headerRef = useRef(null);
   const cardsContainerRef = useRef(null);
 
-  useScrollReveal({
+  useAnimation({
     ref: headerRef,
-    animation: "slide-up",
-    isChildren: true,
+    type: "slide-up",
     stagger: 0.15,
   });
 
-  useScrollReveal({
+  useAnimation({
     ref: cardsContainerRef,
-    animation: "slide-up",
-    isChildren: true,
+    type: "slide-up",
     stagger: 0.3,
     start: "top 75%",
   });
@@ -30,7 +30,7 @@ export default function Programs() {
     return null;
   }
 
-  // استخدام القيم الثابتة مباشرة بدلاً من الترجمة للمسارات
+
   const cards = [
     {
       logo: {
@@ -50,8 +50,11 @@ export default function Programs() {
       description: t("programs_page.cards.0.description"),
       primaryBtnText: t("programs_page.cards.0.primary_btn"),
       primaryBtnColor: "green",
+      primaryBtnHref: "https://calendar.google.com/",
+      primaryBtnExternal: true,
       accentGlowClass: "from-green-500/5",
       secondaryBtnText: t("programs_page.cards.0.secondary_btn"),
+      secondaryBtnHref: "/tamkeen",
     },
     {
       logo: {
@@ -71,13 +74,15 @@ export default function Programs() {
       description: t("programs_page.cards.1.description"),
       primaryBtnText: t("programs_page.cards.1.primary_btn"),
       primaryBtnColor: "orange",
+      primaryBtnHref: "https://calendar.google.com/",
+      primaryBtnExternal: true,
       accentGlowClass: "from-brand-orange/5",
       logoContainerClassName: "pb-8 mb-3",
       secondaryBtnText: t("programs_page.cards.1.secondary_btn"),
+      secondaryBtnHref: "/noonHub",
     },
   ];
 
-  // جلب subtitle_words مع التأكد من وجودها
   const subtitleWords = t("programs_page.subtitle_words", { returnObjects: true });
   const subtitleWordsArray = Array.isArray(subtitleWords) ? subtitleWords : [
     { text: "Tailor", color: "text-brand-sky" },
@@ -86,7 +91,6 @@ export default function Programs() {
     { text: "Tech Sector", color: "text-brand-orange" }
   ];
 
-  // جلب description مع التأكد من وجودها
   const descriptionArray = t("programs_page.description", { returnObjects: true });
   const descriptionLines = Array.isArray(descriptionArray) ? descriptionArray : [
     "At Anoon LLC, we believe there is no shame in falling.",

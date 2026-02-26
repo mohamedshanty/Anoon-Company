@@ -3,6 +3,7 @@
 import Hero from "@/components/common/Hero";
 import Button from "@/components/ui/Button";
 import { useTranslation } from "react-i18next";
+import Link from "next/link";
 
 export default function MainHero() {
   const { t } = useTranslation();
@@ -33,12 +34,17 @@ export default function MainHero() {
       </Hero.Subtitle>
 
       <Hero.Buttons>
-        <Button variant="outline" color="orange">
-          {t("hero.button_services")}
-        </Button>
-        <Button variant="outline" color="sky">
-          {t("hero.button_meeting")}
-        </Button>
+        <Link href="/techAgency" >
+          <Button variant="outline" color="orange">
+            {t("hero.button_services")}
+          </Button>
+        </Link>
+
+        <Link href="https://meet.google.com" target="_blank" rel="noopener noreferrer">
+          <Button variant="outline" color="sky">
+            {t("hero.button_meeting")}
+          </Button>
+        </Link>
       </Hero.Buttons>
     </Hero>
   );

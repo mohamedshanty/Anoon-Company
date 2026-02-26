@@ -4,10 +4,12 @@ import Hero from "@/components/common/Hero";
 import Button from "@/components/ui/Button";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
+import { useRTL } from "@/hooks/useRTL";
+import Link from "next/link";
 
 export default function TamkeenHero() {
-  const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const { t } = useTranslation();
+  const { isRTL } = useRTL();
 
   return (
     <Hero>
@@ -35,13 +37,17 @@ export default function TamkeenHero() {
         </p>
       </Hero.Subtitle>
 
-      <Hero.Buttons>
-        <Button variant="outline" color="orange">
-          {t("tamkeen.hero.button1", "Visit Our Website")}
-        </Button>
-        <Button variant="outline" color="sky">
-          {t("tamkeen.hero.button2", "Donate Now")}
-        </Button>
+      <Hero.Buttons >
+        <Link href="https://tamkeeninsan.org/" target="_blank" rel="noopener noreferrer">
+          <Button variant="outline" color="orange">
+            {t("tamkeen.hero.button1", "Visit Our Website")}
+          </Button>
+        </Link>
+        <Link href="https://tamkeeninsan.org/" target="_blank" rel="noopener noreferrer">
+          <Button variant="outline" color="sky">
+            {t("tamkeen.hero.button2", "Donate Now")}
+          </Button>
+        </Link>
       </Hero.Buttons>
     </Hero>
   );

@@ -3,10 +3,11 @@
 import Testimonials from "../common/Testimonials";
 import SectionHeader from "../ui/SectionHeader";
 import { useTranslation } from "react-i18next";
+import { useRTL } from "@/hooks/useRTL";
 
 const SuccessStories = () => {
-  const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const { t } = useTranslation();
+  const { isRTL } = useRTL();
 
   return (
     <section className="py-24 bg-transparent relative overflow-hidden">

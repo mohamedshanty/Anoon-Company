@@ -1,11 +1,12 @@
 "use client";
 
 import { useTranslation } from "react-i18next";
+import { useRTL } from "@/hooks/useRTL";
 import TrainingProgramsSection from "../common/TrainingProgramsSection";
 
 const TrainingPrograms = () => {
-  const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const { t } = useTranslation();
+  const { isRTL } = useRTL();
 
   return (
     <TrainingProgramsSection
@@ -26,6 +27,7 @@ const TrainingPrograms = () => {
         imageAlt: t("tech_training.training.card.image_alt", "Graphic Design Course"),
         buttonText: t("tech_training.training.card.button", "Visit Us"),
         buttonColor: "sky",
+        buttonHref: "/spaceNoonTraining",
       }}
       isRTL={isRTL}
     />

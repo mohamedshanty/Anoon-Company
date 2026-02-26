@@ -4,6 +4,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import Button from "../ui/Button";
 import Image from "next/image";
+import Link from "next/link";
 
 const TrainingProgramCard = ({
   title,
@@ -17,6 +18,7 @@ const TrainingProgramCard = ({
   onButtonClick,
   imageWidth = 400,
   imageHeight = 250,
+  buttonHref,
   isRTL = false,
 }) => {
   const { i18n } = useTranslation();
@@ -46,7 +48,7 @@ const TrainingProgramCard = ({
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6" dir={rtl ? 'rtl' : 'ltr'}>
       <div className="shadow-[0_0_6px_rgba(255,255,255,0.6)] rounded-xl overflow-hidden">
-        <div className={`flex flex-col md:flex-row items-start gap-6 sm:gap-8 p-6 sm:p-8 lg:p-10 ${rtl ? 'md:flex-row' : ''
+        <div className={`flex flex-col md:flex-row items-start gap-6 sm:gap-8 p-6 sm:p-8 lg:p-10 ${rtl ? 'md:flex-row-reverse' : ''
           }`}>
           {/* Image - Responsive sizing */}
           <div className="flex justify-center w-full md:w-1/2">
@@ -62,27 +64,38 @@ const TrainingProgramCard = ({
             </div>
           </div>
 
-          {/* Content */}
+          {/* Content - مع عرض أصغر للوصف */}
           <div className={`w-full md:w-1/2 text-white h-full flex flex-col justify-between ${rtl ? 'text-right' : ''
             }`}>
             <div>
               {renderTitle()}
-              <p className={`text-gray-300 text-sm sm:text-base md:text-lg leading-6 sm:leading-7 md:leading-8 ${rtl ? 'text-right' : ''
+              <p className={`text-gray-300 text-sm sm:text-base leading-6 sm:leading-7 max-w-md ${rtl ? 'text-right mr-0' : 'text-left ml-0'
                 }`}>
                 {description}
               </p>
             </div>
 
-            <div className={`mt-6 sm:mt-8 md:mt-10 flex ${rtl ? 'justify-start' : 'justify-start'
-              }`}>
-              <Button
-                variant={buttonVariant}
-                color={buttonColor}
-                className="px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base rounded-full w-full sm:w-auto"
-                onClick={onButtonClick}
-              >
-                {buttonText}
-              </Button>
+            <div className="mt-6 md:mt-8">
+              {buttonHref ? (
+                <Link href={buttonHref}>
+                  <Button
+                    variant="outline"
+                    color={buttonColor}
+                    className="px-6 md:px-8 py-2 md:py-3 text-sm md:text-base"
+                  >
+                    {buttonText}
+                  </Button>
+                </Link>
+              ) : (
+                <Button
+                  variant="outline"
+                  color={buttonColor}
+                  className="px-6 md:px-8 py-2 md:py-3 text-sm md:text-base"
+                  onClick={onButtonClick}
+                >
+                  {buttonText}
+                </Button>
+              )}
             </div>
           </div>
         </div>

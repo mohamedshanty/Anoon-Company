@@ -4,11 +4,12 @@ import InfoSection from "@/components/common/InfoSection";
 import { useTranslation } from "react-i18next";
 
 export default function MianInfoSection() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === 'ar';
 
   return (
     <InfoSection
-      id="anoon"
+      id="about"
       layout="image-right"
       backgroundGlow="default"
       image="/images/whoWeAre.png"
@@ -24,6 +25,7 @@ export default function MianInfoSection() {
             highlight={t("who_we_are_page.title_line1_highlight")}
             color="text-brand-sky"
             highlightColor="text-brand-orange"
+            className={`${isRTL ? "mb-5" : ""}`}
           />
           <InfoSection.TitleLine
             text={t("who_we_are_page.title_line2_text")}
@@ -38,22 +40,26 @@ export default function MianInfoSection() {
         {t("who_we_are_page.description")}
       </InfoSection.Description>
 
-      <InfoSection.Features>
+      <InfoSection.Features className={isRTL ? "rtl-gap" : ""}>
         <InfoSection.Feature
           icon="/images/missile.png"
           title={t("who_we_are_page.feature1_title")}
           text={t("who_we_are_page.feature1_desc")}
           color="text-brand-orange"
           ctaText={t("who_we_are_page.feature1_cta") || "Know More"}
+          href="/techAgency"
         />
+
         <InfoSection.Feature
           icon="/images/Lump.png"
           title={t("who_we_are_page.feature2_title")}
           text={t("who_we_are_page.feature2_desc")}
           color="text-brand-sky"
-          className="lg:-mr-12 xl:-mr-16"
+          className={isRTL ? "" : "lg:-mr-12 xl:-mr-16"}
           ctaText={t("who_we_are_page.feature2_cta") || "Know More"}
+          href="/techAgency"
         />
+
       </InfoSection.Features>
     </InfoSection>
   );

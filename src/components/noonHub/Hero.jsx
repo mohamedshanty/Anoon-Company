@@ -3,10 +3,12 @@
 import Hero from "@/components/common/Hero";
 import Button from "@/components/ui/Button";
 import { useTranslation } from "react-i18next";
+import { useRTL } from "@/hooks/useRTL";
+import Link from "next/link";
 
 export default function NoonHero() {
-  const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const { t } = useTranslation();
+  const { isRTL } = useRTL();
 
   return (
     <Hero>
@@ -36,9 +38,11 @@ export default function NoonHero() {
       </Hero.Subtitle>
 
       <Hero.Buttons>
-        <Button variant="outline" color="orange">
-          {t("noon_hub.hero.button", "Explore Our Services")}
-        </Button>
+        <Link href="/noonSpace">
+          <Button variant="outline" color="orange">
+            {t("noon_hub.hero.button", "Explore Our Services")}
+          </Button>
+        </Link>
       </Hero.Buttons>
     </Hero>
   );

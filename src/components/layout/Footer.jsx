@@ -13,12 +13,12 @@ import {
 import Image from "next/image";
 import Button from "../ui/Button";
 import { useTranslation } from "react-i18next";
+import { useRTL } from "@/hooks/useRTL";
 
 export default function Footer() {
-  const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const { t } = useTranslation();
+  const { isRTL, dir } = useRTL();
 
-  // روابط التواصل الاجتماعي
   const socialLinks = [
     { icon: Facebook, href: "https://facebook.com", label: "Facebook" },
     { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
@@ -26,80 +26,54 @@ export default function Footer() {
     { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
   ];
 
-  // معلومات الاتصال
-  const contactInfo = {
-    address: t("footer.address", "8819 Ohio St. South Gate, CA 90280"),
-    addressFormatted: {
-      line1: t("footer.address.line1", "8819 Ohio St. South Gate,"),
-      line2: t("footer.address.line2", "CA 90280"),
-    },
-    email: t("footer.email", "Ourstudio@hello.com"),
-    phone: t("footer.phone", "+1 386-688-3295"),
-    phoneFormatted: t("footer.phone.formatted", "386-688-3295 1+"),
-  };
-
   return (
-    <footer
-      className="pt-20 pb-10"
-      dir={isRTL ? 'rtl' : 'ltr'}
-    >
+    <footer className="pt-20 pb-10" dir={dir}>
       <div className="main-container">
         <div className="grid lg:grid-cols-4 gap-12 mb-16">
           {/* Brand Column */}
-          <div className="col-span-1 lg:col-span-1">
+          <div className="col-span-1 lg:col-span-1 text-center md:text-start">
             <Link href="/" className="inline-block mb-6">
               <Image
-                src="/images/footer.png"
+                src="/images/logo.png"
                 alt={t("footer.logo_alt", "Anoon Logo")}
-                width={200}
-                height={200}
-                className="w-auto h-auto"
+                width={100}
+                height={100}
               />
             </Link>
             <p className="text-white leading-relaxed mb-6 max-w-sm">
-              {t("footer.description", "OurStudio is a digital agency UI/UX Design and Website Development located in Ohio, United States of America")}
+              {t("footer.description")}
             </p>
           </div>
 
           {/* Get in Touch */}
           <div>
             <h4 className="text-white font-bold text-lg mb-8">
-              {t("footer.get_in_touch", "تواصل معنا")}
+              {t("footer.get_in_touch", "Get in Touch")}
             </h4>
             <ul className="space-y-6">
-              <li className={`flex items-start gap-3 ${isRTL ? 'flex-row' : ''}`}>
+              <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" />
                 <div className="flex flex-col text-white">
-                  {isRTL ? (
-                    <>
-                      <span>{t("footer.address.line1", "8819 Ohio St. South Gate,")}</span>
-                      <span>{t("footer.address.line2", "CA 90280")}</span>
-                    </>
-                  ) : (
-                    <span>{contactInfo.address}</span>
-                  )}
+                  <span>{t("footer.addressFormatted.line1")}</span>
+                  <span>{t("footer.addressFormatted.line2")}</span>
                 </div>
               </li>
 
-              <li className={`flex items-start gap-3 ${isRTL ? 'flex-row' : ''}`}>
-                <Mail className="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" />
-                <span className="text-white">{contactInfo.email}</span>
+              <li className="flex items-center gap-3">
+                <Mail className="w-5 h-5 text-orange-500 flex-shrink-0" />
+                <span className="text-white">{t("footer.email")}</span>
               </li>
 
-              <li className={`flex items-start gap-3 ${isRTL ? 'flex-row' : ''}`}>
-                <Phone className="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" />
-                {isRTL ? (
-                  <span className="text-white">{t("footer.phone.formatted", "386-688-3295 1+")}</span>
-                ) : (
-                  <span className="text-white">{contactInfo.phone}</span>
-                )}
+              <li className="flex items-center gap-3">
+                <Phone className="w-5 h-5 text-orange-500 flex-shrink-0" />
+                <span className="text-white" dir="ltr">{t("footer.phone")}</span>
               </li>
             </ul>
           </div>
 
-          {/* Social & Description - الجزء المعدل */}
+          {/* Social & Description */}
           <div>
-            <div className={`flex gap-4 mb-8 ${isRTL ? 'justify-start' : ''}`}>
+            <div className="flex gap-4 mb-8">
               {socialLinks.map((social, i) => (
                 <a
                   key={i}
@@ -113,27 +87,26 @@ export default function Footer() {
                 </a>
               ))}
             </div>
-            <p className={`text-white text-sm leading-relaxed ${isRTL ? 'text-right' : ''}`}>
-              {t("footer.social_description", "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod.")}
+            <p className="text-white text-sm leading-relaxed">
+              {t("footer.social_description")}
             </p>
           </div>
 
           {/* Newsletter */}
           <div>
             <h4 className="text-white font-bold text-lg mb-8">
-              {t("footer.newsletter.title", "Join a Newsletter")}
+              {t("footer.newsletter.title", "Join our Newsletter")}
             </h4>
             <div className="space-y-4">
-              <p className={`text-white text-sm ${isRTL ? 'text-right' : ''}`}>
-                {t("footer.newsletter.label", "Your Email")}
+              <p className="text-white text-sm">
+                {t("footer.newsletter.label", "Email Address")}
               </p>
               <div className="relative">
                 <input
                   type="email"
                   placeholder={t("footer.newsletter.placeholder", "Enter Your Email")}
-                  className={`w-full px-4 py-3 bg-transparent border border-gray-300 rounded-lg text-white placeholder-white focus:outline-none focus:border-orange-500 transition-colors ${isRTL ? 'text-right' : ''
+                  className={`w-full px-4 py-3 bg-transparent border border-gray-300 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-orange-500 transition-colors ${isRTL ? "text-right" : ""
                     }`}
-                  dir={isRTL ? 'rtl' : 'ltr'}
                 />
                 <div className="mt-5">
                   <Button
@@ -150,9 +123,9 @@ export default function Footer() {
         </div>
 
         {/* Bottom Copyright */}
-        <div className="pt-8 border-t border-gray-800">
-          <p className={`text-white text-sm ${isRTL ? 'text-center' : ''}`}>
-            {t("footer.copyright", "Copyright ANoon LLC")}
+        <div className="pt-8 border-t border-gray-800 text-center flex flex-col items-center gap-2">
+          <p className={`text-white text-sm font-medium`}>
+            {t("footer.copyright", { year: new Date().getFullYear() })}
           </p>
         </div>
       </div>

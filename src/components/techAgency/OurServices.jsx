@@ -3,35 +3,37 @@ import { useRef } from "react";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
 import Button from "../ui/Button";
-import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useAnimation } from "@/hooks/useAnimation";
+import { useRTL } from "@/hooks/useRTL";
 import PatternBackground from "../ui/PatternBackground";
 import Stars from "../ui/Stars";
+import Link from "next/link";
 
 export default function OurServices() {
-  const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const { t } = useTranslation();
+  const { isRTL, dir } = useRTL();
 
   const leftSide = useRef(null);
   const rightSide = useRef(null);
   const buttonRef = useRef(null);
 
-  useScrollReveal({
+  useAnimation({
     ref: leftSide,
-    animation: "slide-left",
+    type: "slide-left",
   });
 
-  useScrollReveal({
+  useAnimation({
     ref: rightSide,
-    animation: "slide-right",
+    type: "slide-right",
   });
 
-  useScrollReveal({
+  useAnimation({
     ref: buttonRef,
-    animation: "slide-up",
+    type: "slide-up",
   });
 
   return (
-    <section className="py-24 relative overflow-hidden" dir={isRTL ? 'rtl' : 'ltr'}>
+    <section className="py-24 relative overflow-hidden" dir={dir}>
       {/* Background Pattern */}
       <PatternBackground direction="default" translateY="-translate-y-30" />
 
@@ -80,13 +82,15 @@ export default function OurServices() {
 
             {/* Button */}
             <div ref={buttonRef} className="pt-4">
-              <Button
-                variant="outline"
-                color="sky"
-                className="text-lg px-8 py-4"
-              >
-                {t("tech_agency.our_services.button", "Book A Meeting")}
-              </Button>
+              <Link href="/techBlog">
+                <Button
+                  variant="outline"
+                  color="sky"
+                  className="text-lg px-8 py-4"
+                >
+                  {t("tech_agency.our_services.button", "Book A Meeting")}
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

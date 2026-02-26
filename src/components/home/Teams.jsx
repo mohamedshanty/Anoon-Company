@@ -3,7 +3,8 @@
 import { useRef, useEffect, useState } from "react";
 import Image from "next/image";
 import { gsap } from "@/lib/gsap-setup";
-import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { useAnimation } from "@/hooks/useAnimation";
+import { useRTL } from "@/hooks/useRTL";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, EffectCoverflow } from "swiper/modules";
 import { useTranslation } from "react-i18next";
@@ -11,6 +12,7 @@ import { useTranslation } from "react-i18next";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/effect-coverflow";
+import SectionHeader from "../ui/SectionHeader";
 
 // ===== DATA =====
 const members = [
@@ -38,23 +40,23 @@ const members = [
 
 export default function Teams() {
   const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const { isRTL, dir, rotate } = useRTL();
 
   const headerRef = useRef(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
   const [swiper, setSwiper] = useState(null);
-  const [swiperKey, setSwiperKey] = useState(0); // لإعادة تهيئة السلايدر عند تغيير اللغة
+  const [swiperKey, setSwiperKey] = useState(0);
 
-  // إعادة تهيئة السلايدر عند تغيير اللغة
+  // Re-initialize swiper when language changes
   useEffect(() => {
-    setSwiperKey(prev => prev + 1);
+    setSwiperKey((prev) => prev + 1);
   }, [i18n.language]);
 
   // ===== SCROLL REVEAL =====
-  useScrollReveal({
+  useAnimation({
     ref: headerRef,
-    threshold: 0.1,
-    staggerChildren: 0.2,
+    type: "slide-up",
+    stagger: 0.2,
   });
 
   // ===== HOVER ANIMATION =====
@@ -83,13 +85,13 @@ export default function Teams() {
   // ترجمة الأدوار
   const getTranslatedRole = (role) => {
     const roles = {
-      "CTO": t("teams.roles.cto", "CTO"),
-      "CEO": t("teams.roles.ceo", "CEO"),
+      CTO: t("teams.roles.cto", "CTO"),
+      CEO: t("teams.roles.ceo", "CEO"),
       "Lead Developer": t("teams.roles.lead_developer", "Lead Developer"),
-      "Designer": t("teams.roles.designer", "Designer"),
-      "Marketing": t("teams.roles.marketing", "Marketing"),
+      Designer: t("teams.roles.designer", "Designer"),
+      Marketing: t("teams.roles.marketing", "Marketing"),
       "Product Manager": t("teams.roles.product_manager", "Product Manager"),
-      "Developer": t("teams.roles.developer", "Developer"),
+      Developer: t("teams.roles.developer", "Developer"),
     };
     return roles[role] || role;
   };
@@ -98,22 +100,48 @@ export default function Teams() {
     <section id="teams" className="py-24 relative overflow-hidden">
       <div className="main-container relative z-10">
         {/* ===== HEADER ===== */}
-        <div
+        <SectionHeader
           ref={headerRef}
-          className={`text-center max-w-3xl mx-auto mb-16 ${isRTL ? 'rtl' : ''}`}
-        >
-          <h1 className="text-white font-bold text-4xl mb-5">
-            {t("teams.title", "Our Teams")}
-          </h1>
-          <p className="text-white text-lg font-light">
-            {t("teams.subtitle", "When everything fell, we stood up.")}
-          </p>
-        </div>
+          title={t("teams.title", "Our Teams")}
+          subtitle={{
+            highlightedWords: [
+              {
+                text: t("teams.subtitle_word1", "When"),
+                color: "text-brand-sky",
+              },
+              {
+                text: t("teams.subtitle_word2", "Everything"),
+                color: "text-brand-orange",
+              },
+              {
+                text: t("teams.subtitle_word3", "Fell,"),
+                color: "text-brand-sky",
+              },
+              {
+                text: t("teams.subtitle_word4", "We"),
+                color: "text-brand-orange",
+              },
+              {
+                text: t("teams.subtitle_word5", "Stood"),
+                color: "text-brand-sky",
+              },
+              {
+                text: t("teams.subtitle_word6", "Up."),
+                color: "text-brand-orange",
+              },
+            ],
+          }}
+          maxWidth="4xl"
+          align="center"
+          starsCount={0}
+          titleClassName=""
+          subtitleClassName="mt-4"
+        />
 
         {/* ===== CENTERED SWIPER SLIDER ===== */}
-        <div className={`slider-container ${isRTL ? 'rtl-slider' : ''}`}>
+        <div className={`slider-container ${isRTL ? "rtl-slider" : ""}`}>
           <Swiper
-            key={swiperKey} // مفتاح لإعادة التهيئة عند تغيير اللغة
+            key={swiperKey}
             modules={[Navigation, EffectCoverflow]}
             slidesPerView={"auto"}
             centeredSlides={true}
@@ -121,9 +149,9 @@ export default function Teams() {
             speed={800}
             effect={"coverflow"}
             grabCursor={true}
-            dir={isRTL ? 'rtl' : 'ltr'} // اتجاه السلايدر
+            dir={dir} // direction from useRTL
             coverflowEffect={{
-              rotate: isRTL ? -15 : 15, // عكس اتجاه الدوران في RTL
+              rotate: rotate(15), // useRTL's rotate() flips for RTL
               stretch: 0,
               depth: 200,
               modifier: 2.5,
@@ -195,7 +223,9 @@ export default function Teams() {
           </Swiper>
 
           {/* Custom Navigation Arrows - معكوسة في RTL */}
-          <div className={`navigation-wrapper ${isRTL ? 'rtl-navigation' : ''}`}>
+          <div
+            className={`navigation-wrapper ${isRTL ? "rtl-navigation" : ""}`}
+          >
             <button
               className="swiper-button-prev"
               aria-label={isRTL ? "السابقة" : "Previous slide"}
@@ -205,7 +235,7 @@ export default function Teams() {
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
-                style={{ transform: isRTL ? 'rotate(180deg)' : 'none' }}
+                style={{ transform: isRTL ? "rotate(180deg)" : "none" }}
               >
                 <path
                   strokeLinecap="round"
@@ -224,7 +254,7 @@ export default function Teams() {
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
-                style={{ transform: isRTL ? 'rotate(180deg)' : 'none' }}
+                style={{ transform: isRTL ? "rotate(180deg)" : "none" }}
               >
                 <path
                   strokeLinecap="round"
@@ -246,7 +276,7 @@ export default function Teams() {
         .slider-container {
           position: relative;
           width: 100%;
-          max-width: 1400px;
+          // max-width: 1400px;
           margin: 0 auto;
           padding: 40px 60px;
         }
@@ -254,10 +284,6 @@ export default function Teams() {
         /* أنماط RTL */
         .rtl-slider {
           direction: rtl;
-        }
-
-        .rtl-navigation {
-          direction: ltr; /* للحفاظ على اتجاه الأزرار */
         }
 
         :global(.teams-swiper) {

@@ -3,10 +3,11 @@
 import Hero from "@/components/common/Hero";
 import AiPrompt from "@/components/ui/AiPrompt";
 import { useTranslation } from "react-i18next";
+import { useRTL } from "@/hooks/useRTL";
 
 export default function TechAgencyHero() {
-  const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const { t } = useTranslation();
+  const { isRTL } = useRTL();
 
   return (
     <Hero>

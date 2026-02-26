@@ -2,17 +2,18 @@
 
 import InfoSection from "@/components/common/InfoSection";
 import { useTranslation } from "react-i18next";
+import { useRTL } from "@/hooks/useRTL";
 
 export default function AnoonInfoSection() {
-  const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const { t } = useTranslation();
+  const { isRTL } = useRTL();
 
   return (
     <InfoSection
       id="network"
       layout="image-right"
       backgroundGlow="none"
-      image="/images/whoWeAre.png"
+      image="/images/noonHub.png"
       imageAlt={t("noon_hub.info.image_alt", "Network illustration")}
       customClass={`flex flex-col items-start justify-start ${isRTL ? 'rtl' : ''}`}
     >

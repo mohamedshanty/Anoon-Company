@@ -2,13 +2,14 @@
 
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { useRTL } from "@/hooks/useRTL";
 import SectionHeader from "../ui/SectionHeader";
 import Button from "../ui/Button";
 import Stars from "../ui/Stars";
 
 const OurSpace = () => {
-  const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const { t } = useTranslation();
+  const { isRTL, dir } = useRTL();
 
   // جلب مصفوفة الكلمات المميزة
   const subtitleWords = t("space_noon.our_space.subtitle_words", {
@@ -27,7 +28,7 @@ const OurSpace = () => {
   ].filter(item => item.text); // إزالة أي عناصر فارغة
 
   return (
-    <section className="relative py-24 overflow-hidden" dir={isRTL ? 'rtl' : 'ltr'}>
+    <section className="relative py-24 overflow-hidden" dir={dir}>
       <Stars count={20} zIndex={-5} opacity={0.8} />
 
       <div className="main-container flex flex-col items-center">

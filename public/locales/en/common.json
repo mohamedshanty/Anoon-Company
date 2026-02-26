@@ -90,7 +90,7 @@
       "quote": "I Believe That i was my destiny, i am amazing UX Designer yet i learned a lot of empathy from the staff i needed a place to feel where i belong and i found it here, Now i am in a better place, happy where i am and still rising and i will never give up"
     }
   },
-     "impact_page": {
+  "impact_page": {
     "title": {
       "first_word": "Our",
       "second_word": "Impact"
@@ -122,7 +122,9 @@
     "feature1_title": "Tech Solution",
     "feature1_desc": "We deliver scalable, secure & impact-oriented systems.",
     "feature2_title": "Social",
-    "feature2_desc": "Our Programs provide infrastructure and skills."
+    "feature2_desc": "Our Programs provide infrastructure and skills.",
+    "feature1_cta": "Know More",
+    "feature2_cta": "Know More"
   },
   "ai_agent": {
     "title_main": "AI Agent",
@@ -165,7 +167,7 @@
       "name": "Name *",
       "email": "Email",
       "phone": "Phone number *",
-      "find_us": "How did you find us?",
+      "find_us": "What are you thinking?",
       "google": "Google",
       "friend": "Friend",
       "social": "Social Media",
@@ -194,7 +196,7 @@
     "footer": "Your email is safe with us, we don't spam."
   },
   "tamkeen": {
-     "hero": {
+    "hero": {
       "title_part1": "Enabling",
       "title_highlight": "The Future Generation",
       "title_part2": "With",
@@ -203,7 +205,7 @@
       "button1": "Visit Our Website",
       "button2": "Donate Now"
     },
-     "who_we_are": {
+    "who_we_are": {
       "image_alt": "Tamkeen illustration",
       "subtitle": "Who We Are",
       "title_line1": {
@@ -226,7 +228,7 @@
       }
     }
   },
-   "noon_hub": {
+  "noon_hub": {
     "hero": {
       "title_part1": "Providing",
       "title_part2_prefix": "A",
@@ -250,34 +252,25 @@
       "description": "Your Network is everything, no matter how Professional you are if you don't have the right people it doesn't matter, with us we give you the network of your dream",
       "cta": "Visit Our Location"
     },
-     "our_space": {
+    "our_space": {
       "title": "Our Space",
-      "subtitle_words": [
-        "Your",
-        "Future",
-        "Network"
-      ],
+      "subtitle_words": ["Your", "Future", "Network"],
       "description": "We provide everything your need in our space. We give you the skill you have to acquire to get in the digital work space with professional guidance regarding Freelancing & Networking, and the platform to be able to achieve it.",
       "button": "Visit Our Location"
     },
     "tech_training": {
-    "training": {
-      "title": "Training Programs",
-      "subtitle_words": [
-        "Your",
-        "Way",
-        "For The",
-        "Market Need"
-      ],
-      "description": "We give you the tools you need to start your journey as graphic design, from the design fundamental, using the professional software.",
-      "card": {
-        "title": "Graphic Design Course",
-        "description": "We give you the tools you need to start your journey as graphic design, from the design fundamental, using the professional software for the business, and we give you the guidance for showcasing your portfolio and the freelance to start your journey not just a skills.",
-        "image_alt": "Graphic Design Course",
-        "button": "Visit Us"
+      "training": {
+        "title": "Training Programs",
+        "subtitle_words": ["Your", "Way", "For The", "Market Need"],
+        "description": "We give you the tools you need to start your journey as graphic design, from the design fundamental, using the professional software.",
+        "card": {
+          "title": "Graphic Design Course",
+          "description": "We give you the tools you need to start your journey as graphic design, from the design fundamental, using the professional software for the business, and we give you the guidance for showcasing your portfolio and the freelance to start your journey not just a skills.",
+          "image_alt": "Graphic Design Course",
+          "button": "Visit Us"
+        }
       }
     }
-  }
   },
   "space_noon": {
     "hero": {
@@ -289,7 +282,7 @@
       "button1": "Explore Our Services",
       "button2": "Visit Our Space"
     },
-     "problem": {
+    "problem": {
       "image_alt": "Problem illustration",
       "title_line1": "What is",
       "title_line2_part1": "The",
@@ -327,7 +320,7 @@
       "description": "As technology advances, workloads are increasing and manual processes are no longer efficient. Integrating AI agents into the workplace is the most effective way to save time, reduce costs, and improve productivity.",
       "button": "Book A Free Consulting"
     },
-   "problem": {
+    "problem": {
       "image_alt": "Problem illustration",
       "title_line1": "What is",
       "title_line2_part1": "The",
@@ -336,14 +329,9 @@
       "question_mark": "??",
       "description": "We have a generation that have suffered from the war financially and don't have any skill but the desire and the capability to learn."
     },
-     "training": {
+    "training": {
       "title": "Our Training Programs",
-      "subtitle_words": [
-        "Tailor",
-        "Crafted",
-        "For The",
-        "Tech Sector"
-      ],
+      "subtitle_words": ["Tailor", "Crafted", "For The", "Tech Sector"],
       "description": "We give you the tools you need to start your journey as graphic design, from the design fundamental, using the professional software for the business, and we give you the guidance for showcasing your portfolio and the freelance to start your journey not just a skills.",
       "card": {
         "title": "Graphic Design Course",
@@ -386,13 +374,30 @@
     }
   },
   "blog": {
-   "hero": {
+    "hero": {
       "title_part1": "Learn More",
       "title_part2": "Everyday About",
       "title_highlight": "Artificial Intelligence"
     },
     "tabs": {
-      "section": "Section"
+      "section": "Section",
+      "no_articles": "No articles available in this section.",
+      "sections": {
+        "ins": "AI Insights",
+        "tre": "Tech Trends",
+        "fut": "Future Tech",
+        "inn": "Innovation",
+        "gui": "Guides"
+      },
+      "articles": {
+        "ins_1": {
+          "title": "Learn more about AI",
+          "description": "World leaders gathered at the Global Climate Summit to discuss urgent climate action, emissions reductions, and renewable energy targets."
+        },
+        "tre_1": {
+          "title": "A Decisive Victory for Progressive Policies"
+        }
+      }
     },
     "article": {
       "introduction": "Introduction",
@@ -416,24 +421,32 @@
     }
   },
   "footer": {
-    "logo_alt": "Anoon",
-    "description": "OurStudio is a digital agency UI/UX Design and Website Development located in Ohio, United States of America.",
-    "get_in_touch": "Get in Touch",
-    "address": {
-      "line1": "8819 Ohio St. South Gate,",
-      "line2": "CA 90280"
+    "address": "Palestine, Gaza Strip, Omer Almokhtar Street",
+    "addressFormatted": {
+      "line1": "Palestine, Gaza Strip, Omer Almokhtar Street",
+      "line2": "Alqassas Building, First Floor"
     },
     "email": "info@anoonsolutions.com",
-    "phone": {
-      "formatted": "+1 386-688-3295"
-    },
-    "social_description": "We build innovative digital solutions that help shape the future.",
+    "phone": "+972 567098648",
+    "phoneFormatted": "+972 567098648",
+    "get_in_touch": "Get in Touch",
     "newsletter": {
       "title": "Join a Newsletter",
       "label": "Your Email",
       "placeholder": "Enter Your Email",
       "button": "Subscribe"
     },
-    "copyright": "Copyright ANoon LLC"
+    "logo_alt": "Anoon Logo",
+    "description": "Anoon is a digital agency for UI/UX Design and Website Development located in Palestine, Gaza Strip.",
+    "social_description": "Follow us on social media for updates.",
+    "copyright": "Copyright Anoon LLC"
+  },
+  "errors": {
+    "404": {
+      "title": "Lost in the Digital Void?",
+      "description": "The page you're looking for has vanished into thin air. Don't worry, even the best astronauts get lost sometimes.",
+      "back_home": "Back to Base",
+      "previous_page": "Go Back"
+    }
   }
 }

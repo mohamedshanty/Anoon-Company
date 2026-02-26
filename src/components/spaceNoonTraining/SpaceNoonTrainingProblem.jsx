@@ -2,10 +2,11 @@
 
 import InfoSection from "@/components/common/InfoSection";
 import { useTranslation } from "react-i18next";
+import { useRTL } from "@/hooks/useRTL";
 
 const SpaceNoonTrainingProblemSection = () => {
-  const { t, i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
+  const { t } = useTranslation();
+  const { isRTL } = useRTL();
 
   return (
     <InfoSection

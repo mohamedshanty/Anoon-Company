@@ -3,9 +3,9 @@
 import React, { useRef } from "react";
 import Image from "next/image";
 import { ChevronRight } from "lucide-react";
-import { useScrollReveal } from "@/hooks/useScrollReveal";
-import PatternBackground from "../ui/PatternBackground";
+import { useAnimation } from "@/hooks/useAnimation";
 import Button from "../ui/Button";
+import PatternBackground from "../ui/PatternBackground";
 
 export default function InfoSection({
   children,
@@ -21,41 +21,35 @@ export default function InfoSection({
   const textRef = useRef(null);
   const imageRef = useRef(null);
   const featuresRef = useRef(null);
-  const secondTextRef = useRef(null);
   const ctaRef = useRef(null);
 
-  useScrollReveal({
+  useAnimation({
     ref: textRef,
-    animation: layout === "image-left" ? "slide-right" : "slide-left",
+    type: layout === "image-left" ? "slide-right" : "slide-left",
   });
-  useScrollReveal({
+  useAnimation({
     ref: imageRef,
-    animation: layout === "image-left" ? "slide-left" : "slide-right",
+    type: layout === "image-left" ? "slide-left" : "slide-right",
   });
-  useScrollReveal({
+  useAnimation({
     ref: featuresRef,
-    animation: "slide-up",
-    isChildren: true,
+    type: "slide-up",
     stagger: 0.2,
     start: "top 70%",
   });
-  useScrollReveal({ ref: secondTextRef, animation: "fade-in", delay: 0.3 });
-  useScrollReveal({ ref: ctaRef, animation: "fade-in", delay: 0.4 });
-
-  const glowClasses = {
-    default:
-      "before:absolute before:inset-0 before:bg-gradient-to-r before:from-brand-blue/5 before:to-transparent",
-    orange:
-      "before:absolute before:inset-0 before:bg-gradient-to-r before:from-brand-orange/5 before:to-transparent",
-    blue: "before:absolute before:inset-0 before:bg-gradient-to-r before:from-brand-sky/5 before:to-transparent",
-    none: "",
-  };
+  useAnimation({ ref: ctaRef, type: "fade", delay: 0.4 });
 
   const layoutClasses = {
     "image-right": "flex-col lg:flex-row",
     "image-left": "flex-col lg:flex-row-reverse",
     centered: "flex-col items-center text-center",
-    split: "grid lg:grid-cols-2 gap-8 md:gap-12",
+  };
+  // Define background glow classes
+  const glowClasses = {
+    default: "bg-glow-default",
+    orange: "bg-glow-orange",
+    blue: "bg-glow-blue",
+    // Add more as needed
   };
 
   return (
@@ -69,7 +63,7 @@ export default function InfoSection({
         <div
           className={`flex ${layoutClasses[layout]} items-center xl:items-start gap-6 md:gap-8 lg:gap-10 xl:gap-16`}
         >
-          {/* النص الرئيسي */}
+          {/* Main text */}
           <div
             ref={textRef}
             className={`space-y-4 md:space-y-5 lg:space-y-6 pt-4 md:pt-6 lg:pt-8 xl:pt-10 ${
@@ -88,7 +82,7 @@ export default function InfoSection({
             })}
           </div>
 
-          {/* الصورة */}
+          {/* Image */}
           {image && layout !== "centered" && (
             <div
               ref={imageRef}
@@ -204,6 +198,7 @@ InfoSection.Feature = function InfoFeature({
   ctaText = "Know More",
   onCtaClick,
   className = "",
+  href,
 }) {
   return (
     <div
@@ -232,6 +227,7 @@ InfoSection.Feature = function InfoFeature({
           {text}
         </p>
         <button
+          href={href || "#"}
           onClick={onCtaClick}
           className={`font-bold text-xs md:text-sm flex items-center gap-1 hover:gap-2 transition-all cursor-pointer ${color}`}
         >
