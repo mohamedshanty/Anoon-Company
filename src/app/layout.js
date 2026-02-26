@@ -1,10 +1,12 @@
 import { Alexandria } from "next/font/google";
 import "./globals.css";
 import { PREMIUM_GRADIENT } from "@/lib/constants";
+import { ChatProvider } from "@/context/ChatContext";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { I18nProvider } from "./providers";
 import "../i18n";
+import ChatWidget from "@/components/chat/ChatWidget";
 
 const alexandria = Alexandria({
   subsets: ["latin", "arabic"],
@@ -40,9 +42,12 @@ export default function RootLayout({ children }) {
         style={backgroundStyle}
       >
         <I18nProvider>
-          <Navbar />
-          <main className="relative z-10">{children}</main>
-          <Footer />
+          <ChatProvider>
+            <Navbar />
+            <main className="relative z-10">{children}</main>
+            <ChatWidget />
+            <Footer />
+          </ChatProvider>
         </I18nProvider>
       </body>
     </html>

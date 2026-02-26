@@ -205,9 +205,9 @@ export default function Teams() {
                       }}
                     />
 
-                    {/* Overlay with info - يظهر عند hover */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end justify-center pb-8">
-                      <div className="text-center transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                    {/* Overlay with info - يظهر عند hover (Desktop Only) */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 lg:group-hover:opacity-100 transition-all duration-500 hidden lg:flex items-end justify-center pb-8">
+                      <div className="text-center transform translate-y-4 lg:group-hover:translate-y-0 transition-transform duration-500">
                         <h5 className="text-white font-bold text-xl capitalize mb-1">
                           {member.name}
                         </h5>
@@ -216,6 +216,16 @@ export default function Teams() {
                         </p>
                       </div>
                     </div>
+                  </div>
+
+                  {/* Info under the image - (Tablet/Mobile Only) */}
+                  <div className="mt-5 text-center lg:hidden w-full">
+                    <h5 className="text-white font-bold text-xl capitalize mb-1">
+                      {member.name}
+                    </h5>
+                    <p className="text-brand-sky text-sm font-semibold uppercase tracking-wider">
+                      {getTranslatedRole(member.role)}
+                    </p>
                   </div>
                 </div>
               </SwiperSlide>
@@ -332,7 +342,8 @@ export default function Teams() {
 
         :global(.team-card) {
           width: 280px;
-          height: 380px;
+          height: auto;
+          min-height: 380px;
           position: relative;
           cursor: pointer;
           transition: all 0.3s ease;
@@ -421,7 +432,7 @@ export default function Teams() {
 
           :global(.team-card) {
             width: 240px;
-            height: 340px;
+            height: auto;
           }
         }
 
@@ -432,7 +443,7 @@ export default function Teams() {
 
           :global(.team-card) {
             width: 220px;
-            height: 300px;
+            height: auto;
           }
         }
 
@@ -443,7 +454,7 @@ export default function Teams() {
 
           :global(.team-card) {
             width: 200px;
-            height: 280px;
+            height: auto;
           }
 
           :global(.swiper-button-prev),
@@ -460,7 +471,7 @@ export default function Teams() {
 
           :global(.team-card) {
             width: 260px;
-            height: 360px;
+            height: auto;
           }
 
           :global(.teams-swiper .swiper-slide-active) {

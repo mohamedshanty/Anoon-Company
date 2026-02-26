@@ -171,7 +171,9 @@
       "google": "Google",
       "friend": "Friend",
       "social": "Social Media",
-      "send": "SEND NOW"
+      "send": "SEND NOW",
+      "sending": "Sending...",
+      "success": "Message sent successfully!"
     },
     "contact": {
       "phone": "PHONE",
@@ -349,7 +351,8 @@
       "title_part3": "With",
       "title_highlight": "Tech Agency",
       "prompt_placeholder": "Ask about our services, projects, or how we can help you!",
-      "prompt_button": "Ask Now"
+      "prompt_button": "Ask Now",
+      "ask_ai_button": "Ask Ai"
     },
     "intelligent_solution": {
       "title": "Complex Problem Requires",
@@ -448,5 +451,13 @@
       "back_home": "Back to Base",
       "previous_page": "Go Back"
     }
+  },
+  "chatbot": {
+    "title": "Anoon Assistant",
+    "welcome": "Hello! How can I help you today?",
+    "placeholder": "Type your message...",
+    "error": "Something went wrong. Please try again.",
+    "loading": "AI is thinking...",
+    "send": "Send"
   }
 }

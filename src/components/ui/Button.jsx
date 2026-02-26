@@ -18,6 +18,8 @@ const Button = ({
         "border-2 border-brand-orange text-brand-orange hover:bg-brand-orange hover:text-white shadow-lg shadow-brand-orange/5 hover:shadow-brand-orange/20 hover:-translate-y-0.5",
       "outline-plain":
         "border-2 border-brand-orange text-brand-orange hover:shadow-lg hover:shadow-brand-orange/20 hover:-translate-y-0.5",
+      premium:
+        "bg-linear-to-r from-brand-orange to-orange-600 text-white shadow-xl shadow-brand-orange/20 hover:scale-105 active:scale-95 border border-white/20",
     },
     green: {
       filled:
@@ -50,6 +52,8 @@ const Button = ({
         "border-2 border-brand-sky text-white hover:bg-brand-sky/10 shadow-lg shadow-brand-sky/10 hover:shadow-brand-sky/30 hover:-translate-y-0.5",
       "outline-plain":
         "border-2 border-brand-sky text-white hover:shadow-lg hover:shadow-brand-sky/20 hover:-translate-y-0.5",
+      premium:
+        "bg-linear-to-r from-brand-sky to-blue-600 text-white shadow-xl shadow-brand-sky/20 hover:scale-105 active:scale-95 border border-white/20",
     },
   };
 
@@ -57,10 +61,15 @@ const Button = ({
 
   return (
     <button
-      className={`${baseStyles} ${variantStyles} ${className}`}
+      className={`${baseStyles} ${variantStyles} group relative overflow-hidden ${className}`}
       {...props}
     >
-      {children}
+      {variant === "premium" && (
+        <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+      )}
+      <div className="relative z-10 flex items-center justify-center gap-3">
+        {children}
+      </div>
     </button>
   );
 };

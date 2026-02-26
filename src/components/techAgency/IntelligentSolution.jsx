@@ -76,7 +76,7 @@ export default function IntelligentSolution() {
             <div ref={buttonRef} className="pt-0">
               <Link href="/techBlog">
                 <Button
-                  variant="outline"
+                  variant="premium"
                   color="sky"
                   className="text-lg px-8 py-4"
                 >

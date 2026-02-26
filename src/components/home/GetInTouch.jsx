@@ -2,9 +2,10 @@
 
 import { Mail } from "lucide-react";
 import { Phone } from "lucide-react";
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { gsap } from "@/lib/gsap-setup";
 import { useTranslation } from "react-i18next";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const GetInTouch = () => {
   const { t } = useTranslation();
@@ -16,6 +17,46 @@ const GetInTouch = () => {
   const contactInfoRef = useRef(null);
   const mapRef = useRef(null);
   const buttonRef = useRef(null);
+  const recaptchaRef = useRef(null);
+  const [status, setStatus] = useState({ loading: false, success: false, error: null });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus({ loading: true, success: false, error: null });
+
+    const recaptchaToken = recaptchaRef.current?.getValue();
+    if (!recaptchaToken) {
+      setStatus({ loading: false, success: false, error: "Please verify that you are not a robot." });
+      return;
+    }
+
+    const formData = {
+      name: formInputsRef.current[0].value,
+      email: formInputsRef.current[1].value,
+      phone: formInputsRef.current[2].value,
+      message: formInputsRef.current[3].value,
+      recaptchaToken
+    };
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setStatus({ loading: false, success: true, error: null });
+        formRef.current.reset();
+        recaptchaRef.current?.reset();
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to send message');
+      }
+    } catch (error) {
+      setStatus({ loading: false, success: false, error: error.message });
+    }
+  };
 
   useEffect(() => {
     // Create a timeline for better control - مع speeds أسرع
@@ -230,7 +271,11 @@ const GetInTouch = () => {
             </div>
 
             {/* Form */}
-            <form ref={formRef} className="space-y-4 md:space-y-5 lg:space-y-6">
+            <form
+              ref={formRef}
+              onSubmit={handleSubmit}
+              className="space-y-4 md:space-y-5 lg:space-y-6"
+            >
               <input
                 ref={(el) => (formInputsRef.current[0] = el)}
                 type="text"
@@ -256,14 +301,38 @@ const GetInTouch = () => {
                 className="w-full p-3 md:p-4 rounded-md bg-transparent border border-white/30 placeholder-gray-400 outline-none text-sm md:text-base transition-all duration-300 focus:border-brand-sky focus:ring-1 focus:ring-brand-sky resize-none"
               />
 
+              {process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && (
+                <div className="flex justify-center md:justify-start">
+                  <ReCAPTCHA
+                    ref={recaptchaRef}
+                    sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+                    theme="dark"
+                  />
+                </div>
+              )}
+
               <button
                 ref={buttonRef}
                 type="submit"
-                className="w-full py-3 md:py-4 bg-brand-sky hover:bg-brand-sky/90 rounded-md font-semibold text-sm md:text-base transition-all duration-300 relative overflow-hidden group"
+                disabled={status.loading}
+                className="w-full py-3 md:py-4 bg-brand-sky hover:bg-brand-sky/90 rounded-md font-semibold text-sm md:text-base transition-all duration-300 relative overflow-hidden group disabled:opacity-50"
               >
-                <span className="relative z-10">{t("get_in_touch.form.send")}</span>
+                <span className="relative z-10">
+                  {status.loading ? t("get_in_touch.form.sending", "Sending...") : t("get_in_touch.form.send")}
+                </span>
                 <div className="absolute inset-0 bg-white/20 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
               </button>
+
+              {status.success && (
+                <p className="text-green-500 text-sm mt-2">
+                  {t("get_in_touch.form.success", "Message sent successfully!")}
+                </p>
+              )}
+              {status.error && (
+                <p className="text-red-500 text-sm mt-2">
+                  {status.error}
+                </p>
+              )}
             </form>
 
             {/* Contact Info */}

@@ -1,19 +1,22 @@
 "use client";
 
 import Hero from "@/components/common/Hero";
-import AiPrompt from "@/components/ui/AiPrompt";
 import { useTranslation } from "react-i18next";
 import { useRTL } from "@/hooks/useRTL";
+import { useChat } from "@/context/ChatContext";
+import { Bot } from "lucide-react";
+import Button from "../ui/Button";
 
 export default function TechAgencyHero() {
   const { t } = useTranslation();
   const { isRTL } = useRTL();
+  const { openChat } = useChat();
 
   return (
     <Hero>
       <Hero.Title className="-mt-13">
         <div className={`flex flex-col gap-3 ${isRTL ? 'text-right' : ''}`}>
-          <span className="text-sm tracking-wider text-brand-white bg-brand-white/8 py-3 px-4 sm:px-8 md:px-20 rounded-full w-max mx-auto font-light">
+          <span className="text-sm tracking-wider text-brand-white bg-brand-white/8 py-3 px-4 sm:px-8 md:px-20 rounded-full w-max mx-auto font-light border border-white/10">
             {t("tech_agency.hero.badge", "The New Area Of Technology")}
           </span>
 
@@ -37,10 +40,17 @@ export default function TechAgencyHero() {
       </Hero.Title>
 
       <Hero.Actions>
-        <AiPrompt
-          placeholder={t("tech_agency.hero.prompt_placeholder", "Ask about our services, projects, or how we can help you!")}
-          buttonText={t("tech_agency.hero.prompt_button", "Ask Now")}
-        />
+        <Button
+          variant="premium"
+          color="sky"
+          onClick={openChat}
+          className="text-lg px-10"
+        >
+          <div className="p-2 bg-white/10 rounded-lg">
+            <Bot size={22} className="group-hover:rotate-12 transition-transform animate-pulse" />
+          </div>
+          <span>{t("tech_agency.hero.ask_ai_button", "Ask Ai")}</span>
+        </Button>
       </Hero.Actions>
     </Hero>
   );
