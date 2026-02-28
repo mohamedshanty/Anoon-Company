@@ -1,4 +1,3 @@
-import { Alexandria } from "next/font/google";
 import "./globals.css";
 import { PREMIUM_GRADIENT } from "@/lib/constants";
 import { ChatProvider } from "@/context/ChatContext";
@@ -6,14 +5,12 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { I18nProvider } from "./providers";
 import "../i18n";
-import ChatWidget from "@/components/chat/ChatWidget";
+import ChatWidgetClient from "@/components/chat/ChatWidgetClient";
 
-const alexandria = Alexandria({
-  subsets: ["latin", "arabic"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
-  variable: "--font-alexandria",
-  display: "swap",
-});
+// Custom font variable for fallback
+const alexandria = {
+  variable: "font-alexandria",
+};
 
 export const metadata = {
   title: "Anoon",
@@ -38,14 +35,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" dir="ltr">
       <body
-        className={`${alexandria.variable} antialiased`}
+        className="antialiased overflow-x-hidden"
         style={backgroundStyle}
       >
         <I18nProvider>
           <ChatProvider>
             <Navbar />
             <main className="relative z-10">{children}</main>
-            <ChatWidget />
+            <ChatWidgetClient />
             <Footer />
           </ChatProvider>
         </I18nProvider>

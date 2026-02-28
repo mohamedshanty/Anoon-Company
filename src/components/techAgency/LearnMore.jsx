@@ -26,17 +26,17 @@ export default function LearnMore() {
     type: "slide-right",
   });
 
-  useAnimation({
-    ref: buttonRef,
-    type: "slide-up",
-  });
+  // useAnimation({
+  //   ref: buttonRef,
+  //   type: "slide-up",
+  // });
 
   return (
     <section className="py-24 relative overflow-hidden" dir={dir}>
       <div className={`flex flex-col lg:flex-row items-center ${isRTL ? 'lg:flex-row-reverse' : ''}`}>
         <div
           ref={leftSide}
-          className={`w-full lg:w-1/2 flex ${isRTL ? 'lg:justify-end' : 'lg:justify-start'} justify-center`}
+          className={`w-full lg:w-1/2 flex ${isRTL ? 'justify-end lg:justify-end' : 'justify-start lg:justify-start'}`}
         >
           <div className="relative w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] md:w-[400px] md:h-[400px] lg:w-[450px] lg:h-[450px] xl:w-[500px] xl:h-[500px] 2xl:w-[550px] 2xl:h-[550px]">
             <div className="relative w-full h-full z-10">
@@ -44,7 +44,7 @@ export default function LearnMore() {
                 src="/images/knowladge-book.png"
                 alt={t("tech_agency.learn_more.image_alt", "Knowledge Book")}
                 fill
-                className="object-contain drop-shadow-[0_0_45px_rgba(96,180,255,0.55)]"
+                className={`object-contain drop-shadow-[0_0_45px_rgba(96,180,255,0.55)] ${isRTL ? 'object-right' : 'object-left'}`}
                 sizes="(max-width: 640px) 280px, (max-width: 768px) 350px, (max-width: 1024px) 400px, (max-width: 1280px) 450px, 500px"
               />
             </div>
@@ -55,10 +55,10 @@ export default function LearnMore() {
           ref={rightSide}
           className="w-full lg:w-1/2"
         >
-          <div className={`main-container ${isRTL ? 'lg:pr-0' : 'lg:pl-0'}`}>
+          <div className={`w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-20 lg:max-w-7xl ${isRTL ? 'lg:pr-0' : 'lg:pl-0'}`}>
             <div className={`space-y-6 lg:space-y-8 ${isRTL ? 'text-right' : ''}`}>
               <div className="space-y-4 lg:space-y-6">
-                <h3 className="text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight">
+                <h3 className=" font-semibold leading-tight">
                   <span className="text-brand-white">
                     {t("tech_agency.learn_more.title_part1", "Learn More About")}
                   </span>

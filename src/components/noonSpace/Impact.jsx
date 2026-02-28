@@ -54,10 +54,10 @@ const ImpactSection = () => {
       </Impact.AdditionalText>
 
       <Impact.Subtitle>
-        <div>{t("impact_page.subtitle.line1")}</div>
-        <div className="text-brand-orange">
+        <h4>{t("impact_page.subtitle.line1")}</h4>
+        <h4 className="text-brand-orange">
           {t("impact_page.subtitle.line2.highlight")}
-        </div>
+        </h4>
       </Impact.Subtitle>
 
       <Impact.Description>{t("impact_page.description")}</Impact.Description>

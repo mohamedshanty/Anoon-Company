@@ -2,10 +2,12 @@
 
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import "../../i18n";
 
 export default function LanguageSwitcher() {
     const { i18n } = useTranslation();
+    const router = useRouter();
     const [currentLang, setCurrentLang] = useState(i18n.language || "en");
 
     useEffect(() => {
@@ -18,6 +20,7 @@ export default function LanguageSwitcher() {
     const toggleLanguage = () => {
         const newLang = currentLang === "en" ? "ar" : "en";
         i18n.changeLanguage(newLang);
+        router.refresh(); // Important: updates Server Components
     };
 
     return (
@@ -27,6 +30,17 @@ export default function LanguageSwitcher() {
             aria-label={currentLang === "en" ? "Switch to Arabic" : "Switch to English"}
         >
             {currentLang === "en" ? (
+                /* Palestinian Flag */
+                <svg
+                    className="w-6 h-4 lg:w-7 lg:h-5 rounded-[2px] shadow-lg"
+                    viewBox="0 0 60 30"
+                >
+                    <rect width="60" height="10" fill="black" />
+                    <rect y="10" width="60" height="10" fill="white" />
+                    <rect y="20" width="60" height="10" fill="#007A3D" />
+                    <polygon points="0,0 20,15 0,30" fill="#EE2A35" />
+                </svg>
+            ) : (
                 /* UK Flag */
                 <svg
                     className="w-6 h-4 lg:w-7 lg:h-5 rounded-[2px] shadow-lg"
@@ -44,17 +58,6 @@ export default function LanguageSwitcher() {
                     />
                     <path d="M30,0 v30 M0,15 h60" stroke="#fff" strokeWidth="10" />
                     <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" strokeWidth="6" />
-                </svg>
-            ) : (
-                /* Palestinian Flag */
-                <svg
-                    className="w-6 h-4 lg:w-7 lg:h-5 rounded-[2px] shadow-lg"
-                    viewBox="0 0 60 30"
-                >
-                    <rect width="60" height="10" fill="black" />
-                    <rect y="10" width="60" height="10" fill="white" />
-                    <rect y="20" width="60" height="10" fill="#007A3D" />
-                    <polygon points="0,0 20,15 0,30" fill="#EE2A35" />
                 </svg>
             )}
         </button>

@@ -1,3 +1,9 @@
+@import url("https://fonts.googleapis.com/css2?family=Alexandria:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+:root {
+  --font-alexandria: "Alexandria", sans-serif;
+}
+
 /* Main container utility class for consistent layout */
 .main-container {
   width: 100%;
@@ -75,9 +81,9 @@
   --font-sans: var(--font-alexandria);
   --color-brand-blue: #203c8b;
   --color-brand-blue-alpha: #203c8b80;
-  --color-brand-orange: #f99d1b;
-  --color-brand-white: #f9f9f9;
-  --color-brand-sky: #60b4ff;
+  --color-brand-orange: #ff9d00;
+  --color-brand-white: #ffffff;
+  --color-brand-sky: #4dabff;
   --color-brand-green: #219652;
   --color-noon-bg: #030303;
   --color-noon-card: #0a0a0a;
@@ -334,7 +340,7 @@
 
   0%,
   100% {
-    transform: translateY(0px);
+    transform: translateY(0);
   }
 
   50% {
@@ -342,69 +348,9 @@
   }
 }
 
-.perspective-1000 {
-  perspective: 1000px;
-}
-
-.transform-gpu {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-}
-
-@keyframes blob {
-  0% {
-    transform: translate(0px, 0px) scale(1);
-  }
-
-  33% {
-    transform: translate(30px, -50px) scale(1.1);
-  }
-
-  66% {
-    transform: translate(-20px, 20px) scale(0.9);
-  }
-
-  100% {
-    transform: translate(0px, 0px) scale(1);
-  }
-}
-
-.animate-blob {
-  animation: blob 7s infinite;
-}
-
-.animation-delay-2000 {
-  animation-delay: 2s;
-}
-
-.animation-delay-4000 {
-  animation-delay: 4s;
-}
-
-.transform-gpu {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000px;
-}
-
-.perspective-1000 {
-  perspective: 1000px;
-}
-
-@keyframes float {
-
-  0%,
-  100% {
-    transform: translateY(0) rotate(0deg);
-  }
-
-  50% {
-    transform: translateY(-15px) rotate(5deg);
-  }
-}
-
 .animate-float {
-  animation: float 5s ease-in-out infinite;
+  animation: float 6s ease-in-out infinite;
+  will-change: transform;
 }
 
 .slider img {
@@ -428,5 +374,41 @@
 
   .flex-1 {
     flex: 1 1 0%;
+  }
+}
+
+/* Add to your global.css or tailwind.css */
+
+@layer utilities {
+
+  /* Custom scrollbar */
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 20px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+  }
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
   }
 }

@@ -33,14 +33,14 @@ export default function SpaceNoonHero() {
         </p>
       </Hero.Subtitle>
 
-      <Hero.Buttons>
+      <Hero.Buttons className="mt-10">
 
-        <Link href={""}>
+        <Link href="https://tamkeeninsan.org/" target="_blank" rel="noopener noreferrer">
           <Button variant="outline" color="orange">
             {t("space_noon.hero.button1", "Explore Our Services")}
           </Button>
         </Link>
-        <Link href={""}>
+        <Link href="https://tamkeeninsan.org/" target="_blank" rel="noopener noreferrer">
           <Button variant="outline" color="sky">
             {t("space_noon.hero.button2", "Visit Our Space")}
           </Button>

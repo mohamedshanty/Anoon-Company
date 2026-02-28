@@ -225,7 +225,21 @@
   },
   "teams": {
     "title": "فريقنا",
-    "subtitle": "عندما سقط كل شيء، نهضنا."
+    "subtitle_word1": "عندما",
+    "subtitle_word2": "سقط",
+    "subtitle_word3": "كل شيء،",
+    "subtitle_word4": "نحن",
+    "subtitle_word5": "نهضنا",
+    "subtitle_word6": "من جديد.",
+    "roles": {
+      "cto": "المسؤول التقني الأول",
+      "ceo": "المدير التنفيذي",
+      "lead_developer": "كبير المطورين",
+      "designer": "مصمم",
+      "marketing": "تسويق",
+      "product_manager": "مدير منتج",
+      "developer": "مطور"
+    }
   },
   "newsletter": {
     "badge": "احصل على نشرتنا الأسبوعية",
@@ -491,6 +505,20 @@
     "placeholder": "اكتب رسالتك هنا...",
     "error": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
     "loading": "الذكاء الاصطناعي يفكر...",
-    "send": "إرسال"
+    "send": "إرسال",
+    "status": "متصل · رد فوري",
+    "actions": {
+      "services": "ما هي خدماتكم؟",
+      "contact": "كيف يمكنني التواصل معكم؟",
+      "pricing": "ما هي أسعاركم؟"
+    },
+    "labels": {
+      "services": "💼 الخدمات",
+      "contact": "📞 التواصل",
+      "pricing": "💰 الأسعار"
+    },
+    "tooltip": "هل تحتاج مساعدة؟",
+    "user": "أنت",
+    "assistant": "المساعد"
   }
 }

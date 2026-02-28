@@ -62,6 +62,7 @@ const Button = ({
   return (
     <button
       className={`${baseStyles} ${variantStyles} group relative overflow-hidden ${className}`}
+      aria-label={props["aria-label"] || (typeof children === "string" ? children : undefined)}
       {...props}
     >
       {variant === "premium" && (

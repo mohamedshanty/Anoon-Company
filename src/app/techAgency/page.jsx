@@ -1,5 +1,5 @@
-import GetInTouch from "@/components/home/GetInTouch";
-import Newsletter from "@/components/home/Newsletter";
+import GetInTouch from "@/components/common/GetInTouch";
+import Newsletter from "@/components/common/Newsletter";
 import TechAgencyHero from "@/components/techAgency/Hero";
 import IntelligentSolution from "@/components/techAgency/IntelligentSolution";
 import LearnMore from "@/components/techAgency/LearnMore";

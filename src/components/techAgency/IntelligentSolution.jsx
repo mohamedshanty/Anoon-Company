@@ -28,10 +28,10 @@ export default function IntelligentSolution() {
     type: "slide-right",
   });
 
-  useAnimation({
-    ref: buttonRef,
-    type: "slide-up",
-  });
+  // useAnimation({
+  //   ref: buttonRef,
+  //   type: "slide-up",
+  // });
 
   return (
     <section className="py-24 relative overflow-hidden" dir={dir}>

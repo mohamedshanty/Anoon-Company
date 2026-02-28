@@ -53,7 +53,6 @@ export default function Impact({
   const description = childrenArray.find((c) => c.type === Impact.Description);
   const stats = childrenArray.find((c) => c.type === Impact.Stats);
 
-  // أثناء التحميل، اعرض نفس الهيكل ولكن بدون كلاسات RTL
   if (!mounted || !ready) {
     return (
       <section className={`relative overflow-hidden ${className}`}>
@@ -164,23 +163,23 @@ Impact.AdditionalText = function ImpactAdditionalText({
   className = "",
 }) {
   return (
-    <h2
+    <h3
       data-impact="additional"
       className={`text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold text-white mt-3 md:mt-4 lg:mt-5 ${className}`}
       suppressHydrationWarning
     >
       {children}
-    </h2>
+    </h3>
   );
 };
 
 Impact.Subtitle = function ImpactSubtitle({ children, className = "" }) {
   return (
-    <h4 data-impact="subtitle" className={`mb-4 md:mb-6 lg:mb-8 ${className}`} suppressHydrationWarning>
+    <h3 data-impact="subtitle" className={`mb-4 md:mb-6 lg:mb-8 ${className}`} suppressHydrationWarning>
       <div className="text-white font-medium text-lg md:text-xl lg:text-2xl" suppressHydrationWarning>
         {children}
       </div>
-    </h4>
+    </h3>
   );
 };
 

@@ -1,9 +1,5 @@
-"use clinet";
-
-import { useRef } from "react";
 import Stars from "./Stars";
 import { cn } from "@/lib/utils";
-import useAnimation from "@/hooks/useAnimation";
 
 const maxWidthClasses = {
   sm: "max-w-sm",
@@ -32,19 +28,7 @@ export default function SectionHeader({
   titleClassName,
   subtitleClassName,
   descriptionClassName,
-  withAnimation = true,
-  animationDelay = 0,
 }) {
-  const headerRef = useRef(null);
-
-  useAnimation({
-    ref: headerRef,
-    type: "slide-up",
-    stagger: 0.15,
-    delay: animationDelay,
-    disabled: !withAnimation,
-  });
-
   const renderSubtitle = () => {
     if (!subtitle) return null;
 
@@ -85,7 +69,6 @@ export default function SectionHeader({
 
   return (
     <div
-      ref={headerRef}
       className={cn(
         "relative w-full",
         alignClasses[align],
@@ -95,10 +78,9 @@ export default function SectionHeader({
     >
       <Stars count={starsCount} zIndex={-5} opacity={0.8} />
 
-      {/* العنوان الرئيسي */}
       <h2
         className={cn(
-          "text-brand-white font-bold mb-3 md:mb-4 tracking-wide",
+          "text-brand-white font-bold mb-3 md:mb-4 tracking-wide text-2xl md:text-3xl lg:text-4xl xl:text-5xl",
           titleClassName,
         )}
       >

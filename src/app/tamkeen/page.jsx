@@ -1,23 +1,28 @@
-import GetInTouch from "@/components/home/GetInTouch";
-import Partners from "@/components/home/Partners";
-import SuccessStories from "@/components/home/SuccessStories";
-import Newsletter from "@/components/home/Newsletter";
-import ImpactSection from "@/components/home/tamkeen/Impact";
-import TamkeenHero from "@/components/home/tamkeen/Hero";
-import TamkeenInfoSection from "@/components/home/tamkeen/TamkeenInfo";
+import { cookies } from "next/headers";
+import GetInTouch from "@/components/common/GetInTouch";
+import PartnersServer from "@/components/common/PartnersServer";
+import SuccessStories from "@/components/tamkeen/SuccessStories";
+import Newsletter from "@/components/common/Newsletter";
+import ImpactSection from "@/components/tamkeen/Impact";
+import TamkeenHero from "@/components/tamkeen/Hero";
+import TamkeenInfoSection from "@/components/tamkeen/TamkeenInfo";
+import { getTranslations } from "@/lib/i18n-server";
 
-const tamkeen = () => {
+export default async function TamkeenPage() {
+  const cookieStore = await cookies();
+  const lang = cookieStore.get('i18next')?.value || 'en';
+  const trans = await getTranslations(lang);
+  const isRTL = lang === 'ar';
+
   return (
     <>
       <TamkeenHero />
       <TamkeenInfoSection />
       <SuccessStories />
       <ImpactSection />
-      <Partners />
+      <PartnersServer t={trans.partners} isRTL={isRTL} />
       <GetInTouch />
       <Newsletter />
     </>
   );
-};
-
-export default tamkeen;
+}

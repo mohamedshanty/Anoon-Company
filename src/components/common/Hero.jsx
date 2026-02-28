@@ -36,23 +36,13 @@ export default function Hero({ children }) {
       const subtitleChildren = subtitle?.children;
       const buttonChildren = buttons?.children;
 
-      if (titleChildren) {
-        gsap.set(titleChildren, { opacity: 0, y: 30, scale: 0.9 });
-      }
-      if (subtitleChildren) {
-        gsap.set(subtitleChildren, { opacity: 0, y: 30, scale: 0.9 });
-      }
-      if (buttonChildren) {
-        gsap.set(buttonChildren, { opacity: 0, y: 30, scale: 0.9 });
-      }
-      gsap.set(iconsRef.current, { opacity: 0, y: 30, scale: 0.9 });
-
       const tl = gsap.timeline();
 
       if (titleChildren) {
-        tl.to(titleChildren, {
-          y: 0,
-          opacity: 1,
+        tl.from(titleChildren, {
+          y: 30,
+          opacity: 0,
+          scale: 0.9,
           duration: 0.8,
           stagger: 0.2,
           ease: "power2.out",
@@ -60,11 +50,12 @@ export default function Hero({ children }) {
       }
 
       if (subtitleChildren) {
-        tl.to(
+        tl.from(
           subtitleChildren,
           {
-            y: 0,
-            opacity: 1,
+            y: 30,
+            opacity: 0,
+            scale: 0.9,
             duration: 0.6,
             stagger: 0.1,
             ease: "power2.out",
@@ -74,11 +65,12 @@ export default function Hero({ children }) {
       }
 
       if (buttonChildren) {
-        tl.to(
+        tl.from(
           buttonChildren,
           {
-            scale: 1,
-            opacity: 1,
+            y: 30,
+            opacity: 0,
+            scale: 0.9,
             duration: 0.6,
             stagger: 0.2,
             ease: "back.out(1.7)",
@@ -90,16 +82,12 @@ export default function Hero({ children }) {
       const actionsChildren = actions?.children;
 
       if (actionsChildren) {
-        gsap.set(actionsChildren, { opacity: 0, y: 30, scale: 0.95 });
-      }
-
-      if (actionsChildren) {
-        tl.to(
+        tl.from(
           actionsChildren,
           {
-            y: 0,
-            opacity: 1,
-            scale: 1,
+            y: 30,
+            opacity: 0,
+            scale: 0.95,
             duration: 0.6,
             stagger: 0.15,
             ease: "power2.out",
@@ -108,11 +96,12 @@ export default function Hero({ children }) {
         );
       }
 
-      tl.to(
+      tl.from(
         iconsRef.current,
         {
-          scale: 1,
-          opacity: 1,
+          y: 30,
+          opacity: 0,
+          scale: 0.9,
           duration: 0.6,
           stagger: 0.1,
           ease: "back.out(1.7)",
@@ -141,7 +130,7 @@ export default function Hero({ children }) {
   return (
     <section
       ref={container}
-      className="relative flex items-center justify-center py-36 overflow-hidden min-h-[600px]"
+      className="relative flex items-center justify-center py-36 overflow-hidden min-h-screen"
     >
       {/* Background */}
       <div className="absolute inset-0 pointer-events-none">
@@ -184,12 +173,12 @@ Hero.Title = function HeroTitle({ children, className = "" }) {
 
 Hero.Subtitle = function HeroSubtitle({ children, className = "" }) {
   return (
-    <div
+    <h2
       data-hero="subtitle"
       className={`max-w-3xl mx-auto space-y-4 mb-4 ${className}`}
     >
       {children}
-    </div>
+    </h2>
   );
 };
 

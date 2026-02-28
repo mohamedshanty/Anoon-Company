@@ -5,7 +5,8 @@ export default function PatternBackground({
     direction = 'default',
     opacity = 'opacity-70',
     className = '',
-    translateY = '-translate-y-30'
+    translateY = '-translate-y-30',
+    priority = false
 }) {
 
     const directionClass = direction === 'diagonal'
@@ -20,7 +21,7 @@ export default function PatternBackground({
                     alt="Background Pattern"
                     fill
                     className={`object-cover ${translateY}`}
-                    priority
+                    priority={priority}
                 />
             </div>
         </div>

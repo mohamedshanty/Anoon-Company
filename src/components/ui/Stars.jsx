@@ -1,53 +1,44 @@
-// components/ui/Stars.tsx
-"use client";
-
-import { useEffect, useRef } from "react";
-
-
-
+// components/ui/Stars.jsx
 export default function Stars({
     count = 20,
     className = "",
     zIndex = -10,
     opacity = 1
 }) {
-    const containerRef = useRef(null);
+    // Basic pseudo-random generator to avoid hydration mismatch
+    const getStarData = (idx) => {
+        const seed = idx * 1.5;
+        const x = (Math.sin(seed) * 10000) % 100;
+        const y = (Math.cos(seed) * 10000) % 100;
+        const s = 1 + (idx % 3);
+        const d = (idx % 4) * 0.5;
+        const dur = 3 + (idx % 5);
+        return { x: Math.abs(x), y: Math.abs(y), s, d, dur };
+    };
 
-    useEffect(() => {
-        if (!containerRef.current) return;
-
-        const container = containerRef.current;
-        const stars = [];
-
-        for (let i = 0; i < count; i++) {
-            const star = document.createElement('div');
-
-            const top = Math.random() * 100;
-            const left = Math.random() * 100;
-
-            const delay = Math.random() * 2;
-
-            star.className = `star-particle absolute`;
-            star.style.top = `${top}%`;
-            star.style.left = `${left}%`;
-            star.style.animationDelay = `${delay}s`;
-            star.style.opacity = String(opacity * (0.5 + Math.random() * 0.5));
-
-            stars.push(star);
-        }
-
-        stars.forEach(star => container.appendChild(star));
-
-        return () => {
-            stars.forEach(star => star.remove());
-        };
-    }, [count, opacity]);
+    const stars = Array.from({ length: count }).map((_, i) => getStarData(i));
 
     return (
         <div
-            ref={containerRef}
-            className={`absolute inset-0 pointer-events-none ${className}`}
+            className={`absolute inset-0 pointer-events-none overflow-hidden ${className}`}
             style={{ zIndex }}
-        />
+            aria-hidden="true"
+        >
+            {stars.map((star, i) => (
+                <div
+                    key={i}
+                    className="absolute bg-brand-orange rounded-full blur-[1px] animate-pulse"
+                    style={{
+                        top: `${star.y}%`,
+                        left: `${star.x}%`,
+                        width: `${star.s}px`,
+                        height: `${star.s}px`,
+                        opacity: opacity * 0.7,
+                        animationDelay: `${star.d}s`,
+                        animationDuration: `${star.dur}s`,
+                    }}
+                />
+            ))}
+        </div>
     );
 }

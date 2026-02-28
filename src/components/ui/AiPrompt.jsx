@@ -55,6 +55,7 @@ export default function AiPrompt() {
             onClick={handleFileUpload}
             className="p-2 sm:p-2.5 rounded-xl hover:bg-white/10 transition-colors group cursor-pointer"
             title={t("tech_agency.ai_prompt.attach_file", "Attach file")}
+            aria-label={t("tech_agency.ai_prompt.attach_file", "Attach file")}
           >
             <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-white/60 group-hover:text-white/80" />
           </button>
@@ -65,7 +66,7 @@ export default function AiPrompt() {
           <Button
             variant="outline"
             color="sky"
-            className="rounded-xl !px-3 sm:!px-5 !py-2 sm:!py-2.5 !min-h-0 !h-auto flex items-center gap-2"
+            className="rounded-xl px-3! sm:px-5! py-2! sm:py-2.5! min-h-0! h-auto! flex items-center gap-2"
           >
             <span className="hidden sm:inline text-xs sm:text-sm">
               {t("tech_agency.ai_prompt.button", "Ask Our AI")}

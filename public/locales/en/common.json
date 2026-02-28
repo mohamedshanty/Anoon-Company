@@ -186,7 +186,21 @@
   },
   "teams": {
     "title": "Our Teams",
-    "subtitle": "When everything fell, we stood up."
+    "subtitle_word1": "When",
+    "subtitle_word2": "Everything",
+    "subtitle_word3": "Fell,",
+    "subtitle_word4": "We",
+    "subtitle_word5": "Stood",
+    "subtitle_word6": "Up.",
+    "roles": {
+      "cto": "CTO",
+      "ceo": "CEO",
+      "lead_developer": "Lead Developer",
+      "designer": "Designer",
+      "marketing": "Marketing",
+      "product_manager": "Product Manager",
+      "developer": "Developer"
+    }
   },
   "newsletter": {
     "badge": "Get Our Weekly",
@@ -349,6 +363,7 @@
       "title_part1": "Creating",
       "title_part2": "Next Generation Solution",
       "title_part3": "With",
+      "title_part3_prefix": "With",
       "title_highlight": "Tech Agency",
       "prompt_placeholder": "Ask about our services, projects, or how we can help you!",
       "prompt_button": "Ask Now",
@@ -458,6 +473,20 @@
     "placeholder": "Type your message...",
     "error": "Something went wrong. Please try again.",
     "loading": "AI is thinking...",
-    "send": "Send"
+    "send": "Send",
+    "status": "Online · Instant response",
+    "actions": {
+      "services": "What are your services?",
+      "contact": "How can I contact you?",
+      "pricing": "What are your rates?"
+    },
+    "labels": {
+      "services": "💼 Services",
+      "contact": "📞 Contact",
+      "pricing": "💰 Rates"
+    },
+    "tooltip": "Need help?",
+    "user": "You",
+    "assistant": "AI"
   }
 }

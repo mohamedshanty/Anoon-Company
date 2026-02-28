@@ -1,19 +1,26 @@
-import GetInTouch from "@/components/home/GetInTouch";
-import Partners from "@/components/home/Partners";
-import OurSpace from "@/components/noonHub/OurSpace";
+import { cookies } from "next/headers";
+import GetInTouch from "@/components/common/GetInTouch";
+import PartnersServer from "@/components/common/PartnersServer";
+import OurSpace from "@/components/common/OurSpace";
 import SpaceNoonHero from "@/components/noonSpace/Hero";
 import ImpactSection from "@/components/noonSpace/Impact";
 import SpaceNoonProblemSection from "@/components/noonSpace/SpaceNoonProblem";
+import { getTranslations } from "@/lib/i18n-server";
 import React from "react";
 
-const NoonSapce = () => {
+const NoonSapce = async () => {
+  const cookieStore = await cookies();
+  const lang = cookieStore.get('i18next')?.value || 'en';
+  const trans = await getTranslations(lang);
+  const isRTL = lang === 'ar';
+
   return (
     <>
       <SpaceNoonHero />
       <SpaceNoonProblemSection />
       <OurSpace />
       <ImpactSection />
-      <Partners />
+      <PartnersServer t={trans.partners} isRTL={isRTL} />
       <GetInTouch />
     </>
   );

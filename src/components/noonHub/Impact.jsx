@@ -37,7 +37,7 @@ const ImpactSection = () => {
   return (
     <Impact patternDirection="grid" patternOpacity="opacity-75">
       <Impact.Title>
-        <span className="text-brand-sky">{t("impact_page.title.first_word")}</span>
+        <span className="text-brand-sky">{t("impact_page.title.first_word")}</span>{" "}
         <span className="text-brand-orange">{t("impact_page.title.second_word")}</span>
       </Impact.Title>
 
@@ -46,8 +46,8 @@ const ImpactSection = () => {
       </Impact.AdditionalText>
 
       <Impact.Subtitle>
-        <span>{t("impact_page.subtitle.line1")}</span>
-        <span className="text-brand-orange">{t("impact_page.subtitle.line2.highlight")}</span>
+        <h4>{t("impact_page.subtitle.line1")}</h4>
+        <h4 className="text-brand-orange">{t("impact_page.subtitle.line2.highlight")}</h4>
       </Impact.Subtitle>
 
       <Impact.Description>
