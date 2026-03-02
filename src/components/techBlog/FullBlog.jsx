@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 import { Heart, MessageCircle, Calendar, User, Tag, Eye } from "lucide-react";
 import { useState, useEffect } from "react";
-// import { CommentSection } from "./comments/CommentSection";
 
 export default function FullBlog({ article, similarArticles }) {
   const [likes, setLikes] = useState(article?.likes || 0);
@@ -231,11 +230,6 @@ export default function FullBlog({ article, similarArticles }) {
             />
           )}
         </div>
-
-        {/* <CommentSection
-          articleId={article.id}
-          articleDocumentId={article.documentId}
-        /> */}
 
         {similarArticles?.length > 0 && (
           <section className="mt-20">
