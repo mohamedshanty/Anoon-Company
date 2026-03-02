@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 import { Heart, MessageCircle, Calendar, User, Tag, Eye } from "lucide-react";
 import { useState, useEffect } from "react";
-import { CommentSection } from "./comments/CommentSection";
+// import { CommentSection } from "./comments/CommentSection";
 
 export default function FullBlog({ article, similarArticles }) {
   const [likes, setLikes] = useState(article?.likes || 0);
@@ -16,7 +16,6 @@ export default function FullBlog({ article, similarArticles }) {
   const { i18n } = useTranslation();
   const lang = i18n.language.startsWith("ar") ? "ar" : "en";
 
-  // تسجيل المشاهدة مرة واحدة فقط لكل جلسة
   useEffect(() => {
     const registerView = async () => {
       if (!article?.id || hasViewed) return;
@@ -57,13 +56,11 @@ export default function FullBlog({ article, similarArticles }) {
     registerView();
   }, [article, hasViewed]);
 
-  // التحقق من حالة الإعجاب من localStorage
   useEffect(() => {
     if (article?.id) {
       const liked = localStorage.getItem(`liked_${article.id}`);
       setIsLiked(liked === "true");
 
-      // تحديث عدد الإعجابات إذا كان المستخدم معجباً
       if (liked === "true" && likes === article?.likes) {
         setLikes((prev) => prev + 1);
       }
@@ -187,7 +184,6 @@ export default function FullBlog({ article, similarArticles }) {
           </div>
         </div>
 
-        {/* أزرار التفاعل */}
         <div className="flex items-center gap-6 mb-8 pb-6 border-b border-white/10">
           <button
             onClick={handleLike}
@@ -236,19 +232,17 @@ export default function FullBlog({ article, similarArticles }) {
           )}
         </div>
 
-        <CommentSection
+        {/* <CommentSection
           articleId={article.id}
           articleDocumentId={article.documentId}
-        />
+        /> */}
 
         {similarArticles?.length > 0 && (
           <section className="mt-20">
             <h2 className="text-3xl font-bold text-white mb-8">
               {lang === "ar" ? "مقالات مشابهة" : "Similar Articles"}
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* يمكنك إضافة عرض المقالات المشابهة هنا */}
-            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
           </section>
         )}
       </div>
