@@ -1,103 +1,76 @@
 import FullBlog from "@/components/techBlog/FullBlog";
-import { notFound } from "next/navigation";
+import Link from "next/link";
 
-// دالة لجلب المقال بناءً على الـ slug
-const getArticleBySlug = (slug) => {
-  const articles = {
-    1: {
-      id: 1,
-      title: "Learn more about ai",
-      fullTitle: "The Rise of Block Chain Technology In The World",
-      introduction:
-        "Artificial Intelligence (AI) has emerged as a transformative force in the healthcare industry, reshaping patient care, diagnostics, and research. In this blog post, we explore the profound impact of AI in healthcare, from revolutionizing diagnostic accuracy to enhancing patient outcomes.",
-      content: [
-        {
-          subtitle: "Artificial Intelligence (AI)",
-          text: "Artificial Intelligence (AI) has permeated virtually every aspect of our lives, and healthcare is no exception. The integration of AI in healthcare is ushering in a new era of medical practice, where machines complement the capabilities of healthcare professionals, ultimately improving patient outcomes and the efficiency of the healthcare system. In this blog post, we will delve into the diverse applications of AI in healthcare, from diagnostic imaging to personalized treatment plans, and address the ethical considerations surrounding this revolutionary technology.",
-        },
-        {
-          subtitle: "Predictive Analytics and Disease Prevention",
-          text: "One of the most prominent applications of AI in healthcare is in diagnostic imaging. AI algorithms have demonstrated remarkable proficiency in interpreting medical images such as X-rays, MRIs, and CT scans. They can identify anomalies and deviations that might be overlooked by the human eye. This is particularly valuable in early disease detection. For instance, AI can aid radiologists in detecting minute irregularities in mammograms or identifying critical findings in chest X-rays, potentially indicative of life-threatening conditions.",
-        },
-      ],
-      category: "Environment",
-      date: "October 10, 2023",
-      author: "Jane Smith",
-      image: "/images/blogImage.png",
-      likes: "1.4k",
-      comments: 204,
-    },
-    2: {
-      id: 2,
-      title: "A Decisive Victory for Progressive Policies",
-      fullTitle: "A Decisive Victory for Progressive Policies",
-      introduction:
-        "World leaders gathered at the Global Climate Summit to discuss urgent climate action, emissions reductions, and renewable energy targets.",
-      content: [
-        {
-          subtitle: "Introduction",
-          text: "Progressive policies have taken center stage in recent political developments, with world leaders committing to ambitious climate goals and sustainable development initiatives.",
-        },
-      ],
-      category: "Politics",
-      date: "October 12, 2023",
-      author: "John Doe",
-      image: "/images/blogImage.png",
-      likes: "1.4k",
-      comments: 204,
-    },
-    3: {
-      id: 3,
-      title: "A Decisive Victory for Progressive Policies",
-      fullTitle: "A Decisive Victory for Progressive Policies",
-      introduction:
-        "World leaders gathered at the Global Climate Summit to discuss urgent climate action, emissions reductions, and renewable energy targets.",
-      content: [
-        {
-          subtitle: "Introduction",
-          text: "Progressive policies have taken center stage in recent political developments, with world leaders committing to ambitious climate goals and sustainable development initiatives.",
-        },
-      ],
-      category: "Politics",
-      date: "October 12, 2023",
-      author: "John Doe",
-      image: "/images/blogImage.png",
-      likes: "1.4k",
-      comments: 204,
-    },
-    4: {
-      id: 4,
-      title: "A Decisive Victory for Progressive Policies",
-      fullTitle: "A Decisive Victory for Progressive Policies",
-      introduction:
-        "World leaders gathered at the Global Climate Summit to discuss urgent climate action, emissions reductions, and renewable energy targets.",
-      content: [
-        {
-          subtitle: "Introduction",
-          text: "Progressive policies have taken center stage in recent political developments, with world leaders committing to ambitious climate goals and sustainable development initiatives.",
-        },
-      ],
-      category: "Politics",
-      date: "October 12, 2023",
-      author: "John Doe",
-      image: "/images/blogImage.png",
-      likes: "1.4k",
-      comments: 204,
-    },
-  };
+async function getArticleBySlug(slug) {
+  const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL;
 
-  return articles[slug] || null;
-};
+  const fullUrl = `${STRAPI_URL}/api/articles?filters[slug][$eq]=${encodeURIComponent(slug)}&populate[0]=image&populate[1]=category&publicationState=live`;
 
-export default async function BlogPostPage({ params }) {
-  // ⚠️ مهم جداً: استخدم await مع params لأنه Promise
+  try {
+    const res = await fetch(fullUrl, {
+      next: { revalidate: 60 },
+    });
+
+    if (!res.ok) return null;
+
+    const json = await res.json();
+    return json.data?.[0] || null;
+  } catch (error) {
+    console.error("خطأ في جلب المقال:", error);
+    return null;
+  }
+}
+
+async function getSimilarArticles(categoryId, currentArticleId, currentLang = 'en') {
+  const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL;
+
+  const fullUrl = `${STRAPI_URL}/api/articles?filters[category][id][$eq]=${categoryId}&filters[id][$ne]=${currentArticleId}&populate=image,category&sort=publishedAt:desc&pagination[limit]=3`;
+
+  try {
+    const res = await fetch(fullUrl, {
+      next: { revalidate: 300 },
+    });
+
+    if (!res.ok) return [];
+
+    const json = await res.json();
+    return json.data || [];
+  } catch (error) {
+    console.error("خطأ في جلب مقالات مشابهة:", error);
+    return [];
+  }
+}
+
+export default async function ArticlePage({ params }) {
   const { slug } = await params;
 
-  const article = getArticleBySlug(slug);
+  const article = await getArticleBySlug(slug);
 
   if (!article) {
-    notFound();
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-black">
+        <div className="text-center">
+          <h1 className="text-5xl font-bold text-white mb-4">
+            المقال غير موجود
+          </h1>
+          <p className="text-xl text-white/70">
+            الرابط غير صحيح أو المقال غير منشور
+          </p>
+          <Link
+            href="/techBlog"
+            className="inline-block mt-8 px-6 py-3 bg-brand-sky text-white rounded-xl hover:bg-brand-sky/80 transition"
+          >
+            العودة للمدونة
+          </Link>
+        </div>
+      </div>
+    );
   }
 
-  return <FullBlog article={article} />;
+  const categoryId = article.category?.id;
+  const similarArticles = categoryId
+    ? await getSimilarArticles(categoryId, article.id)
+    : [];
+
+  return <FullBlog article={article} similarArticles={similarArticles} />;
 }

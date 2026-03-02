@@ -29,13 +29,13 @@ export default function MainHeroServer({ t }) {
             </HeroSubtitle>
 
             <HeroButtons>
-                <Link href="/techAgency">
+                <Link href="/noonHub">
                     <Button variant="outline" color="orange">
                         {t.button_services}
                     </Button>
                 </Link>
 
-                <Link href="https://meet.google.com" target="_blank" rel="noopener noreferrer">
+                <Link href="/#contact" >
                     <Button variant="outline" color="sky">
                         {t.button_meeting}
                     </Button>

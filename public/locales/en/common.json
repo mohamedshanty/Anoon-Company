@@ -241,7 +241,8 @@
       "additional": "We Are Going To Be The Different",
       "stats": {
         "yearly_student": "Yearly Student"
-      }
+      },
+      "description": "We didn't wait for permission. While the world watched in silence, we chose to build. Alongside those who truly stood by us, we carved a path through the impossible. We didn't just bring frameworks; we brought the tools for our people to reclaim their own future. We are still here, we are still building, and our will is stronger than any struggle."
     }
   },
   "noon_hub": {
@@ -455,15 +456,15 @@
       "button": "Subscribe"
     },
     "logo_alt": "Anoon Logo",
-    "description": "Anoon is a digital agency for UI/UX Design and Website Development located in Palestine, Gaza Strip.",
+    "description": "Anoon is a social enterprise, not a charity. We combine education and technical solutions for sustainable impact, located in Palestine, Gaza Strip.",
     "social_description": "Follow us on social media for updates.",
     "copyright": "Copyright Anoon LLC"
   },
   "errors": {
     "404": {
-      "title": "Lost in the Digital Void?",
-      "description": "The page you're looking for has vanished into thin air. Don't worry, even the best astronauts get lost sometimes.",
-      "back_home": "Back to Base",
+      "title": "Oops! You're Lost ",
+      "description": "Don't worry, the page you're looking for doesn't exist.",
+      "back_home": "Back To Home",
       "previous_page": "Go Back"
     }
   },
@@ -488,5 +489,22 @@
     "tooltip": "Need help?",
     "user": "You",
     "assistant": "AI"
+  },
+  "common": {
+    "loading": "Loading...",
+    "unknown_date": "Unknown date"
+  },
+  "comingSoon": {
+    "title": "This feature will be available soon"
+  },
+    "partner": {
+    "description_en": "A registered Scottish charity providing humanitarian aid worldwide.",
+    "supports_anoon": "Scot Aid proudly supports Anoon's mission to empower youth in Gaza through technology education and sustainable development programs.",
+    "visit_website": "Visit Website",
+    "registered": "Registered",
+    "based_in": "Based in",
+    "location_scotland": "Edinburgh, Scotland",
+    "charity_type": "Scottish Charitable Incorporated Organisation",
+    "more_info": "Registered with OSCR • Scottish Charity No: SC050319"
   }
 }

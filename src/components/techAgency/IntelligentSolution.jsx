@@ -73,7 +73,7 @@ export default function IntelligentSolution() {
             </div>
 
             {/* Button */}
-            <div ref={buttonRef} className="pt-0">
+            {/* <div ref={buttonRef} className="pt-0">
               <Link href="/techBlog">
                 <Button
                   variant="premium"
@@ -83,7 +83,7 @@ export default function IntelligentSolution() {
                   {t("tech_agency.intelligent_solution.button", "Book A Free Consulting")}
                 </Button>
               </Link>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

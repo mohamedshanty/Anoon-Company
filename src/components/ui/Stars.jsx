@@ -10,7 +10,7 @@ export default function Stars({
         const seed = idx * 1.5;
         const x = (Math.sin(seed) * 10000) % 100;
         const y = (Math.cos(seed) * 10000) % 100;
-        const s = 1 + (idx % 3);
+        const s = 2 + (idx % 10);
         const d = (idx % 4) * 0.5;
         const dur = 3 + (idx % 5);
         return { x: Math.abs(x), y: Math.abs(y), s, d, dur };
@@ -27,13 +27,13 @@ export default function Stars({
             {stars.map((star, i) => (
                 <div
                     key={i}
-                    className="absolute bg-brand-orange rounded-full blur-[1px] animate-pulse"
+                    className="absolute bg-brand-orange rounded-full blur-[3px] animate-pulse"
                     style={{
                         top: `${star.y}%`,
                         left: `${star.x}%`,
                         width: `${star.s}px`,
                         height: `${star.s}px`,
-                        opacity: opacity * 0.7,
+                        opacity: opacity * 0.9,
                         animationDelay: `${star.d}s`,
                         animationDuration: `${star.dur}s`,
                     }}

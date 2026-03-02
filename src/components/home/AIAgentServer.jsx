@@ -72,7 +72,7 @@ export default function AIAgentServer({ t }) {
                         </Reveal>
 
                         <div className="pt-4 md:pt-6 lg:pt-8 flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-5 lg:gap-6">
-                            <Link href={"https://meet.google.com"} target="_blank" rel="noopener noreferrer">
+                            <Link href="/#contact">
                                 <Button
                                     variant="filled"
                                     color="sky"

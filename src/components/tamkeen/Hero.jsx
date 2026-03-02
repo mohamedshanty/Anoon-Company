@@ -31,7 +31,7 @@ export default function TamkeenHero() {
         </span>
       </Hero.Title>
 
-      <Hero.Subtitle>
+      <Hero.Subtitle className="tracking-[0.15px]">
         <p className={`text-subtitle text-white/80 ${isRTL ? 'rtl text-right' : ''}`}>
           {t("tamkeen.hero.subtitle", "Buildings can be broken, but the human Spirit remain Ignited. We didn't wait, We just did it because while aid sustains the body, knowledge reclaims the future. The war took Everything, but couldn't take our skills. We are building the minds that will rebuild this land.")}
         </p>
@@ -43,7 +43,7 @@ export default function TamkeenHero() {
             {t("tamkeen.hero.button1", "Visit Our Website")}
           </Button>
         </Link>
-        <Link href="https://tamkeeninsan.org/" target="_blank" rel="noopener noreferrer">
+        <Link href="https://donate.stripe.com/dRm8wQ6V2bu9anlfQn1gs00" target="_blank" rel="noopener noreferrer">
           <Button variant="outline" color="sky">
             {t("tamkeen.hero.button2", "Donate Now")}
           </Button>

@@ -43,6 +43,9 @@ export default function AnoonInfoSection() {
         ctaText={t("noon_hub.info.cta", "Visit Our Location")}
         variant="outline"
         color="sky"
+        href="https://maps.app.goo.gl/AHQxMFpHrhuP86qq6"
+        target="_blank"
+        rel="noopener noreferrer"
       />
     </InfoSection>
   );

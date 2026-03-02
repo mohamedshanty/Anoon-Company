@@ -74,7 +74,9 @@ export default function NavMobileMenu({
 
                 <div className="mt-4 md:mt-6 pt-4 md:pt-6 border-t border-white/20">
                     <Link
-                        href="/support"
+                        href="https://donate.stripe.com/dRm8wQ6V2bu9anlfQn1gs00"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="block w-full text-center px-4 py-2.5 md:py-3 border-2 border-[#3b82f6] text-white hover:bg-[#3b82f6] rounded-lg transition-all duration-500 text-sm md:text-base font-medium"
                         onClick={() => setMobileMenuOpen(false)}
                     >

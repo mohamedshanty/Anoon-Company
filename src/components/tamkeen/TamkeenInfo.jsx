@@ -11,7 +11,7 @@ export default function TamkeenHelpSection() {
 
   const handleScroll = (e) => {
     e.preventDefault();
-    const element = document.getElementById('contact');
+    const element = document.getElementById("contact");
     if (element) {
       const offset = 80;
       const elementPosition = element.getBoundingClientRect().top;
@@ -29,14 +29,12 @@ export default function TamkeenHelpSection() {
       id="tamkeen"
       layout="image-right"
       backgroundGlow="default"
-      image="/images/whoWeAre.png"
+      image="/images/whoWeAre1.png"
       imageAlt={t("tamkeen.who_we_are.image_alt")}
     >
       <InfoSection.Header>
         <InfoSection.Subtitle className="text-brand-white">
-          <h2>
-            {t("tamkeen.who_we_are.subtitle")}
-          </h2>
+          <h2>{t("tamkeen.who_we_are.subtitle")}</h2>
         </InfoSection.Subtitle>
         <InfoSection.Title>
           <InfoSection.TitleLine
@@ -56,7 +54,9 @@ export default function TamkeenHelpSection() {
         </InfoSection.Title>
       </InfoSection.Header>
 
-      <InfoSection.Description className={`text-white/80 max-w-xl mt-10 text-base ${isRTL ? 'text-right' : ''}`}>
+      <InfoSection.Description
+        className={`text-white/80 max-w-xl mt-10 text-base ${isRTL ? "text-right" : ""}`}
+      >
         {t("tamkeen.who_we_are.description")}
       </InfoSection.Description>
 
@@ -64,8 +64,9 @@ export default function TamkeenHelpSection() {
         ctaText={t("tamkeen.who_we_are.cta")}
         variant="outline"
         color="sky"
-        href="#contact"
-        onClick={handleScroll}
+        href="https://tamkeeninsan.org/"
+        target="_blank"
+        rel="noopener noreferrer"
       />
     </InfoSection>
   );

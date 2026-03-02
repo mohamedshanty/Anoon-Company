@@ -1,183 +1,310 @@
 "use client";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, MessageCircle } from "lucide-react";
+import { Heart, MessageCircle, Eye } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useRTL } from "@/hooks/useRTL";
 
 export default function TabsSection() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { isRTL, dir } = useRTL();
-  const [activeSection, setActiveSection] = useState("ins");
 
-  const sections = [
-    { id: "ins", title: t("blog.tabs.sections.ins", "AI Insights") },
-    { id: "tre", title: t("blog.tabs.sections.tre", "Tech Trends") },
-    { id: "fut", title: t("blog.tabs.sections.fut", "Future Tech") },
-    { id: "inn", title: t("blog.tabs.sections.inn", "Innovation") },
-    { id: "gui", title: t("blog.tabs.sections.gui", "Guides") },
-  ];
+  const currentLang = i18n.language.startsWith("ar") ? "ar" : "en";
 
-  // Example articles for each section
-  const articles = {
-    ins: [
-      {
-        id: 1,
-        title: t("blog.tabs.articles.ins_1.title", "Learn more about AI"),
-        description: t("blog.tabs.articles.ins_1.description", "World leaders gathered at the Global Climate Summit to discuss urgent climate action, emissions reductions, and renewable energy targets."),
-        category: t("blog.categories.environment", "Environment"),
-        date: "October 10, 2023",
-        author: t("blog.authors.jane_smith", "Jane Smith"),
-        image: "/images/blogImage.png",
-        likes: "1.4k",
-        comments: 204,
-        slug: "1",
-      },
-    ],
-    tre: [
-      {
-        id: 2,
-        title: t("blog.tabs.articles.tre_1.title", "A Decisive Victory for Progressive Policies"),
-        description: "",
-        category: t("blog.categories.politics", "Politics"),
-        date: "October 12, 2023",
-        author: t("blog.authors.john_doe", "John Doe"),
-        image: "/images/blogImage.png",
-        likes: "1.4k",
-        comments: 204,
-        slug: "2",
-      },
-      {
-        id: 3,
-        title: t("blog.tabs.articles.tre_1.title", "A Decisive Victory for Progressive Policies"),
-        description: "",
-        category: t("blog.categories.politics", "Politics"),
-        date: "October 12, 2023",
-        author: t("blog.authors.john_doe", "John Doe"),
-        image: "/images/blogImage.png",
-        likes: "1.4k",
-        comments: 204,
-        slug: "3",
-      },
-      {
-        id: 4,
-        title: t("blog.tabs.articles.tre_1.title", "A Decisive Victory for Progressive Policies"),
-        description: "",
-        category: t("blog.categories.politics", "Politics"),
-        date: "October 12, 2023",
-        author: t("blog.authors.john_doe", "John Doe"),
-        image: "/images/blogImage.png",
-        likes: "1.4k",
-        comments: 204,
-        slug: "4",
-      },
-    ],
-    fut: [],
-    inn: [],
-    gui: [],
+  const [activeTab, setActiveTab] = useState(null);
+  const [tabs, setTabs] = useState([]);
+  const [articlesByTab, setArticlesByTab] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [localLikes, setLocalLikes] = useState({}); // لتخزين الإعجابات المحلية
+  const [localViews, setLocalViews] = useState({}); // لتخزين المشاهدات المحلية
+
+  // دالة لاستخراج النص من blocks
+  const extractTextFromBlocks = (blocks) => {
+    if (!blocks || !Array.isArray(blocks)) return "";
+    let text = "";
+    blocks.forEach((block) => {
+      if (block.children) {
+        block.children.forEach((child) => {
+          if (child.text) text += child.text + " ";
+        });
+      }
+    });
+    return text.trim();
   };
+
+  // تحميل حالات الإعجاب من localStorage
+  useEffect(() => {
+    const loadLocalData = () => {
+      // تحميل الإعجابات
+      const likedStates = {};
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('liked_')) {
+          const articleId = key.replace('liked_', '');
+          likedStates[articleId] = localStorage.getItem(key) === 'true';
+        }
+      });
+      setLocalLikes(likedStates);
+
+      // تحميل المشاهدات المسجلة في هذه الجلسة
+      const viewedStates = {};
+      Object.keys(sessionStorage).forEach(key => {
+        if (key.startsWith('viewed_')) {
+          const articleId = key.replace('viewed_', '');
+          viewedStates[articleId] = true;
+        }
+      });
+      setLocalViews(viewedStates);
+    };
+
+    loadLocalData();
+  }, []);
+
+  useEffect(() => {
+    const loadData = async () => {
+      setIsLoading(true);
+      try {
+        const categoriesUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/categories?sort=createdAt:desc`;
+        const categoriesRes = await fetch(categoriesUrl);
+
+        if (!categoriesRes.ok) throw new Error("فشل جلب التصنيفات");
+
+        const categoriesData = await categoriesRes.json();
+
+        const formattedTabs = categoriesData.data.map((item) => ({
+          id: item.id,
+          slug: item.slug,
+          title: item[`name_${currentLang}`] || item.name || "بدون اسم",
+        }));
+
+        setTabs(formattedTabs);
+
+        const articlesUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/articles?populate=*&sort=publishedAt:desc`;
+        const articlesRes = await fetch(articlesUrl);
+
+        if (!articlesRes.ok) throw new Error("فشل جلب المقالات");
+
+        const articlesData = await articlesRes.json();
+
+        const grouped = {};
+        articlesData.data.forEach((article) => {
+          const categoryId = article.category?.id;
+          if (categoryId) {
+            if (!grouped[categoryId]) {
+              grouped[categoryId] = [];
+            }
+            grouped[categoryId].push(article);
+          }
+        });
+
+        setArticlesByTab(grouped);
+
+        if (formattedTabs.length > 0) {
+          setActiveTab(formattedTabs[0].id);
+        }
+      } catch (err) {
+        console.error("Error loading data:", err);
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadData();
+  }, [currentLang]);
+
+  if (isLoading) {
+    return (
+      <div className="py-24 text-center text-white">
+        {t("common.loading", "جاري التحميل...")}
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="py-24 text-center text-red-400">
+        {error}
+      </div>
+    );
+  }
+
+  if (tabs.length === 0) {
+    return (
+      <div className="py-24 text-center text-white/70">
+        {t("blog.tabs.no_articles", "لا توجد تصنيفات")}
+      </div>
+    );
+  }
 
   return (
     <section className="py-24 relative overflow-hidden" dir={dir}>
-      {/* Background Effects */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className={`absolute top-20 ${isRTL ? 'left-20' : 'right-20'} w-[45%] h-[45%] bg-blue-600/10 blur-[120px] rounded-full`} />
-        <div className={`absolute bottom-20 ${isRTL ? 'right-20' : 'left-20'} w-[35%] h-[35%] bg-brand-orange/10 blur-[100px] rounded-full`} />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-brand-sky/5 to-transparent" />
+      <div className="absolute inset-0">
+        <div className="absolute top-40 left-10 w-72 h-72 bg-brand-sky/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-40 right-10 w-80 h-80 bg-brand-orange/20 rounded-full blur-3xl animate-pulse delay-1000" />
       </div>
 
       <div className="main-container relative z-10">
-        {/* Tabs */}
         <div className="flex flex-wrap gap-3 mb-12 justify-center">
-          {sections.map((sec) => (
+          {tabs.map((tab) => (
             <button
-              key={sec.id}
-              onClick={() => setActiveSection(sec.id)}
-              className={`px-6 py-2.5 rounded-full border transition-all duration-300 cursor-pointer ${activeSection === sec.id
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-6 py-2.5 rounded-full border transition-all duration-300 cursor-pointer text-sm md:text-base ${activeTab === tab.id
                 ? "bg-brand-sky border-brand-sky text-white shadow-lg shadow-brand-sky/20"
                 : "border-white/20 text-white/70 hover:bg-white/10 hover:border-white/30"
                 }`}
             >
-              {sec.title}
+              {tab.title}
             </button>
           ))}
         </div>
 
-        {/* Articles Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {articles[activeSection] && articles[activeSection].length > 0 ? (
-            articles[activeSection].map((article) => (
-              <div
-                key={article.id}
-                className="group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-500 hover:shadow-xl hover:shadow-brand-sky/5"
-              >
-                {/* Article Image - جعل الصورة قابلة للنقر */}
-                <Link
-                  href={`/techBlog/${article.slug}`}
-                  className="block relative h-48 overflow-hidden"
+          {articlesByTab[activeTab]?.length > 0 ? (
+            articlesByTab[activeTab].map((item) => {
+              const title = item[`title_${currentLang}`] || item.title || "بدون عنوان";
+
+              const excerptBlocks = item[`excerpt_${currentLang}`] || item.excerpt;
+              const excerpt = excerptBlocks ? extractTextFromBlocks(excerptBlocks) : "";
+
+              let imageUrl = "/images/blogImage.png";
+
+              if (item.image && Array.isArray(item.image) && item.image.length > 0) {
+                const imageData = item.image[0];
+                if (imageData.formats?.medium?.url) {
+                  imageUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL}${imageData.formats.medium.url}`;
+                } else if (imageData.formats?.small?.url) {
+                  imageUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL}${imageData.formats.small.url}`;
+                } else if (imageData.url) {
+                  imageUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL}${imageData.url}`;
+                }
+              }
+
+              const categoryName = item.category
+                ? item.category[`name_${currentLang}`] || item.category.name
+                : currentLang === "ar"
+                  ? "غير مصنف"
+                  : "Uncategorized";
+
+              const author = item[`author_${currentLang}`] || item.author || "غير معروف";
+
+              const dateFormatted = item.publishedAt
+                ? new Date(item.publishedAt).toLocaleDateString(
+                  currentLang === "ar" ? "ar-EG" : "en-US",
+                  {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  }
+                )
+                : t("common.unknown_date", "غير محدد");
+
+              // التحقق مما إذا كان المستخدم معجب بهذه المقالة
+              const isLiked = localLikes[item.id] || false;
+
+              // التحقق مما إذا كانت المشاهدة مسجلة محلياً
+              const isViewed = localViews[item.id] || false;
+
+              return (
+                <div
+                  key={item.id}
+                  className="group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-500 hover:shadow-xl hover:shadow-brand-sky/5"
                 >
-                  <Image
-                    src={article.image}
-                    alt={article.title}
-                    fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-700 cursor-pointer"
-                  />
-                </Link>
-
-                {/* Article Content */}
-                <div className="p-5 space-y-4">
-                  {/* Title - جعل العنوان قابلاً للنقر */}
-                  <Link href={`/techBlog/${article.slug}`}>
-                    <h3 className={`text-xl font-semibold text-white group-hover:text-brand-sky transition-colors cursor-pointer hover:text-brand-sky ${isRTL ? 'text-right' : 'text-left'}`}>
-                      {article.title}
-                    </h3>
-                  </Link>
-
-                  {/* Description - Only for first article */}
-                  {article.description && (
-                    <p className={`text-white/70 text-sm leading-relaxed ${isRTL ? 'text-right' : 'text-left'}`}>
-                      {article.description}
-                    </p>
-                  )}
-
-                  {/* Meta Info */}
-                  <div className={`flex flex-wrap items-center gap-2 text-xs text-white/50 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                    <span className="px-2 py-1 bg-white/10 rounded-full">
-                      {article.category}
-                    </span>
-                    <span>•</span>
-                    <span>{article.date}</span>
-                    <span>•</span>
-                    <span>{article.author}</span>
-                  </div>
-
-                  {/* Stats */}
-                  <div className={`flex items-center gap-4 text-sm ${isRTL ? 'flex-row-reverse' : ''}`}>
-                    <div className="flex items-center gap-1 text-white/60">
-                      <Heart className="w-4 h-4 text-red-400" />
-                      <span>{article.likes}</span>
-                    </div>
-                    <div className="flex items-center gap-1 text-white/60">
-                      <MessageCircle className="w-4 h-4 text-brand-sky" />
-                      <span>{article.comments}</span>
-                    </div>
-                  </div>
-
-                  {/* Read More Button - رابط كامل */}
                   <Link
-                    href={`/techBlog/${article.slug}`}
-                    className="block w-full py-2.5 px-4 rounded-xl border border-brand-sky/30 text-brand-sky hover:bg-brand-sky hover:text-white transition-all duration-300 font-medium text-center cursor-pointer"
+                    href={`/techBlog/${item.slug}`}
+                    className="block relative h-48 overflow-hidden"
                   >
-                    {t("blog.article.read_more", "Read More")}
+                    <Image
+                      src={imageUrl}
+                      alt={title}
+                      fill
+                      unoptimized
+                      className="object-cover group-hover:scale-110 transition-transform duration-700"
+                      onError={(e) => {
+                        e.currentTarget.src = "/images/blogImage.png";
+                      }}
+                    />
                   </Link>
+
+                  <div className="p-5 space-y-4">
+                    <Link href={`/techBlog/${item.slug}`}>
+                      <h3
+                        className={`text-xl font-semibold text-white group-hover:text-brand-sky transition-colors line-clamp-2 ${isRTL ? "text-right" : "text-left"
+                          }`}
+                      >
+                        {title}
+                      </h3>
+                    </Link>
+
+                    {excerpt && (
+                      <p
+                        className={`text-white/70 text-sm leading-relaxed line-clamp-3 ${isRTL ? "text-right" : "text-left"
+                          }`}
+                      >
+                        {excerpt}
+                      </p>
+                    )}
+
+                    <div
+                      className={`flex flex-wrap items-center gap-2 text-xs text-white/50 ${isRTL ? "flex-row-reverse" : ""
+                        }`}
+                    >
+                      <span className="px-2 py-1 bg-white/10 rounded-full">
+                        {categoryName}
+                      </span>
+                      <span>•</span>
+                      <span>{dateFormatted}</span>
+                      <span>•</span>
+                      <span>{author}</span>
+                    </div>
+
+                    <div
+                      className={`flex items-center gap-4 text-sm ${isRTL ? "flex-row-reverse" : ""
+                        }`}
+                    >
+                      <div className="flex items-center gap-1 text-white/60">
+                        <Heart
+                          className={`w-4 h-4 transition-all duration-300 ${isLiked
+                            ? 'fill-red-400 text-red-400'
+                            : 'text-red-400'
+                            }`}
+                        />
+                        <span>{item.likes || 0}</span>
+                      </div>
+
+                      <div className="flex items-center gap-1 text-white/60">
+                        <Eye className="w-4 h-4 text-brand-sky" />
+                        <span>
+                          {isViewed ? (item.views || 0) + 1 : item.views || 0}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-1 text-white/60">
+                        <MessageCircle className="w-4 h-4 text-brand-sky" />
+                        <span>{item.comments || 0}</span>
+                      </div>
+                    </div>
+
+                    <Link
+                      href={`/techBlog/${item.slug}`}
+                      className="block w-full py-2.5 px-4 rounded-xl border border-brand-sky/30 text-brand-sky hover:bg-brand-sky hover:text-white transition-all duration-300 font-medium text-center"
+                    >
+                      {t("blog.article.read_more", "اقرأ المزيد")}
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           ) : (
             <div className="col-span-full text-center py-20">
               <p className="text-white/50 text-lg">
-                {t("blog.tabs.no_articles", "No articles available in this section.")}
+                {t(
+                  "blog.tabs.no_articles",
+                  "لا توجد مقالات متاحة في هذا القسم حاليًا"
+                )}
               </p>
             </div>
           )}
@@ -186,4 +313,3 @@ export default function TabsSection() {
     </section>
   );
 }
-

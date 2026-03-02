@@ -3,9 +3,11 @@
 import Image from "next/image";
 import Stars from "../ui/Stars";
 import { useTranslation } from "react-i18next";
+import { useState } from "react";
 
 const Newsletter = () => {
   const { t } = useTranslation();
+  const [comingSoon, setComingSoon] = useState(false);
 
   return (
     <section className="relative flex items-center justify-center p-6 overflow-hidden my-20">
@@ -36,14 +38,7 @@ const Newsletter = () => {
 
         {/* الكرت الرئيسي */}
         <div className="relative z-10 bg-white rounded-3xl shadow-2xl overflow-hidden p-10 md:p-16 pb-6 md:pb-8">
-          {" "}
-          {/* زر الإغلاق الصغير في الزاوية */}
-          <button
-            aria-label="Close newsletter"
-            className="absolute top-6 right-8 text-gray-300 hover:text-gray-500 text-xl font-bold z-20"
-          >
-            ✕
-          </button>
+
           <div className="flex flex-col md:flex-row items-center gap-12 mb-15">
             {/* القسم الأيسر: الصورة والشكل الهندسي */}
             <div className="w-full md:w-1/2 flex justify-center relative">
@@ -77,16 +72,30 @@ const Newsletter = () => {
             </div>
           </div>
           {/* حقل الإدخال والزر */}
-          <div className="flex flex-col sm:flex-row items-stretch border border-gray-200 rounded-md overflow-hidden shadow-sm">
-            <input
-              type="email"
-              placeholder={t("newsletter.placeholder")}
-              className="grow px-5 py-4 outline-none text-gray-700 placeholder-gray-300 text-sm"
-              aria-label={t("newsletter.placeholder")}
-            />
-            <button className="bg-brand-sky hover:bg-blue-600 cursor-pointer text-white font-bold px-10 py-4 transition-all uppercase text-xs tracking-widest whitespace-nowrap">
-              {t("newsletter.button")}
-            </button>
+          <div>
+            <div className="flex flex-col sm:flex-row items-stretch border border-gray-200 rounded-md overflow-hidden shadow-sm">
+              <input
+                type="email"
+                placeholder={t("newsletter.placeholder")}
+                className="grow px-5 py-4 outline-none text-gray-700 placeholder-gray-300 text-sm"
+                aria-label={t("newsletter.placeholder")}
+              />
+              <button
+                onClick={() => {
+                  setComingSoon(true);
+                  setTimeout(() => setComingSoon(false), 3000);
+                }}
+                className="bg-brand-sky hover:bg-blue-600 cursor-pointer text-white font-bold px-10 py-4 transition-all uppercase text-xs tracking-widest whitespace-nowrap"
+              >
+                {t("newsletter.button")}
+              </button>
+            </div>
+
+            {comingSoon && (
+              <p className="mt-2 text-center text-sm text-blue-600 font-medium animate-fadeIn">
+                🚀 {t("comingSoon.title")}
+              </p>
+            )}
           </div>
           {/* النص السفلي الصغير */}
           <p className="text-center text-[16px] text-gray-300 italic mt-5">

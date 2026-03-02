@@ -16,8 +16,8 @@ export const metadata = {
   title: "Anoon",
   description: "Welcome to Anoon, a simple and anonymous pastebin service.",
   icons: {
-    icon: "/images/logo.png",
-    apple: "/images/logo.png",
+    icon: "/images/logo1.png",
+    apple: "/images/logo1.png",
   },
 };
 
@@ -34,10 +34,7 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en" dir="ltr">
-      <body
-        className="antialiased overflow-x-hidden"
-        style={backgroundStyle}
-      >
+      <body className="antialiased overflow-x-hidden" style={backgroundStyle}>
         <I18nProvider>
           <ChatProvider>
             <Navbar />

@@ -41,17 +41,13 @@ const ImpactSection = () => {
         <span className="text-brand-orange">{t("impact_page.title.second_word")}</span>
       </Impact.Title>
 
-      <Impact.AdditionalText>
-        {t("tamkeen.impact.additional")}
-      </Impact.AdditionalText>
-
       <Impact.Subtitle>
         <h4>{t("impact_page.subtitle.line1")}</h4>
         <h4 className="text-brand-orange">{t("impact_page.subtitle.line2.highlight")}</h4>
       </Impact.Subtitle>
 
       <Impact.Description>
-        {t("impact_page.description")}
+        {t("tamkeen.impact.description")}
       </Impact.Description>
 
       <Impact.Stats stats={secondPageStats} />

@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import Button from "../ui/Button";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const TrainingProgramCard = ({
   title,
@@ -23,6 +24,10 @@ const TrainingProgramCard = ({
 }) => {
   const { i18n } = useTranslation();
   const rtl = isRTL || i18n?.language === 'ar';
+  const pathname = usePathname();
+
+  const isSpaceNoonTraining = pathname === "/spaceNoonTraining";
+  const isNoonHub = pathname === "/noonHub";
 
   const renderTitle = () => {
     if (titleLines && titleLines.length > 0) {
@@ -39,7 +44,7 @@ const TrainingProgramCard = ({
     }
 
     return (
-      <h4 className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 ${rtl ? 'text-right' : ''}`}>
+      <h4 className={` font-bold mb-4 sm:mb-6 ${rtl ? 'text-right' : ''}`}>
         {title}
       </h4>
     );
@@ -76,8 +81,22 @@ const TrainingProgramCard = ({
             </div>
 
             <div className="mt-6 md:mt-8">
-              {buttonHref ? (
-                <Link href={buttonHref}>
+              {isSpaceNoonTraining ? (
+                <Link
+                  href="https://maps.app.goo.gl/ars1q5FHPEMyP1zo6"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Button
+                    variant="outline"
+                    color={buttonColor}
+                    className="px-6 md:px-8 py-2 md:py-3 text-sm md:text-base"
+                  >
+                    {buttonText}
+                  </Button>
+                </Link>
+              ) : isNoonHub ? (
+                <Link href="/spaceNoonTraining">
                   <Button
                     variant="outline"
                     color={buttonColor}
@@ -90,8 +109,8 @@ const TrainingProgramCard = ({
                 <Button
                   variant="outline"
                   color={buttonColor}
-                  className="px-6 md:px-8 py-2 md:py-3 text-sm md:text-base"
                   onClick={onButtonClick}
+                  className="px-6 md:px-8 py-2 md:py-3 text-sm md:text-base"
                 >
                   {buttonText}
                 </Button>

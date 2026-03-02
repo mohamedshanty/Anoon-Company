@@ -2,14 +2,18 @@
 
 import Link from "next/link";
 import {
-  Facebook,
-  Twitter,
-  Instagram,
-  Linkedin,
   MapPin,
   Mail,
   Phone,
 } from "lucide-react";
+
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaLinkedinIn,
+  FaWhatsapp,
+} from "react-icons/fa";
+
 import Image from "next/image";
 import Button from "../ui/Button";
 import { useTranslation } from "react-i18next";
@@ -20,10 +24,10 @@ export default function Footer() {
   const { isRTL, dir } = useRTL();
 
   const socialLinks = [
-    { icon: Facebook, href: "https://facebook.com", label: "Facebook" },
-    { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
-    { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
-    { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
+    { icon: FaFacebookF, href: "https://www.facebook.com/profile.php?id=61584269549700", label: "Facebook" },
+    { icon: FaWhatsapp, href: "https://wa.me/972567098648", label: "WhatsApp" },
+    { icon: FaInstagram, href: "https://www.instagram.com/anoon.solution", label: "Instagram" },
+    { icon: FaLinkedinIn, href: "https://www.linkedin.com/company/anoon-solutions", label: "LinkedIn" },
   ];
 
   return (

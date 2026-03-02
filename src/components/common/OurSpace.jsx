@@ -6,6 +6,7 @@ import { useRTL } from "@/hooks/useRTL";
 import SectionHeader from "../ui/SectionHeader";
 import Button from "../ui/Button";
 import Stars from "../ui/Stars";
+import Link from "next/link";
 
 const OurSpace = () => {
   const { t } = useTranslation();
@@ -46,9 +47,11 @@ const OurSpace = () => {
           titleClassName="text-5xl md:text-6xl"
         />
         <div className="mt-12">
-          <Button variant="outline" color="sky" className="px-8 py-3 text-lg">
-            {t("space_noon.our_space.button", "Visit Our Location")}
-          </Button>
+          <Link href="https://maps.app.goo.gl/AHQxMFpHrhuP86qq6" target="_blank" rel="noopener noreferrer">
+            <Button variant="outline" color="sky" className="px-8 py-3 text-lg">
+              {t("space_noon.our_space.button", "Visit Our Location")}
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

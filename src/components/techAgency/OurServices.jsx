@@ -81,7 +81,7 @@ export default function OurServices() {
             </div>
 
             {/* Button */}
-            <div ref={buttonRef} className="pt-4">
+            {/* <div ref={buttonRef} className="pt-4">
               <Link href="/techBlog">
                 <Button
                   variant="premium"
@@ -91,7 +91,7 @@ export default function OurServices() {
                   {t("tech_agency.our_services.button", "Book A Meeting")}
                 </Button>
               </Link>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

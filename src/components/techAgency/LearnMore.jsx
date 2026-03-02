@@ -73,7 +73,7 @@ export default function LearnMore() {
                 </p>
               </div>
 
-              <div ref={buttonRef} className="pt-4">
+              {/* <div ref={buttonRef} className="pt-4">
                 <Link href="/techBlog">
                   <Button
                     variant="premium"
@@ -83,7 +83,7 @@ export default function LearnMore() {
                     {t("tech_agency.learn_more.button", "Read Now")}
                   </Button>
                 </Link>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

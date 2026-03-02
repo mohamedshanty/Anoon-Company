@@ -11,7 +11,7 @@ export default function SpaceNoonTrainingHero() {
 
   return (
     <Hero>
-      <Hero.Title>
+      <Hero.Title className={`${isRTL ? 'gap-y-8' : 'gap-y-3'}`}>
         <span>{t("tech_training.hero.title_part1", "Enabling")}</span>
         <span className="text-brand-orange">
           {t("tech_training.hero.title_highlight", "The Future Generation")}
@@ -26,9 +26,9 @@ export default function SpaceNoonTrainingHero() {
         </span>
       </Hero.Title>
 
-      <Hero.Subtitle>
+      <Hero.Subtitle className={`tracking-[0.5px] ${isRTL ? 'mt-10' : ''}`}>
         <p
-          className={`text-subtitle text-white/80 ${isRTL ? "text-right" : ""}`}
+          className={`text-subtitle text-white/80`}
         >
           {t(
             "tech_training.hero.subtitle",
@@ -38,7 +38,7 @@ export default function SpaceNoonTrainingHero() {
       </Hero.Subtitle>
 
       <Hero.Buttons>
-        <Link href="https://maps.app.goo.gl/ars1q5FHPEMyP1zo6" target="_blank" rel="noopener noreferrer">
+        <Link href="/spaceNoonTraining#contact" >
           <Button variant="outline" color="orange">
             {t("tech_training.hero.button1", "Explore Our Services")}
           </Button>

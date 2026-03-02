@@ -13,7 +13,10 @@ export default function NotFound() {
   const { isRTL, dir } = useRTL();
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden py-20 px-6" dir={dir}>
+    <div
+      className="min-h-screen flex items-center justify-center relative overflow-hidden py-20 px-6 gap-y-6"
+      dir={dir}
+    >
       {/* Background Elements */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-1/4 left-1/4 w-[50%] h-[50%] bg-brand-sky/10 blur-[120px] rounded-full animate-float opacity-50" />
@@ -37,7 +40,7 @@ export default function NotFound() {
           <p className="text-lg text-white/60 max-w-lg mx-auto leading-relaxed">
             {t(
               "errors.404.description",
-              "The page you're looking for has vanished into thin air. Don't worry, even the best astronauts get lost sometimes."
+              "The page you're looking for has vanished into thin air. Don't worry, even the best astronauts get lost sometimes.",
             )}
           </p>
         </div>
@@ -45,17 +48,25 @@ export default function NotFound() {
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
           <Link href="/">
-            <Button variant="filled" color="sky" className="px-8 py-4 text-lg rounded-2xl group">
-              <Home className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'} transition-transform group-hover:scale-110`} />
+            <Button
+              variant="filled"
+              color="sky"
+              className="px-8 py-4 text-lg rounded-2xl group"
+            >
+              <Home
+                className={`w-5 h-5 ${isRTL ? "ml-2" : "mr-2"} transition-transform group-hover:scale-110`}
+              />
               {t("errors.404.back_home", "Back to Base")}
             </Button>
           </Link>
-          
-          <button 
+
+          <button
             onClick={() => window.history.back()}
             className="flex items-center gap-3 text-white/80 hover:text-white transition-colors py-3 px-6 group"
           >
-            <MoveLeft className={`w-5 h-5 ${isRTL ? 'rotate-180 order-last' : 'group-hover:-translate-x-1'} transition-transform`} />
+            <MoveLeft
+              className={`w-5 h-5 ${isRTL ? "rotate-180 order-last" : "group-hover:-translate-x-1"} transition-transform`}
+            />
             <span className="text-lg font-medium">
               {t("errors.404.previous_page", "Go Back")}
             </span>

@@ -27,7 +27,7 @@ export default async function Home() {
         <ProgramsServer t={trans.programs_page} isRTL={isRTL} />
         <AIAgentServer t={trans.ai_agent} isRTL={isRTL} />
         <ImpactSectionServer t={trans.impact_page} statsTrans={trans.stats} isRTL={isRTL} />
-        <TeamsServer t={trans.teams} isRTL={isRTL} />
+        <TeamsServer t={trans.teams} locale={lang} isRTL={isRTL} />
         <PartnersServer t={trans.partners} isRTL={isRTL} />
         <FAQServer t={trans.faq} isRTL={isRTL} />
         <GetInTouch />

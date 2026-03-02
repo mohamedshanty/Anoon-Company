@@ -12,7 +12,7 @@ export default function NoonHero() {
 
   return (
     <Hero>
-      <Hero.Title>
+      <Hero.Title className="gap-y-6">
         <span className="font-semibold">{t("noon_hub.hero.title_part1", "Providing")}</span>
         <span className="font-semibold">
           {t("noon_hub.hero.title_part2_prefix", "A")}{" "}
@@ -31,7 +31,7 @@ export default function NoonHero() {
         </span>
       </Hero.Title>
 
-      <Hero.Subtitle>
+      <Hero.Subtitle className="mt-5 tracking-[1px]">
         <p className={`text-subtitle text-white/80 ${isRTL ? 'text-right' : ''}`}>
           {t("noon_hub.hero.subtitle", "Noon Hub is a place Designed for your needs, the friends you know the people you admire, Every body focusing on get things done, Learn more, network more and Focus With Us")}
         </p>

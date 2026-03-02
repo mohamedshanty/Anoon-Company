@@ -12,7 +12,7 @@ export default function SpaceNoonHero() {
 
   return (
     <Hero>
-      <Hero.Title>
+      <Hero.Title className="gap-y-6">
         <span>{t("space_noon.hero.title_part1", "Enabling")}</span>
         <span className="text-brand-orange">
           {t("space_noon.hero.title_highlight", "The Future Generation")}
@@ -27,20 +27,20 @@ export default function SpaceNoonHero() {
         </span>
       </Hero.Title>
 
-      <Hero.Subtitle>
-        <p className={`text-subtitle text-white/80 ${isRTL ? 'text-right' : ''}`}>
+      <Hero.Subtitle className="tracking-[0.5px]">
+        <p className={`text-subtitle text-white/80`}>
           {t("space_noon.hero.subtitle", "Empowering students and professionals with the tools and the platform by providing a co-working space that they can work in safe, quiet space with the ability to network")}
         </p>
       </Hero.Subtitle>
 
       <Hero.Buttons className="mt-10">
 
-        <Link href="https://tamkeeninsan.org/" target="_blank" rel="noopener noreferrer">
+        <Link href="/spaceNoonTraining">
           <Button variant="outline" color="orange">
             {t("space_noon.hero.button1", "Explore Our Services")}
           </Button>
         </Link>
-        <Link href="https://tamkeeninsan.org/" target="_blank" rel="noopener noreferrer">
+        <Link href="https://maps.app.goo.gl/AHQxMFpHrhuP86qq6" target="_blank" rel="noopener noreferrer">
           <Button variant="outline" color="sky">
             {t("space_noon.hero.button2", "Visit Our Space")}
           </Button>
