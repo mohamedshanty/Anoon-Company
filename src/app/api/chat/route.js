@@ -1,5 +1,5 @@
 // app/api/chat/route.js
-import { OpenAI } from "openai";
+import OpenAI from "openai";
 
 // Switching to Groq for FREE usage (OpenAI Compatible)
 const client = new OpenAI({
