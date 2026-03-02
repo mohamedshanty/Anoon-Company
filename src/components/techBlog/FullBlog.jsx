@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 import { Heart, MessageCircle, Calendar, User, Tag, Eye } from "lucide-react";
 import { useState, useEffect } from "react";
-import CommentSection from "./comments/CommentSection";
+import { CommentSection } from "./comments/CommentSection";
 
 export default function FullBlog({ article, similarArticles }) {
   const [likes, setLikes] = useState(article?.likes || 0);
@@ -28,7 +28,7 @@ export default function FullBlog({ article, similarArticles }) {
         const articleId = article?.documentId || article?.id;
 
         const res = await fetch(`/api/articles/${articleId}/views`, {
-          method: 'POST',
+          method: "POST",
         });
 
         if (!res.ok) return;
@@ -37,12 +37,17 @@ export default function FullBlog({ article, similarArticles }) {
         if (data.success) {
           setViews(data.views);
           setHasViewed(true);
-          sessionStorage.setItem(`viewed_${article.id}`, 'true');
+          sessionStorage.setItem(`viewed_${article.id}`, "true");
 
           // تحديث localStorage للمشاهدة
-          const viewedArticles = JSON.parse(localStorage.getItem('viewed_articles') || '{}');
+          const viewedArticles = JSON.parse(
+            localStorage.getItem("viewed_articles") || "{}",
+          );
           viewedArticles[article.id] = true;
-          localStorage.setItem('viewed_articles', JSON.stringify(viewedArticles));
+          localStorage.setItem(
+            "viewed_articles",
+            JSON.stringify(viewedArticles),
+          );
         }
       } catch (error) {
         console.error("Error registering view:", error);
@@ -56,11 +61,11 @@ export default function FullBlog({ article, similarArticles }) {
   useEffect(() => {
     if (article?.id) {
       const liked = localStorage.getItem(`liked_${article.id}`);
-      setIsLiked(liked === 'true');
+      setIsLiked(liked === "true");
 
       // تحديث عدد الإعجابات إذا كان المستخدم معجباً
-      if (liked === 'true' && likes === article?.likes) {
-        setLikes(prev => prev + 1);
+      if (liked === "true" && likes === article?.likes) {
+        setLikes((prev) => prev + 1);
       }
     }
   }, [article?.id, article?.likes]);
@@ -75,9 +80,9 @@ export default function FullBlog({ article, similarArticles }) {
       const articleId = article?.documentId || article?.id;
 
       const res = await fetch(`/api/articles/${articleId}/likes`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ increment: newLikedState }),
       });
@@ -110,7 +115,11 @@ export default function FullBlog({ article, similarArticles }) {
 
   let heroImageUrl = "/images/blogImage.png";
 
-  if (article?.image && Array.isArray(article.image) && article.image.length > 0) {
+  if (
+    article?.image &&
+    Array.isArray(article.image) &&
+    article.image.length > 0
+  ) {
     const imageData = article.image[0];
     if (imageData.formats?.large?.url) {
       heroImageUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL}${imageData.formats.large.url}`;
@@ -123,13 +132,13 @@ export default function FullBlog({ article, similarArticles }) {
 
   const dateFormatted = article.publishedAt
     ? new Date(article.publishedAt).toLocaleDateString(
-      lang === "ar" ? "ar-EG" : "en-US",
-      {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      }
-    )
+        lang === "ar" ? "ar-EG" : "en-US",
+        {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        },
+      )
     : "غير محدد";
 
   return (
@@ -172,7 +181,9 @@ export default function FullBlog({ article, similarArticles }) {
           </div>
           <div className="flex items-center gap-2">
             <Eye size={18} />
-            <span>{views.toLocaleString()} {lang === 'ar' ? 'مشاهدة' : 'views'}</span>
+            <span>
+              {views.toLocaleString()} {lang === "ar" ? "مشاهدة" : "views"}
+            </span>
           </div>
         </div>
 
@@ -181,14 +192,16 @@ export default function FullBlog({ article, similarArticles }) {
           <button
             onClick={handleLike}
             disabled={isUpdating}
-            className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 ${isLiked
-              ? 'bg-red-500/20 text-red-400'
-              : 'bg-white/5 text-white/70 hover:bg-white/10'
-              }`}
+            className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 ${
+              isLiked
+                ? "bg-red-500/20 text-red-400"
+                : "bg-white/5 text-white/70 hover:bg-white/10"
+            }`}
           >
             <Heart
-              className={`w-5 h-5 transition-all duration-300 ${isLiked ? 'fill-red-400 text-red-400 scale-110' : ''
-                }`}
+              className={`w-5 h-5 transition-all duration-300 ${
+                isLiked ? "fill-red-400 text-red-400 scale-110" : ""
+              }`}
             />
             <span>{likes.toLocaleString()}</span>
           </button>
@@ -231,7 +244,7 @@ export default function FullBlog({ article, similarArticles }) {
         {similarArticles?.length > 0 && (
           <section className="mt-20">
             <h2 className="text-3xl font-bold text-white mb-8">
-              {lang === 'ar' ? 'مقالات مشابهة' : 'Similar Articles'}
+              {lang === "ar" ? "مقالات مشابهة" : "Similar Articles"}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* يمكنك إضافة عرض المقالات المشابهة هنا */}
