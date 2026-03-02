@@ -47,7 +47,7 @@ const ImpactSection = () => {
       </Impact.Subtitle>
 
       <Impact.Description>
-        {t("tamkeen.impact.description")}
+        {t("tamkeen_impact.description")}
       </Impact.Description>
 
       <Impact.Stats stats={secondPageStats} />

@@ -12,21 +12,18 @@ const OurSpace = () => {
   const { t } = useTranslation();
   const { isRTL, dir } = useRTL();
 
-  // جلب مصفوفة الكلمات المميزة
   const subtitleWords = t("space_noon.our_space.subtitle_words", {
     returnObjects: true,
     defaultValue: ["Your", "Future", "Network"]
   });
 
-  // التأكد من أن subtitleWords هي مصفوفة
   const wordsArray = Array.isArray(subtitleWords) ? subtitleWords : ["Your", "Future", "Network"];
 
-  // بناء highlightedWords بشكل ديناميكي
   const highlightedWords = [
     ...(wordsArray[0] ? [{ text: wordsArray[0], color: "text-brand-sky" }] : []),
     ...(wordsArray[1] ? [{ text: wordsArray[1], color: "text-brand-orange" }] : []),
     ...(wordsArray[2] ? [{ text: wordsArray[2], color: "text-brand-sky" }] : []),
-  ].filter(item => item.text); // إزالة أي عناصر فارغة
+  ].filter(item => item.text);
 
   return (
     <section className="relative py-24 overflow-hidden" dir={dir}>

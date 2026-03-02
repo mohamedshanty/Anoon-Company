@@ -105,12 +105,11 @@ export default function PartnersSection({
       </div>
 
       <div className="main-container">
-        {/* Section Header - مبسط */}
+        {/* Section Header */}
         <div ref={titleRef} className="text-center mb-10">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3">
-            <span className="text-brand-sky">{t("partners.title", "Our")}</span>{" "}
             <span className="text-brand-orange">
-              {t("partners.title_highlight", "Partner")}
+              {t("partners.title", "Our")}
             </span>
           </h2>
           <p className="text-base md:text-lg text-white/70 max-w-2xl mx-auto">
@@ -134,7 +133,7 @@ export default function PartnersSection({
           </div>
         </div>
 
-        {/* Additional Info - مبسط */}
+        {/* Additional Info */}
         <div className="mt-8 text-center">
           <p className="text-white/40 text-xs">
             {t(

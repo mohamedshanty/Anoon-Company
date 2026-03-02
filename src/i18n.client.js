@@ -7,7 +7,6 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import enTranslation from '../public/locales/en/common.json';
 import arTranslation from '../public/locales/ar/common.json';
 
-// تأكد من عدم إعادة التهيئة
 if (!i18n.isInitialized) {
   i18n
     .use(LanguageDetector)

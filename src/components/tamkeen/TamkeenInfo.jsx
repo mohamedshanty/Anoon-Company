@@ -34,7 +34,9 @@ export default function TamkeenHelpSection() {
     >
       <InfoSection.Header>
         <InfoSection.Subtitle className="text-brand-white">
-          <h2>{t("tamkeen.who_we_are.subtitle")}</h2>
+          <span className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+            {t("tamkeen.who_we_are.subtitle")}
+          </span>
         </InfoSection.Subtitle>
         <InfoSection.Title>
           <InfoSection.TitleLine

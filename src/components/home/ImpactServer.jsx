@@ -1,56 +1,59 @@
-import { LineChart, Briefcase, Star, User } from "lucide-react";
-import Impact from "@/components/common/ImpactServer"; // I'll refactor Impact to be server-friendly
-import Link from 'next/link';
+// components/home/ImpactSection.jsx (للهوم بيج)
+"use client"
 
-export default function ImpactSectionServer({ t, statsTrans, isRTL }) {
-    const mainPageStats = [
+import { LineChart, Briefcase, Star, User } from "lucide-react";
+import Impact from "@/components/common/Impact";
+import { useTranslation } from "react-i18next";
+
+const ImpactSection = () => {
+    const { t } = useTranslation();
+
+    const stats = [
         {
             id: "freelancers",
             icon: <User className="text-brand-orange" />,
             value: "11,000",
-            label: statsTrans.freelancers,
+            label: t("stats.freelancers"),
         },
         {
             id: "success",
             icon: <Star className="text-brand-orange" />,
             value: "50 %",
-            label: statsTrans.success,
+            label: t("stats.success"),
         },
         {
             id: "courses",
             icon: <LineChart className="text-brand-orange" />,
             value: "3",
-            label: statsTrans.courses,
+            label: t("stats.courses"),
         },
         {
             id: "workspace",
             icon: <Briefcase className="text-brand-orange" />,
             value: "11",
-            label: statsTrans.workspace,
+            label: t("stats.workspace"),
         },
     ];
 
     return (
-        <Impact patternDirection="diagonal" className="pt-10" isRTL={isRTL}>
+        <Impact patternDirection="diagonal" className="pt-10">
             <Impact.Title>
-                <span className="text-brand-sky">{t.title.first_word}</span>{" "}
-                <span className="text-brand-orange">{t.title.second_word}</span>
+                <span className="text-brand-sky">{t("impact_page.title.first_word")}</span>{" "}
+                <span className="text-brand-orange">{t("impact_page.title.second_word")}</span>
             </Impact.Title>
 
-            <Impact.AdditionalText>
-                {t.additional_text}
-            </Impact.AdditionalText>
-
             <Impact.Subtitle>
-                <p>{t.subtitle.line1}</p>
-                <p className="text-brand-orange">{t.subtitle.line2.highlight}</p>
+                <h4>{t("impact_page.subtitle.line1")}</h4>
+                <h4 className="text-brand-orange">{t("impact_page.subtitle.line2.highlight")}</h4>
             </Impact.Subtitle>
 
             <Impact.Description>
-                {t.description}
+                {t("impact_page.description")}
             </Impact.Description>
 
-            <Impact.Stats stats={mainPageStats} />
+            <Impact.Stats stats={stats} />
         </Impact>
     );
-}
+};
+
+export default ImpactSection;

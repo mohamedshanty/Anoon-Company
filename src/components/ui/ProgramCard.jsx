@@ -11,16 +11,15 @@ const ProgramCard = ({
   primaryBtnColor = "green",
   primaryBtnHref,
   primaryBtnOnClick,
-  primaryBtnExternal = false, // للروابط الخارجية
+  primaryBtnExternal = false,
   secondaryBtnText = "Know More",
   secondaryBtnHref,
   secondaryBtnOnClick,
-  secondaryBtnExternal = false, // للروابط الخارجية
+  secondaryBtnExternal = false,
   accentGlowClass = "from-green-500/5",
   secondaryBtnVariant = "outline-plain",
   logoContainerClassName = "mb-3",
 }) => {
-  // دالة لعرض الزر المناسب
   const renderButton = ({ text, color, variant, href, onClick, external }) => {
     const buttonElement = (
       <Button
@@ -35,7 +34,6 @@ const ProgramCard = ({
 
     if (href) {
       if (external) {
-        // رابط خارجي
         return (
           <a
             href={href}
@@ -47,7 +45,6 @@ const ProgramCard = ({
           </a>
         );
       } else {
-        // رابط داخلي
         return (
           <Link href={href} className="flex-1 w-full">
             {buttonElement}
@@ -56,7 +53,6 @@ const ProgramCard = ({
       }
     }
 
-    // بدون رابط، فقط زر عادي
     return <div className="flex-1 w-full">{buttonElement}</div>;
   };
 

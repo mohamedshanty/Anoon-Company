@@ -37,7 +37,7 @@ export default function IntelligentSolution() {
     <section className="py-24 relative overflow-hidden" dir={dir}>
       <Stars />
 
-      {/* main-container يحتوي على الصورة والنص معاً */}
+      {/* main-container */}
       <div className="main-container">
         <div className={`flex flex-col lg:flex-row items-center gap-8 lg:gap-12 ${isRTL ? 'lg:flex-row-reverse' : ''}`}>
 

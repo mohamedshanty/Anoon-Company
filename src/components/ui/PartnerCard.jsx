@@ -29,7 +29,7 @@ export default function PartnerCard({
 
   const detailedContent = (
     <div className="space-y-5">
-      {/* Support Message - رسالة الدعم لأنون */}
+      {/* Support Message */}
       <div className="p-4 bg-gradient-to-r from-brand-sky/20 to-brand-orange/20 rounded-xl border border-white/10">
         <div className="flex items-start gap-3">
           <HandHeart className="w-6 h-6 text-brand-orange shrink-0 mt-1" />
@@ -43,7 +43,7 @@ export default function PartnerCard({
         </div>
       </div>
 
-      {/* Quick Info - سطر واحد مبسط */}
+      {/* Quick Info */}
       <div className="flex flex-wrap justify-center gap-3 text-sm">
         <div className="flex items-center gap-1 px-3 py-1.5 bg-white/5 rounded-full">
           <Award className="w-4 h-4 text-brand-orange" />
@@ -55,7 +55,7 @@ export default function PartnerCard({
         </div>
       </div>
 
-      {/* Charity Type - مبسط */}
+      {/* Charity Type */}
       {charityType && (
         <div className="flex items-center justify-center gap-2">
           <Shield className="w-4 h-4 text-brand-orange" />
@@ -73,7 +73,7 @@ export default function PartnerCard({
       {/* Background Gradient Effect */}
       <div className="absolute inset-0 bg-gradient-to-br from-brand-sky/10 via-transparent to-brand-orange/10 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-      {/* Logo Container - معدل للتمركز في المنتصف */}
+      {/* Logo Container */}
       <div className="flex justify-center mb-4">
         <div className="relative w-[200px] h-[100px] p-4 bg-white/10 rounded-2xl backdrop-blur-sm border border-white/10 group-hover:border-brand-sky/30 transition-all duration-500">
           <Image
@@ -88,12 +88,12 @@ export default function PartnerCard({
 
       {/* Content */}
       <div className="text-center space-y-4">
-        {/* Description - مختصرة */}
+        {/* Description */}
         <p className="text-white/70 text-sm leading-relaxed max-w-xl mx-auto line-clamp-2">
           {description}
         </p>
 
-        {/* Detailed Content - يظهر فقط إذا كان variant = detailed */}
+        {/* Detailed Content */}
         {variant === "detailed" && detailedContent}
       </div>
 

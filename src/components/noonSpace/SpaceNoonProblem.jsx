@@ -18,14 +18,12 @@ const SpaceNoonProblemSection = () => {
     >
       <InfoSection.Header>
         <InfoSection.Title>
-          {/* تنسيق مطابق للصورة - كل كلمة في سطر منفصل مع دعم RTL */}
           <div className={`space-y-6 pt-10 ${isRTL ? 'text-right' : ''}`}>
             <h1 className="text-5xl md:text-6xl font-semibold text-brand-white">
               {t("space_noon.problem.title_line1", "What is")}
             </h1>
             <h1 className={`text-5xl md:text-6xl font-semibold leading-17 text-brand-sky ${isRTL ? 'text-right' : ''}`}>
               {isRTL ? (
-                // ترتيب عربي: المشكلة التي تواجهنا؟؟
                 <>
                   <span className="text-red-400">{t("space_noon.problem.highlight", "المشكلة")}</span>{" "}
                   {t("space_noon.problem.title_line2_part1", "التي")}{" "}
@@ -33,7 +31,6 @@ const SpaceNoonProblemSection = () => {
                   {t("space_noon.problem.question_mark", "؟؟")}
                 </>
               ) : (
-                // ترتيب إنجليزي: The Problem That Face Us ??
                 <>
                   {t("space_noon.problem.title_line2_part1", "The")}{" "}
                   <span className="text-red-400">{t("space_noon.problem.highlight", "Problem")}</span>{" "}

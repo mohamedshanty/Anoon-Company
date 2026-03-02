@@ -24,7 +24,6 @@ const SpaceNoonTrainingProblemSection = () => {
             </h1>
             <h1 className={`text-5xl md:text-6xl font-semibold leading-17 text-brand-sky ${isRTL ? 'text-right' : ''}`}>
               {isRTL ? (
-                // ترتيب عربي: المشكلة التي تواجهنا؟؟
                 <>
                   <span className="text-red-400">{t("tech_training.problem.highlight", "المشكلة")}</span>{" "}
                   {t("tech_training.problem.title_line2_part1", "التي")}{" "}
@@ -32,7 +31,6 @@ const SpaceNoonTrainingProblemSection = () => {
                   {t("tech_training.problem.question_mark", "؟؟")}
                 </>
               ) : (
-                // ترتيب إنجليزي: The Problem That Face Us ??
                 <>
                   {t("tech_training.problem.title_line2_part1", "The")}{" "}
                   <span className="text-red-400">{t("tech_training.problem.highlight", "Problem")}</span>{" "}

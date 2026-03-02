@@ -7,7 +7,6 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 import enTranslation from '../public/locales/en/common.json';
 import arTranslation from '../public/locales/ar/common.json';
 
-// تأكد من عدم إعادة التهيئة
 if (!i18n.isInitialized) {
   i18n
     .use(LanguageDetector)
@@ -24,7 +23,7 @@ if (!i18n.isInitialized) {
       defaultNS: 'common',
       ns: ['common'],
       fallbackLng: 'en',
-      debug: process.env.NODE_ENV === 'development', // تفعيل debug في وضع التطوير
+      debug: process.env.NODE_ENV === 'development',
       interpolation: {
         escapeValue: false,
       },
@@ -33,7 +32,7 @@ if (!i18n.isInitialized) {
         caches: ['localStorage', 'cookie'],
       },
       react: {
-        useSuspense: false, // مهم لمنع مشاكل التحميل
+        useSuspense: false, 
       }
     });
 }

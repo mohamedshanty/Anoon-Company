@@ -163,7 +163,6 @@ export default function CommentSection({ articleId, articleDocumentId }) {
                 {lang === 'ar' ? 'التعليقات' : 'Comments'} ({comments.length})
             </h2>
 
-            {/* نموذج إضافة تعليق */}
             <form onSubmit={handleSubmitComment} className="mb-10">
                 <textarea
                     value={newComment}

@@ -14,7 +14,7 @@ export default function MainInfoServer({ t }) {
     >
       <InfoSection.Header>
         <InfoSection.Subtitle className="text-brand-white">
-          <h2>{t.subtitle}</h2>
+          <span className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">{t.subtitle}</span>
         </InfoSection.Subtitle>
         <InfoSection.Title>
           <InfoSection.TitleLine

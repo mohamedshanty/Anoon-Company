@@ -37,7 +37,7 @@ export default function OurServices() {
       {/* Background Pattern */}
       <PatternBackground direction="default" translateY="-translate-y-30" />
 
-      {/* main-container يحتوي على الصورة والنص معاً */}
+      {/* main-container */}
       <div className="main-container">
         <div className={`flex flex-col lg:flex-row items-center gap-8 lg:gap-12 ${isRTL ? 'lg:flex-row-reverse' : ''}`}>
 

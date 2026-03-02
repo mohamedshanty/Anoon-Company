@@ -18,7 +18,11 @@ const GetInTouch = () => {
   const mapRef = useRef(null);
   const buttonRef = useRef(null);
   const recaptchaRef = useRef(null);
-  const [status, setStatus] = useState({ loading: false, success: false, error: null });
+  const [status, setStatus] = useState({
+    loading: false,
+    success: false,
+    error: null,
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,7 +30,11 @@ const GetInTouch = () => {
 
     const recaptchaToken = recaptchaRef.current?.getValue();
     if (!recaptchaToken) {
-      setStatus({ loading: false, success: false, error: "Please verify that you are not a robot." });
+      setStatus({
+        loading: false,
+        success: false,
+        error: "Please verify that you are not a robot.",
+      });
       return;
     }
 
@@ -35,13 +43,13 @@ const GetInTouch = () => {
       email: formInputsRef.current[1].value,
       phone: formInputsRef.current[2].value,
       message: formInputsRef.current[3].value,
-      recaptchaToken
+      recaptchaToken,
     };
 
     try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
@@ -51,7 +59,7 @@ const GetInTouch = () => {
         recaptchaRef.current?.reset();
       } else {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to send message');
+        throw new Error(errorData.message || "Failed to send message");
       }
     } catch (error) {
       setStatus({ loading: false, success: false, error: error.message });
@@ -59,109 +67,101 @@ const GetInTouch = () => {
   };
 
   useEffect(() => {
-    // Create a timeline for better control - مع speeds أسرع
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: sectionRef.current,
-        start: "top 80%", // بدأ مبكراً قليلاً
+        start: "top 80%",
         end: "bottom 20%",
         toggleActions: "play none none reverse",
       },
     });
 
-    // Animate title - أسرع
     tl.fromTo(
       titleRef.current,
       {
-        y: 30, // مسافة أقل
+        y: 30,
         opacity: 0,
       },
       {
         y: 0,
         opacity: 1,
-        duration: 0.4, // من 0.8 إلى 0.4
-        ease: "power2.out", // easing أسرع
+        duration: 0.4,
+        ease: "power2.out",
       },
     )
-      // Animate subtitle - أسرع وتأخير أقل
       .fromTo(
         subtitleRef.current,
         {
-          y: 20, // مسافة أقل
+          y: 20,
           opacity: 0,
         },
         {
           y: 0,
           opacity: 1,
-          duration: 0.3, // من 0.6 إلى 0.3
+          duration: 0.3,
           ease: "power2.out",
         },
-        "-=0.2", // تأخير أقل (كان -=0.4)
+        "-=0.2",
       )
-      // Animate form inputs with stagger - أسرع
       .fromTo(
         formInputsRef.current,
         {
-          x: -30, // مسافة أقل
+          x: -30,
           opacity: 0,
         },
         {
           x: 0,
           opacity: 1,
-          duration: 0.3, // من 0.6 إلى 0.3
-          stagger: 0.08, // stagger أقل (كان 0.15)
+          duration: 0.3,
+          stagger: 0.08,
           ease: "power2.out",
         },
-        "-=0.1", // تأخير أقل
+        "-=0.1",
       )
-      // Animate button with pulse effect - أسرع
       .fromTo(
         buttonRef.current,
         {
-          scale: 0.95, // مقياس أقرب للطبيعي
+          scale: 0.95,
           opacity: 0,
         },
         {
           scale: 1,
           opacity: 1,
-          duration: 0.3, // من 0.5 إلى 0.3
-          ease: "back.out(1.5)", // back out أقوى
+          duration: 0.3,
+          ease: "back.out(1.5)",
         },
       )
-      // Animate contact info - أسرع
       .fromTo(
         contactInfoRef.current,
         {
-          y: 20, // مسافة أقل
+          y: 20,
           opacity: 0,
         },
         {
           y: 0,
           opacity: 1,
-          duration: 0.3, // من 0.6 إلى 0.3
+          duration: 0.3,
           ease: "power2.out",
         },
-        "-=0.1", // تأخير أقل
+        "-=0.1",
       )
-      // Animate map with rotation and scale - أسرع
       .fromTo(
         mapRef.current,
         {
-          rotationY: 10, // دوران أقل
-          scale: 0.9, // مقياس أقرب
+          rotationY: 10,
+          scale: 0.9,
           opacity: 0,
         },
         {
           rotationY: 0,
           scale: 1,
           opacity: 1,
-          duration: 0.5, // من 1.0 إلى 0.5
+          duration: 0.5,
           ease: "power2.out",
         },
-        "-=0.2", // تأخير أقل
+        "-=0.2",
       );
 
-    // Add hover animation for form inputs - مع speeds أسرع
     formInputsRef.current.forEach((input) => {
       if (input) {
         input.addEventListener("focus", () => {
@@ -177,20 +177,19 @@ const GetInTouch = () => {
           gsap.to(input, {
             scale: 1,
             borderColor: "rgba(255,255,255,0.3)",
-            duration: 0.15, // من 0.3 إلى 0.15
+            duration: 0.15,
             ease: "power1.out",
           });
         });
       }
     });
 
-    // Add hover animation for button - أسرع
     if (buttonRef.current) {
       buttonRef.current.addEventListener("mouseenter", () => {
         gsap.to(buttonRef.current, {
-          scale: 1.03, // تغيير أقل
+          scale: 1.03,
           boxShadow: "0 8px 20px -5px rgba(56, 189, 248, 0.4)",
-          duration: 0.15, // من 0.3 إلى 0.15
+          duration: 0.15,
           ease: "power1.out",
         });
       });
@@ -199,20 +198,19 @@ const GetInTouch = () => {
         gsap.to(buttonRef.current, {
           scale: 1,
           boxShadow: "none",
-          duration: 0.15, // من 0.3 إلى 0.15
+          duration: 0.15,
           ease: "power1.out",
         });
       });
     }
 
-    // Add hover animation for contact info items - أسرع
     const contactItems = contactInfoRef.current?.children;
     if (contactItems) {
       Array.from(contactItems).forEach((item) => {
         item.addEventListener("mouseenter", () => {
           gsap.to(item, {
-            x: 5, // حركة أقل
-            duration: 0.15, // من 0.3 إلى 0.15
+            x: 5,
+            duration: 0.15,
             ease: "power1.out",
           });
         });
@@ -220,7 +218,7 @@ const GetInTouch = () => {
         item.addEventListener("mouseleave", () => {
           gsap.to(item, {
             x: 0,
-            duration: 0.15, // من 0.3 إلى 0.15
+            duration: 0.15,
             ease: "power1.out",
           });
         });
@@ -232,13 +230,13 @@ const GetInTouch = () => {
       tl.kill();
       formInputsRef.current.forEach((input) => {
         if (input) {
-          input.removeEventListener("focus", () => { });
-          input.removeEventListener("blur", () => { });
+          input.removeEventListener("focus", () => {});
+          input.removeEventListener("blur", () => {});
         }
       });
       if (buttonRef.current) {
-        buttonRef.current.removeEventListener("mouseenter", () => { });
-        buttonRef.current.removeEventListener("mouseleave", () => { });
+        buttonRef.current.removeEventListener("mouseenter", () => {});
+        buttonRef.current.removeEventListener("mouseleave", () => {});
       }
     };
   }, []);
@@ -261,7 +259,10 @@ const GetInTouch = () => {
           <div className="space-y-6 md:space-y-8">
             <div ref={titleRef} className="mb-8 md:mb-10 lg:mb-12">
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-medium">
-                {t("get_in_touch.title")} <span className="text-brand-sky">{t("get_in_touch.title_highlight")}</span>
+                {t("get_in_touch.title")}{" "}
+                <span className="text-brand-sky">
+                  {t("get_in_touch.title_highlight")}
+                </span>
               </h2>
               <p
                 ref={subtitleRef}
@@ -319,7 +320,9 @@ const GetInTouch = () => {
                 className="w-full py-3 md:py-4 bg-brand-sky hover:bg-brand-sky/90 rounded-md font-semibold text-sm md:text-base transition-all duration-300 relative overflow-hidden group disabled:opacity-50"
               >
                 <span className="relative z-10">
-                  {status.loading ? t("get_in_touch.form.sending", "Sending...") : t("get_in_touch.form.send")}
+                  {status.loading
+                    ? t("get_in_touch.form.sending", "Sending...")
+                    : t("get_in_touch.form.send")}
                 </span>
                 <div className="absolute inset-0 bg-white/20 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
               </button>
@@ -330,9 +333,7 @@ const GetInTouch = () => {
                 </p>
               )}
               {status.error && (
-                <p className="text-red-500 text-sm mt-2">
-                  {status.error}
-                </p>
+                <p className="text-red-500 text-sm mt-2">{status.error}</p>
               )}
             </form>
 
@@ -345,7 +346,9 @@ const GetInTouch = () => {
                     size={20}
                   />
                   <div>
-                    <p className="font-semibold text-sm md:text-base">{t("get_in_touch.contact.phone")}</p>
+                    <p className="font-semibold text-sm md:text-base">
+                      {t("get_in_touch.contact.phone")}
+                    </p>
                     <p className="text-gray-300 text-xs md:text-sm">
                       +972 567098648
                     </p>
@@ -357,7 +360,9 @@ const GetInTouch = () => {
                     size={20}
                   />
                   <div>
-                    <p className="font-semibold text-sm md:text-base">{t("get_in_touch.contact.email")}</p>
+                    <p className="font-semibold text-sm md:text-base">
+                      {t("get_in_touch.contact.email")}
+                    </p>
                     <p className="text-gray-300 text-xs md:text-sm">
                       info@anoonsolutions.com
                     </p>

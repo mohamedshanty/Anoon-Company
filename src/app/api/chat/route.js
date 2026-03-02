@@ -116,7 +116,7 @@ A: You can book a free meeting through our website's "Book A Free Meeting" butto
       model: "llama-3.3-70b-versatile",
       messages: [{ role: "system", content: systemPrompt }, ...messages],
       temperature: 0.7,
-      max_tokens: 800, // زيادة قليلاً للسماح بإجابات أكثر تفصيلاً
+      max_tokens: 800,
     });
 
     const aiMessage = response.choices[0].message.content;
