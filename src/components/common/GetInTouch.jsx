@@ -18,51 +18,78 @@ const GetInTouch = () => {
   const mapRef = useRef(null);
   const buttonRef = useRef(null);
   const recaptchaRef = useRef(null);
+  const [siteKey, setSiteKey] = useState("");
   const [status, setStatus] = useState({
     loading: false,
     success: false,
     error: null,
   });
 
+  // تحميل مفتاح reCAPTCHA من المتغيرات البيئية
+  useEffect(() => {
+    setSiteKey(process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "");
+    console.log(
+      "reCAPTCHA Site Key:",
+      process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
+    );
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus({ loading: true, success: false, error: null });
 
-    const recaptchaToken = recaptchaRef.current?.getValue();
-    if (!recaptchaToken) {
+    if (!recaptchaRef.current) {
       setStatus({
         loading: false,
         success: false,
-        error: "Please verify that you are not a robot.",
+        error: "reCAPTCHA not initialized",
       });
       return;
     }
 
-    const formData = {
-      name: formInputsRef.current[0].value,
-      email: formInputsRef.current[1].value,
-      phone: formInputsRef.current[2].value,
-      message: formInputsRef.current[3].value,
-      recaptchaToken,
-    };
-
     try {
+      // ✅ الطريقة الصحيحة لـ reCAPTCHA v3 - executeAsync
+      const recaptchaToken = await recaptchaRef.current.executeAsync();
+
+      if (!recaptchaToken) {
+        throw new Error("Failed to get reCAPTCHA token");
+      }
+
+      const formData = {
+        name: formInputsRef.current[0]?.value || "",
+        email: formInputsRef.current[1]?.value || "",
+        phone: formInputsRef.current[2]?.value || "",
+        message: formInputsRef.current[3]?.value || "",
+        recaptchaToken,
+      };
+
+      // التحقق من الحقول المطلوبة
+      if (!formData.name || !formData.email || !formData.message) {
+        throw new Error("Please fill in all required fields");
+      }
+
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
+      const data = await response.json();
+
       if (response.ok) {
         setStatus({ loading: false, success: true, error: null });
         formRef.current.reset();
         recaptchaRef.current?.reset();
       } else {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to send message");
+        throw new Error(data.message || "Failed to send message");
       }
     } catch (error) {
-      setStatus({ loading: false, success: false, error: error.message });
+      console.error("Form submission error:", error);
+      setStatus({
+        loading: false,
+        success: false,
+        error: error.message || "An error occurred. Please try again.",
+      });
     }
   };
 
@@ -78,80 +105,35 @@ const GetInTouch = () => {
 
     tl.fromTo(
       titleRef.current,
-      {
-        y: 30,
-        opacity: 0,
-      },
-      {
-        y: 0,
-        opacity: 1,
-        duration: 0.4,
-        ease: "power2.out",
-      },
+      { y: 30, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" },
     )
       .fromTo(
         subtitleRef.current,
-        {
-          y: 20,
-          opacity: 0,
-        },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.3,
-          ease: "power2.out",
-        },
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" },
         "-=0.2",
       )
       .fromTo(
         formInputsRef.current,
-        {
-          x: -30,
-          opacity: 0,
-        },
-        {
-          x: 0,
-          opacity: 1,
-          duration: 0.3,
-          stagger: 0.08,
-          ease: "power2.out",
-        },
+        { x: -30, opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.3, stagger: 0.08, ease: "power2.out" },
         "-=0.1",
       )
       .fromTo(
         buttonRef.current,
-        {
-          scale: 0.95,
-          opacity: 0,
-        },
-        {
-          scale: 1,
-          opacity: 1,
-          duration: 0.3,
-          ease: "back.out(1.5)",
-        },
+        { scale: 0.95, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.5)" },
       )
       .fromTo(
         contactInfoRef.current,
-        {
-          y: 20,
-          opacity: 0,
-        },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.3,
-          ease: "power2.out",
-        },
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" },
         "-=0.1",
       )
       .fromTo(
         mapRef.current,
-        {
-          rotationY: 10,
-          scale: 0.9,
-          opacity: 0,
-        },
+        { rotationY: 10, scale: 0.9, opacity: 0 },
         {
           rotationY: 0,
           scale: 1,
@@ -162,83 +144,66 @@ const GetInTouch = () => {
         "-=0.2",
       );
 
+    // Add input animations
     formInputsRef.current.forEach((input) => {
-      if (input) {
-        input.addEventListener("focus", () => {
-          gsap.to(input, {
-            scale: 1.01, // تغيير أقل
-            borderColor: "#38bdf8",
-            duration: 0.15, // من 0.3 إلى 0.15
-            ease: "power1.out", // easing أبسط
-          });
-        });
+      if (!input) return;
 
-        input.addEventListener("blur", () => {
-          gsap.to(input, {
-            scale: 1,
-            borderColor: "rgba(255,255,255,0.3)",
-            duration: 0.15,
-            ease: "power1.out",
-          });
+      const onFocus = () => {
+        gsap.to(input, {
+          scale: 1.01,
+          borderColor: "#38bdf8",
+          duration: 0.15,
+          ease: "power1.out",
         });
-      }
+      };
+
+      const onBlur = () => {
+        gsap.to(input, {
+          scale: 1,
+          borderColor: "rgba(255,255,255,0.3)",
+          duration: 0.15,
+          ease: "power1.out",
+        });
+      };
+
+      input.addEventListener("focus", onFocus);
+      input.addEventListener("blur", onBlur);
+
+      // Cleanup
+      return () => {
+        input.removeEventListener("focus", onFocus);
+        input.removeEventListener("blur", onBlur);
+      };
     });
 
+    // Button animations
     if (buttonRef.current) {
-      buttonRef.current.addEventListener("mouseenter", () => {
+      const onMouseEnter = () => {
         gsap.to(buttonRef.current, {
           scale: 1.03,
           boxShadow: "0 8px 20px -5px rgba(56, 189, 248, 0.4)",
           duration: 0.15,
           ease: "power1.out",
         });
-      });
+      };
 
-      buttonRef.current.addEventListener("mouseleave", () => {
+      const onMouseLeave = () => {
         gsap.to(buttonRef.current, {
           scale: 1,
           boxShadow: "none",
           duration: 0.15,
           ease: "power1.out",
         });
-      });
+      };
+
+      buttonRef.current.addEventListener("mouseenter", onMouseEnter);
+      buttonRef.current.addEventListener("mouseleave", onMouseLeave);
+
+      return () => {
+        buttonRef.current?.removeEventListener("mouseenter", onMouseEnter);
+        buttonRef.current?.removeEventListener("mouseleave", onMouseLeave);
+      };
     }
-
-    const contactItems = contactInfoRef.current?.children;
-    if (contactItems) {
-      Array.from(contactItems).forEach((item) => {
-        item.addEventListener("mouseenter", () => {
-          gsap.to(item, {
-            x: 5,
-            duration: 0.15,
-            ease: "power1.out",
-          });
-        });
-
-        item.addEventListener("mouseleave", () => {
-          gsap.to(item, {
-            x: 0,
-            duration: 0.15,
-            ease: "power1.out",
-          });
-        });
-      });
-    }
-
-    // Cleanup
-    return () => {
-      tl.kill();
-      formInputsRef.current.forEach((input) => {
-        if (input) {
-          input.removeEventListener("focus", () => {});
-          input.removeEventListener("blur", () => {});
-        }
-      });
-      if (buttonRef.current) {
-        buttonRef.current.removeEventListener("mouseenter", () => {});
-        buttonRef.current.removeEventListener("mouseleave", () => {});
-      }
-    };
   }, []);
 
   return (
@@ -282,12 +247,14 @@ const GetInTouch = () => {
                 ref={(el) => (formInputsRef.current[0] = el)}
                 type="text"
                 placeholder={t("get_in_touch.form.name")}
+                required
                 className="w-full p-3 md:p-4 rounded-md bg-transparent border border-white/30 placeholder-gray-400 outline-none text-sm md:text-base transition-all duration-300 focus:border-brand-sky focus:ring-1 focus:ring-brand-sky"
               />
               <input
                 ref={(el) => (formInputsRef.current[1] = el)}
                 type="email"
                 placeholder={t("get_in_touch.form.email")}
+                required
                 className="w-full p-3 md:p-4 rounded-md bg-transparent border border-white/30 placeholder-gray-400 outline-none text-sm md:text-base transition-all duration-300 focus:border-brand-sky focus:ring-1 focus:ring-brand-sky"
               />
               <input
@@ -300,24 +267,25 @@ const GetInTouch = () => {
                 ref={(el) => (formInputsRef.current[3] = el)}
                 placeholder={t("get_in_touch.form.find_us")}
                 rows={4}
+                required
                 className="w-full p-3 md:p-4 rounded-md bg-transparent border border-white/30 placeholder-gray-400 outline-none text-sm md:text-base transition-all duration-300 focus:border-brand-sky focus:ring-1 focus:ring-brand-sky resize-none"
               />
 
-              {process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY && (
-                <div className="flex justify-center md:justify-start">
-                  <ReCAPTCHA
-                    ref={recaptchaRef}
-                    sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
-                    theme="dark"
-                  />
-                </div>
+              {/* reCAPTCHA - Hidden but active */}
+              {siteKey && (
+                <ReCAPTCHA
+                  ref={recaptchaRef}
+                  sitekey={siteKey}
+                  size="invisible"
+                  theme="dark"
+                />
               )}
 
               <button
                 ref={buttonRef}
                 type="submit"
-                disabled={status.loading}
-                className="w-full py-3 md:py-4 bg-brand-sky hover:bg-brand-sky/90 rounded-md font-semibold text-sm md:text-base transition-all duration-300 relative overflow-hidden group disabled:opacity-50"
+                disabled={status.loading || !siteKey}
+                className="w-full py-3 md:py-4 bg-brand-sky hover:bg-brand-sky/90 rounded-md font-semibold text-sm md:text-base transition-all duration-300 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span className="relative z-10">
                   {status.loading
@@ -356,7 +324,7 @@ const GetInTouch = () => {
                 </div>
                 <div className="flex items-center gap-3 md:gap-4 group cursor-pointer">
                   <Mail
-                    className="text-white group-hover:text-brand-sky transition-colors duration-200" // من 300 إلى 200
+                    className="text-white group-hover:text-brand-sky transition-colors duration-200"
                     size={20}
                   />
                   <div>
