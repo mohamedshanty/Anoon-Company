@@ -1,10 +1,9 @@
-// app/api/chat/route.js
-import OpenAI from "openai";
+// استيراد Groq SDK بدلاً من OpenAI
+import Groq from "groq-sdk";
 
-// Switching to Groq for FREE usage (OpenAI Compatible)
-const client = new OpenAI({
+// إنشاء عميل Groq
+const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY,
-  baseURL: "https://api.groq.com/openai/v1",
 });
 
 export async function POST(req) {
@@ -112,39 +111,26 @@ A: You can book a free meeting through our website's "Book A Free Meeting" butto
 - Knowledge is the only thing that can't be taken away
 - We are building the minds that will rebuild Gaza`;
 
-    const response = await client.chat.completions.create({
+    // استخدم groq بدلاً من client
+    const response = await groq.chat.completions.create({
       model: "llama-3.3-70b-versatile",
       messages: [{ role: "system", content: systemPrompt }, ...messages],
       temperature: 0.7,
       max_tokens: 800,
     });
 
-    const aiMessage = response.choices[0].message.content;
-
-    return new Response(JSON.stringify({ message: aiMessage }), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
-  } catch (error) {
-    console.error("OpenAI API Error:", error);
-
-    // Handle Quota/Billing errors specifically
-    if (error.code === "insufficient_quota") {
-      return new Response(
-        JSON.stringify({
-          error:
-            "OpenAI Billing Error: You have reached your quota or have no credits left.",
-        }),
-        { status: 402, headers: { "Content-Type": "application/json" } },
-      );
-    }
-
     return new Response(
-      JSON.stringify({ error: "Failed to fetch response from AI" }),
+      JSON.stringify({ message: response.choices[0].message.content }),
       {
-        status: 500,
+        status: 200,
         headers: { "Content-Type": "application/json" },
       },
+    );
+  } catch (error) {
+    console.error("API Error:", error);
+    return new Response(
+      JSON.stringify({ error: "Failed to fetch response from AI" }),
+      { status: 500, headers: { "Content-Type": "application/json" } },
     );
   }
 }
