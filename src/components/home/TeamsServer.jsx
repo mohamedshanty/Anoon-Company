@@ -5,7 +5,7 @@ import Reveal from "../ui/Reveal";
 const members = [
   {
     name: { ar: "علاء", en: "Alaa" },
-    role: { ar: "المدير العام", en: "Founder" },
+    role: { ar: "المؤسس والمدير العام", en: "Founder" },
     image: "/images/teem/alla1.png",
   },
   {
@@ -25,25 +25,25 @@ const members = [
   },
   {
     name: { ar: "غيداء", en: "Ghida" },
-    role: { ar: "مديرة منصات التواصل الاجتماعي", en: "Social Media Manager" },
+    role: { ar: "موظفة المبيعات", en: "Sales Officer" },
     image: "/images/teem/ghida1.png",
   },
   {
     name: { ar: "إيهاب", en: "Ehab" },
     role: {
-      ar: "مدير البرامج",
+      ar: "مدير العمليات والتخطيط الاستراتيجي",
       en: "Programs Manager",
     },
     image: "/images/teem/ihab1.png",
   },
   {
     name: { ar: "عبد المنعم", en: "Abdelmoniem" },
-    role: { ar: "مطور", en: "Developer" },
+    role: { ar: "استشاري نمو تسويق", en: "Marketing Growth Consultant" },
     image: "/images/teem/abdelmoniem1.png",
   },
   {
     name: { ar: "ريم", en: "Reem" },
-    role: { ar: "مسؤولة مساحة دراسية", en: "Study Space Officer" },
+    role: { ar: "مديرة النقطة ", en: "Study Space Officer" },
     image: "/images/teem/reem2.png",
   },
   {
@@ -54,10 +54,8 @@ const members = [
 ];
 
 export default function TeamsServer({ t, locale }) {
-  // تحديد اللغة الحالية (افتراضي: العربية)
   const currentLocale = locale || "ar";
 
-  // تجهيز البيانات حسب اللغة الحالية
   const localizedMembers = members.map((member) => ({
     name: member.name[currentLocale],
     role: member.role[currentLocale],
