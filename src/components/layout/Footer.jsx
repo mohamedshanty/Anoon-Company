@@ -1,11 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import {
-  MapPin,
-  Mail,
-  Phone,
-} from "lucide-react";
+import { MapPin, Mail, Phone } from "lucide-react";
 
 import {
   FaFacebookF,
@@ -24,10 +20,22 @@ export default function Footer() {
   const { isRTL, dir } = useRTL();
 
   const socialLinks = [
-    { icon: FaFacebookF, href: "https://www.facebook.com/profile.php?id=61584269549700", label: "Facebook" },
+    {
+      icon: FaFacebookF,
+      href: "https://www.facebook.com/profile.php?id=61584269549700",
+      label: "Facebook",
+    },
     { icon: FaWhatsapp, href: "https://wa.me/972567098648", label: "WhatsApp" },
-    { icon: FaInstagram, href: "https://www.instagram.com/anoon.solution", label: "Instagram" },
-    { icon: FaLinkedinIn, href: "https://www.linkedin.com/company/anoon-solutions", label: "LinkedIn" },
+    {
+      icon: FaInstagram,
+      href: "https://www.instagram.com/anoonsolutions/?utm_source=ig_web_button_share_sheet",
+      label: "Instagram",
+    },
+    {
+      icon: FaLinkedinIn,
+      href: "https://www.linkedin.com/company/anoon-solutions-%D8%A7%D9%84%D9%86%D9%88%D9%86-%D9%84%D9%84%D8%AD%D9%84%D9%88%D9%84-%D8%A7%D9%84%D8%B1%D9%82%D9%85%D9%8A%D8%A9/posts/?feedView=all&viewAsMember=true",
+      label: "LinkedIn",
+    },
   ];
 
   return (
@@ -38,7 +46,7 @@ export default function Footer() {
           <div className="col-span-1 lg:col-span-1 text-center md:text-start">
             <Link href="/" className="inline-block mb-6">
               <Image
-                src="/images/logo.png"
+                src="/images/logo1.png"
                 alt={t("footer.logo_alt", "Anoon Logo")}
                 width={100}
                 height={100}
@@ -70,7 +78,9 @@ export default function Footer() {
 
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-orange-500 flex-shrink-0" />
-                <span className="text-white" dir="ltr">{t("footer.phone")}</span>
+                <span className="text-white" dir="ltr">
+                  {t("footer.phone")}
+                </span>
               </li>
             </ul>
           </div>
@@ -108,9 +118,13 @@ export default function Footer() {
               <div className="relative">
                 <input
                   type="email"
-                  placeholder={t("footer.newsletter.placeholder", "Enter Your Email")}
-                  className={`w-full px-4 py-3 bg-transparent border border-gray-300 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-orange-500 transition-colors ${isRTL ? "text-right" : ""
-                    }`}
+                  placeholder={t(
+                    "footer.newsletter.placeholder",
+                    "Enter Your Email",
+                  )}
+                  className={`w-full px-4 py-3 bg-transparent border border-gray-300 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-orange-500 transition-colors ${
+                    isRTL ? "text-right" : ""
+                  }`}
                 />
                 <div className="mt-5">
                   <Button

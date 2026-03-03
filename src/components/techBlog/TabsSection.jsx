@@ -64,15 +64,15 @@ export default function TabsSection() {
   useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
+      setError(null);
       try {
-        const categoriesUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/categories?sort=createdAt:desc`;
-        const categoriesRes = await fetch(categoriesUrl);
+        const res = await fetch("/api/blog/data");
+        const json = await res.json();
 
-        if (!categoriesRes.ok) throw new Error("فشل جلب التصنيفات");
+        if (!json.success) throw new Error(json.error);
 
-        const categoriesData = await categoriesRes.json();
-
-        const formattedTabs = categoriesData.data.map((item) => ({
+        // تنسيق التصنيفات (Tabs)
+        const formattedTabs = json.categories.map((item) => ({
           id: item.id,
           slug: item.slug,
           title: item[`name_${currentLang}`] || item.name || "بدون اسم",
@@ -80,15 +80,9 @@ export default function TabsSection() {
 
         setTabs(formattedTabs);
 
-        const articlesUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL}/api/articles?populate=*&sort=publishedAt:desc`;
-        const articlesRes = await fetch(articlesUrl);
-
-        if (!articlesRes.ok) throw new Error("فشل جلب المقالات");
-
-        const articlesData = await articlesRes.json();
-
+        // تجميع المقالات حسب التصنيف
         const grouped = {};
-        articlesData.data.forEach((article) => {
+        json.articles.forEach((article) => {
           const categoryId = article.category?.id;
           if (categoryId) {
             if (!grouped[categoryId]) {
@@ -105,7 +99,9 @@ export default function TabsSection() {
         }
       } catch (err) {
         console.error("Error loading data:", err);
-        setError(err.message);
+        setError(currentLang === "ar"
+          ? "غير قادر على الاتصال بالسيرفر. تأكد من تشغيل خادم Strapi."
+          : "Unable to connect to the server. Please ensure Strapi is running.");
       } finally {
         setIsLoading(false);
       }
@@ -140,7 +136,7 @@ export default function TabsSection() {
 
   return (
     <section className="py-24 relative overflow-hidden" dir={dir}>
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-brand-sky/5 to-transparent" />
+      <div className="absolute inset-0 bg-linear-to-b from-transparent via-brand-sky/5 to-transparent" />
       <div className="absolute inset-0">
         <div className="absolute top-40 left-10 w-72 h-72 bg-brand-sky/20 rounded-full blur-3xl animate-pulse" />
         <div className="absolute bottom-40 right-10 w-80 h-80 bg-brand-orange/20 rounded-full blur-3xl animate-pulse delay-1000" />
@@ -272,19 +268,19 @@ export default function TabsSection() {
                             : 'text-red-400'
                             }`}
                         />
-                        <span>{item.likes || 0}</span>
+                        <span>{(item.likes || 0) + (isLiked ? 1 : 0)}</span>
                       </div>
 
                       <div className="flex items-center gap-1 text-white/60">
                         <Eye className="w-4 h-4 text-brand-sky" />
                         <span>
-                          {isViewed ? (item.views || 0) + 1 : item.views || 0}
+                          {(item.views || 0) + (isViewed ? 1 : 0)}
                         </span>
                       </div>
 
                       <div className="flex items-center gap-1 text-white/60">
                         <MessageCircle className="w-4 h-4 text-brand-sky" />
-                        <span>{item.comments || 0}</span>
+                        <span>{item.comments_count || 0}</span>
                       </div>
                     </div>
 

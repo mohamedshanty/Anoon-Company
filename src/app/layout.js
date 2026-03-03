@@ -13,11 +13,28 @@ const alexandria = {
 };
 
 export const metadata = {
-  title: "Anoon",
-  description: "Welcome to Anoon, a simple and anonymous pastebin service.",
+  title: "Anoon Solutions",
+  description: "Welcome to Anoon Solutions, a simple and anonymous pastebin service.",
   icons: {
-    icon: "/images/logo1.png",
-    apple: "/images/logo1.png",
+    icon: [
+      {
+        url: "/images/logo1.png",
+        sizes: "32x32",  
+        type: "image/png",
+      },
+      {
+        url: "/images/logo1.png",  
+        sizes: "192x192",
+        type: "image/png",
+      },
+    ],
+    apple: [
+      {
+        url: "/images/logo1.png",
+        sizes: "180x180",  
+        type: "image/png",
+      },
+    ],
   },
 };
 

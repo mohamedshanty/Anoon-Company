@@ -1,18 +1,20 @@
+// تحديث route.js للمشاهدات
 import { NextResponse } from "next/server";
 
 export async function POST(request, { params }) {
   try {
-    const { id } = await params; // هذا هو الـ id من الرابط (مثلاً: rhearj257gz3796yglnajehv)
+    const { id } = await params;
     
     const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL;
     const API_TOKEN = process.env.STRAPI_API_TOKEN;
 
-    console.log("Updating views for article with documentId:", id);
+    console.log("Updating views for article with ID:", id);
 
-    // في Strapi v5، نستخدم documentId وليس id
+    // جلب المقال الحالي
     const getRes = await fetch(`${STRAPI_URL}/api/articles/${id}`, {
       headers: {
         'Authorization': `Bearer ${API_TOKEN}`,
+        'Content-Type': 'application/json',
       },
     });
 
@@ -25,9 +27,11 @@ export async function POST(request, { params }) {
       );
     }
 
-    const article = await getRes.json();
-    const currentViews = article.data?.views || 0;
+    const articleData = await getRes.json();
+    const currentViews = articleData.data?.views || 0;
+    const newViews = currentViews + 1;
 
+    // تحديث المقال
     const updateRes = await fetch(`${STRAPI_URL}/api/articles/${id}`, {
       method: 'PUT',
       headers: {
@@ -36,7 +40,7 @@ export async function POST(request, { params }) {
       },
       body: JSON.stringify({
         data: {
-          views: currentViews + 1
+          views: newViews
         }
       }),
     });
@@ -50,11 +54,11 @@ export async function POST(request, { params }) {
       );
     }
 
-    const updatedArticle = await updateRes.json();
+    const updatedData = await updateRes.json();
 
     return NextResponse.json({ 
       success: true, 
-      views: updatedArticle.data?.views || currentViews + 1 
+      views: updatedData.data?.views || newViews 
     });
   } catch (error) {
     console.error("Error in views API:", error);

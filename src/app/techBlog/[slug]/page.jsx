@@ -3,11 +3,15 @@ import Link from "next/link";
 
 async function getArticleBySlug(slug) {
   const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL;
+  const API_TOKEN = process.env.STRAPI_API_TOKEN;
 
   const fullUrl = `${STRAPI_URL}/api/articles?filters[slug][$eq]=${encodeURIComponent(slug)}&populate[0]=image&populate[1]=category&publicationState=live`;
 
   try {
     const res = await fetch(fullUrl, {
+      headers: {
+        Authorization: `Bearer ${API_TOKEN}`,
+      },
       next: { revalidate: 60 },
     });
 
@@ -23,11 +27,15 @@ async function getArticleBySlug(slug) {
 
 async function getSimilarArticles(categoryId, currentArticleId, currentLang = 'en') {
   const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL;
+  const API_TOKEN = process.env.STRAPI_API_TOKEN;
 
   const fullUrl = `${STRAPI_URL}/api/articles?filters[category][id][$eq]=${categoryId}&filters[id][$ne]=${currentArticleId}&populate=image,category&sort=publishedAt:desc&pagination[limit]=3`;
 
   try {
     const res = await fetch(fullUrl, {
+      headers: {
+        Authorization: `Bearer ${API_TOKEN}`,
+      },
       next: { revalidate: 300 },
     });
 

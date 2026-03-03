@@ -1,11 +1,20 @@
-// components/ui/Stars.jsx
+"use client";
+
+import { useState, useEffect } from "react";
+
 export default function Stars({
     count = 20,
     className = "",
     zIndex = -10,
     opacity = 1
 }) {
-    // Basic pseudo-random generator to avoid hydration mismatch
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    // Basic pseudo-random generator
     const getStarData = (idx) => {
         const seed = idx * 1.5;
         const x = (Math.sin(seed) * 10000) % 100;
@@ -18,6 +27,9 @@ export default function Stars({
 
     const stars = Array.from({ length: count }).map((_, i) => getStarData(i));
 
+    // Only render on client to avoid hydration mismatch from random values/rounding
+    if (!mounted) return null;
+
     return (
         <div
             className={`absolute inset-0 pointer-events-none overflow-hidden ${className}`}
@@ -29,8 +41,8 @@ export default function Stars({
                     key={i}
                     className="absolute bg-brand-orange rounded-full blur-[3px] animate-pulse"
                     style={{
-                        top: `${star.y}%`,
-                        left: `${star.x}%`,
+                        top: `${star.y.toFixed(4)}%`,
+                        left: `${star.x.toFixed(4)}%`,
                         width: `${star.s}px`,
                         height: `${star.s}px`,
                         opacity: opacity * 0.9,

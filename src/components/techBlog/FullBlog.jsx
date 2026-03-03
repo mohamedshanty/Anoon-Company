@@ -4,10 +4,12 @@ import { useTranslation } from "react-i18next";
 import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 import { Heart, MessageCircle, Calendar, User, Tag, Eye } from "lucide-react";
 import { useState, useEffect } from "react";
+import CommentSection from "./comments/CommentSection";
 
 export default function FullBlog({ article, similarArticles }) {
   const [likes, setLikes] = useState(article?.likes || 0);
   const [views, setViews] = useState(article?.views || 0);
+  const [commentsCount, setCommentsCount] = useState(article?.comments_count || 0);
   const [isLiked, setIsLiked] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [hasViewed, setHasViewed] = useState(false);
@@ -66,6 +68,7 @@ export default function FullBlog({ article, similarArticles }) {
     }
   }, [article?.id, article?.likes]);
 
+
   const handleLike = async () => {
     if (isUpdating || !article?.id) return;
 
@@ -73,9 +76,9 @@ export default function FullBlog({ article, similarArticles }) {
 
     try {
       const newLikedState = !isLiked;
-      const articleId = article?.documentId || article?.id;
+      const articleIdentifier = article.documentId || article.id;
 
-      const res = await fetch(`/api/articles/${articleId}/likes`, {
+      const res = await fetch(`/api/articles/${articleIdentifier}/likes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -83,7 +86,11 @@ export default function FullBlog({ article, similarArticles }) {
         body: JSON.stringify({ increment: newLikedState }),
       });
 
-      if (!res.ok) return;
+      if (!res.ok) {
+        const errorData = await res.json();
+        console.error("Error response:", errorData);
+        return;
+      }
 
       const data = await res.json();
       if (data.success) {
@@ -128,13 +135,13 @@ export default function FullBlog({ article, similarArticles }) {
 
   const dateFormatted = article.publishedAt
     ? new Date(article.publishedAt).toLocaleDateString(
-        lang === "ar" ? "ar-EG" : "en-US",
-        {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        },
-      )
+      lang === "ar" ? "ar-EG" : "en-US",
+      {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      },
+    )
     : "غير محدد";
 
   return (
@@ -187,23 +194,21 @@ export default function FullBlog({ article, similarArticles }) {
           <button
             onClick={handleLike}
             disabled={isUpdating}
-            className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 ${
-              isLiked
-                ? "bg-red-500/20 text-red-400"
-                : "bg-white/5 text-white/70 hover:bg-white/10"
-            }`}
+            className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 ${isLiked
+              ? "bg-red-500/20 text-red-400"
+              : "bg-white/5 text-white/70 hover:bg-white/10"
+              }`}
           >
             <Heart
-              className={`w-5 h-5 transition-all duration-300 ${
-                isLiked ? "fill-red-400 text-red-400 scale-110" : ""
-              }`}
+              className={`w-5 h-5 transition-all duration-300 ${isLiked ? "fill-red-400 text-red-400 scale-110" : ""
+                }`}
             />
             <span>{likes.toLocaleString()}</span>
           </button>
 
           <div className="flex items-center gap-2 text-white/70">
             <MessageCircle className="w-5 h-5 text-brand-sky" />
-            <span>{article.comments || 0}</span>
+            <span>{commentsCount.toLocaleString()}</span>
           </div>
         </div>
 
@@ -230,6 +235,13 @@ export default function FullBlog({ article, similarArticles }) {
             />
           )}
         </div>
+
+        {/* Comment Section Integration */}
+        <CommentSection
+          articleId={article.id}
+          articleDocumentId={article.documentId}
+          onCommentAdded={() => setCommentsCount(prev => prev + 1)}
+        />
 
         {similarArticles?.length > 0 && (
           <section className="mt-20">

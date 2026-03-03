@@ -32,7 +32,7 @@ export default function TamkeenHero() {
       </Hero.Title>
 
       <Hero.Subtitle className="tracking-[0.15px]">
-        <p className={`text-subtitle text-white/80 ${isRTL ? 'rtl text-right' : ''}`}>
+        <p className={`text-subtitle text-white/80 text-center`}>
           {t("tamkeen.hero.subtitle", "Buildings can be broken, but the human Spirit remain Ignited. We didn't wait, We just did it because while aid sustains the body, knowledge reclaims the future. The war took Everything, but couldn't take our skills. We are building the minds that will rebuild this land.")}
         </p>
       </Hero.Subtitle>

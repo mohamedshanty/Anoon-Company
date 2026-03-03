@@ -5,7 +5,7 @@ import Reveal from "../ui/Reveal";
 const members = [
   {
     name: { ar: "علاء", en: "Alaa" },
-    role: { ar: "المدير العام", en: "CIO" },
+    role: { ar: "المدير العام", en: "Founder" },
     image: "/images/teem/alla1.png",
   },
   {
@@ -29,10 +29,10 @@ const members = [
     image: "/images/teem/ghida1.png",
   },
   {
-    name: { ar: "إيهاب", en: "Ihab" },
+    name: { ar: "إيهاب", en: "Ehab" },
     role: {
-      ar: "مدير العمليات والتخطيط الاستراتيجي",
-      en: "Operations & Strategic Planning Manager",
+      ar: "مدير البرامج",
+      en: "Programs Manager",
     },
     image: "/images/teem/ihab1.png",
   },

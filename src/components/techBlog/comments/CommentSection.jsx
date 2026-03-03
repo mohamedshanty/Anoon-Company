@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { MessageCircle, Send, User, Clock } from "lucide-react";
 
-export default function CommentSection({ articleId, articleDocumentId }) {
+export default function CommentSection({ articleId, articleDocumentId, onCommentAdded }) {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -16,8 +16,6 @@ export default function CommentSection({ articleId, articleDocumentId }) {
   const lang = i18n.language.startsWith("ar") ? "ar" : "en";
 
   const contentId = articleDocumentId || articleId;
-  const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL;
-  const API_TOKEN = process.env.STRAPI_API_TOKEN;
 
   // جلب التعليقات
   useEffect(() => {
@@ -25,21 +23,7 @@ export default function CommentSection({ articleId, articleDocumentId }) {
       if (!contentId) return;
 
       try {
-        console.log("Fetching comments for:", contentId);
-        console.log("Using API Token:", API_TOKEN ? "✅ Yes" : "❌ No");
-
-        // الرابط الصحيح لجلب التعليقات في Strapi v5
-        const res = await fetch(
-          `${STRAPI_URL}/api/comments?filters[relatedTo][$containsi]=api::article.article:${contentId}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${API_TOKEN}`,
-            },
-          },
-        );
-
-        console.log("Response status:", res.status);
+        const res = await fetch(`/api/articles/${contentId}/comments`);
 
         if (!res.ok) {
           console.error("Failed to fetch comments:", res.status);
@@ -47,8 +31,6 @@ export default function CommentSection({ articleId, articleDocumentId }) {
         }
 
         const data = await res.json();
-        console.log("Comments data:", data);
-
         setComments(data.data || []);
       } catch (error) {
         console.error("Error fetching comments:", error);
@@ -57,73 +39,53 @@ export default function CommentSection({ articleId, articleDocumentId }) {
       }
     };
 
-    if (API_TOKEN) {
-      fetchComments();
-    } else {
-      console.error("⚠️ API_TOKEN is missing in .env.local");
-      setIsLoading(false);
-    }
-  }, [contentId, STRAPI_URL, API_TOKEN]);
+    fetchComments();
+  }, [contentId]);
 
   // إضافة تعليق جديد
   const handleSubmitComment = async (e) => {
     e.preventDefault();
-    if (!newComment.trim() || !API_TOKEN) return;
+    if (!newComment.trim()) return;
 
     setIsSubmitting(true);
 
     try {
-      console.log(
-        "Posting comment with token:",
-        API_TOKEN ? "✅ Yes" : "❌ No",
-      );
-
-      // الرابط الصحيح للإضافة
-      const endpoint = `${STRAPI_URL}/api/comments`;
-
-      // الهيكل الصحيح للبيانات
       const commentData = {
-        data: {
-          content: newComment,
-          authorName: guestName || "Guest",
-          authorEmail: guestEmail || "guest@example.com",
-          relatedTo: `api::article.article:${contentId}`,
-        },
+        content: newComment,
+        authorName: guestName || "Guest",
+        authorEmail: guestEmail || "guest@example.com",
       };
 
-      console.log("Sending data:", commentData);
-
-      const res = await fetch(endpoint, {
+      const res = await fetch(`/api/articles/${contentId}/comments`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${API_TOKEN}`,
         },
         body: JSON.stringify(commentData),
       });
 
-      console.log("Response status:", res.status);
-
       if (!res.ok) {
-        const errorText = await res.text();
-        console.error("Error response:", errorText);
+        const errorData = await res.json();
+        console.error("Error posting comment:", errorData);
         throw new Error(`Failed to post comment: ${res.status}`);
       }
 
       const data = await res.json();
-      console.log("Comment posted successfully:", data);
 
-      // إعادة جلب التعليقات
-      const updatedRes = await fetch(
-        `${STRAPI_URL}/api/comments?filters[relatedTo][$containsi]=api::article.article:${contentId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${API_TOKEN}`,
-          },
-        },
-      );
-      const updatedData = await updatedRes.json();
-      setComments(updatedData.data || []);
+      // إضافة التعليق الجديد محلياً أو إعادة جلب القائمة بالكامل لضمان الترتيب
+      if (data.data) {
+        setComments((prev) => [data.data, ...prev]);
+      } else {
+        // Fallback: re-fetch comments if response structure is unusual
+        const reFetchRes = await fetch(`/api/articles/${contentId}/comments`);
+        const reFetchData = await reFetchRes.json();
+        setComments(reFetchData.data || []);
+      }
+
+      // إعلام الأب بالإضافة
+      if (typeof onCommentAdded === 'function') {
+        onCommentAdded();
+      }
 
       // تنظيف الحقول
       setNewComment("");

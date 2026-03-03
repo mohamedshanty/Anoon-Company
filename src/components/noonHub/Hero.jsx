@@ -32,7 +32,7 @@ export default function NoonHero() {
       </Hero.Title>
 
       <Hero.Subtitle className="mt-5 tracking-[1px]">
-        <p className={`text-subtitle text-white/80 ${isRTL ? 'text-right' : ''}`}>
+        <p className={`text-subtitle text-white/80`}>
           {t("noon_hub.hero.subtitle", "Noon Hub is a place Designed for your needs, the friends you know the people you admire, Every body focusing on get things done, Learn more, network more and Focus With Us")}
         </p>
       </Hero.Subtitle>
