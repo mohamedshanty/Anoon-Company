@@ -70,7 +70,7 @@ export default function SectionHeader({
   return (
     <div
       className={cn(
-        "relative w-full",
+        "relative w-full animate-fade-in",
         alignClasses[align],
         maxWidthClasses[maxWidth],
         className,

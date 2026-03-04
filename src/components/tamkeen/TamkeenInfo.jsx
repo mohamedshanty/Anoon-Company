@@ -31,6 +31,7 @@ export default function TamkeenHelpSection() {
       backgroundGlow="default"
       image="/images/whoWeAre1.png"
       imageAlt={t("tamkeen.who_we_are.image_alt")}
+      className="animate-fade-in"
     >
       <InfoSection.Header>
         <InfoSection.Subtitle className="text-brand-white">

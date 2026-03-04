@@ -12,7 +12,7 @@ export default function TamkeenHero() {
   const { isRTL } = useRTL();
 
   return (
-    <Hero>
+    <Hero className="animate-fade-in">
       <Hero.Title className="gap-y-4 md:gap-y-6">
         <span>{t("tamkeen.hero.title_part1", "Enabling")}</span>
         <span className="text-brand-orange">

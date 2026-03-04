@@ -2,7 +2,17 @@
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
 import { BlocksRenderer } from "@strapi/blocks-react-renderer";
-import { Heart, MessageCircle, Calendar, User, Tag, Eye, Share2, Clock, ChevronDown } from "lucide-react";
+import {
+  Heart,
+  MessageCircle,
+  Calendar,
+  User,
+  Tag,
+  Eye,
+  Share2,
+  Clock,
+  ChevronDown,
+} from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import CommentSection from "./comments/CommentSection";
 
@@ -139,26 +149,29 @@ export default function FullBlog({ article, similarArticles }) {
 
   // Calculate Reading Time (rough estimate)
   const readingTime = useMemo(() => {
-    const text = typeof content === 'string' ? content : JSON.stringify(content);
+    const text =
+      typeof content === "string" ? content : JSON.stringify(content);
     const wordsPerMinute = 200;
     const noOfWords = text.split(/\s/g).length;
     const minutes = Math.ceil(noOfWords / wordsPerMinute);
-    return `${minutes} ${lang === 'ar' ? 'دقائق' : 'Min'}`;
+    return `${minutes} ${lang === "ar" ? "دقائق" : "Min"}`;
   }, [content, lang]);
 
   // Extract headings for Table of Contents
   const tableOfContents = useMemo(() => {
-    if (typeof content !== 'string') {
-        // Simple extraction for blocks content if possible, or skip
-        return [];
+    if (typeof content !== "string") {
+      // Simple extraction for blocks content if possible, or skip
+      return [];
     }
     const parser = new DOMParser();
-    const doc = parser.parseFromString(content, 'text/html');
-    const headings = Array.from(doc.querySelectorAll('h1, h2, h3')).map(h => ({
-      text: h.innerText,
-      id: h.id || h.innerText.toLowerCase().replace(/\s+/g, '-'),
-      level: h.tagName.toLowerCase()
-    }));
+    const doc = parser.parseFromString(content, "text/html");
+    const headings = Array.from(doc.querySelectorAll("h1, h2, h3")).map(
+      (h) => ({
+        text: h.innerText,
+        id: h.id || h.innerText.toLowerCase().replace(/\s+/g, "-"),
+        level: h.tagName.toLowerCase(),
+      }),
+    );
     return headings;
   }, [content]);
 
@@ -177,49 +190,50 @@ export default function FullBlog({ article, similarArticles }) {
         {/* Overlay Gradients */}
         <div className="absolute inset-x-0 top-0 h-1/3 bg-linear-to-b from-black/40 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-2/3 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
-        
+
         {/* Centered Content - Similar to Landing Page */}
         <div className="relative z-10 container mx-auto px-6 text-center">
           <div className="mb-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-sky/10 border border-brand-sky/20 text-brand-sky text-xs font-semibold uppercase tracking-widest backdrop-blur-sm">
-              {categoryName}
+            {categoryName}
           </div>
-          
+
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight drop-shadow-2xl">
             {title}
           </h1>
 
           <div className="flex items-center justify-center gap-4 md:gap-8 text-white/70 text-sm md:text-base font-medium">
-             <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-brand-sky" />
-                <span>{readingTime} {lang === 'ar' ? 'قراء' : 'Read'}</span>
-             </div>
-             <div className="w-1 h-1 rounded-full bg-white/20" />
-             <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-purple-400" />
-                <span>{dateFormatted}</span>
-             </div>
+            <div className="flex items-center gap-2">
+              <Clock className="w-4 h-4 text-brand-sky" />
+              <span>
+                {readingTime} {lang === "ar" ? "قراء" : "Read"}
+              </span>
+            </div>
+            <div className="w-1 h-1 rounded-full bg-white/20" />
+            <div className="flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-purple-400" />
+              <span>{dateFormatted}</span>
+            </div>
           </div>
         </div>
       </section>
 
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-16 mt-16 relative z-10">
-        
         {/* Left Column: Content */}
         <article className="lg:col-span-8 space-y-12">
           {introduction && (
             <div className="relative">
-                 <div className="absolute -left-6 top-0 bottom-0 w-1 bg-brand-sky/50 rounded-full" />
-                 <p className="text-xl md:text-2xl text-white/80 leading-relaxed font-light pl-4">
-                    {introduction}
-                </p>
+              <div className="absolute -left-6 top-0 bottom-0 w-1 bg-brand-sky/50 rounded-full" />
+              <p className="text-xl md:text-2xl text-white/80 leading-relaxed font-light pl-4">
+                {introduction}
+              </p>
             </div>
-          )    }
+          )}
 
           <div className="prose prose-invert prose-headings:font-bold prose-headings:text-white prose-p:text-white/80 prose-p:leading-relaxed prose-p:text-lg prose-a:text-brand-sky prose-img:rounded-3xl prose-img:shadow-2xl max-w-none">
             {typeof content === "string" ? (
-              <div 
+              <div
                 className="article-body"
-                dangerouslySetInnerHTML={{ __html: content }} 
+                dangerouslySetInnerHTML={{ __html: content }}
               />
             ) : (
               <BlocksRenderer
@@ -239,7 +253,11 @@ export default function FullBlog({ article, similarArticles }) {
                         unoptimized
                         className="rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] mx-auto object-cover border border-white/5"
                       />
-                      {alt && <p className="text-center text-sm text-white/40 mt-4 italic">{alt}</p>}
+                      {alt && (
+                        <p className="text-center text-sm text-white/40 mt-4 italic">
+                          {alt}
+                        </p>
+                      )}
                     </div>
                   ),
                 }}
@@ -248,87 +266,96 @@ export default function FullBlog({ article, similarArticles }) {
           </div>
 
           <div className="pt-12 border-t border-white/10">
-              <CommentSection
-                articleId={article.id}
-                articleDocumentId={article.documentId}
-                onCommentAdded={() => setCommentsCount((prev) => prev + 1)}
-              />
+            <CommentSection
+              articleId={article.id}
+              articleDocumentId={article.documentId}
+              onCommentAdded={() => setCommentsCount((prev) => prev + 1)}
+            />
           </div>
         </article>
 
         {/* Right Column: Sidebar */}
         <aside className="lg:col-span-4 space-y-10 lg:sticky lg:top-32 h-fit">
-          
           {/* Action Stats */}
           <div className="flex gap-4 p-1 bg-white/5 rounded-2xl backdrop-blur-md border border-white/10">
-             <button 
-                onClick={handleLike}
-                className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl transition-all duration-300 ${isLiked ? 'bg-red-500/20 text-red-400' : 'bg-transparent text-white/70 hover:bg-white/5'}`}
-             >
-                <Heart className={`w-5 h-5 ${isLiked ? 'fill-red-400' : ''}`} />
-                <span className="font-semibold">{likes.toLocaleString()}</span>
-             </button>
-             <div className="flex-1 flex items-center justify-center gap-2 py-3 border-x border-white/5">
-                <Eye className="w-5 h-5 text-brand-sky" />
-                <span className="font-semibold text-white/70">{views.toLocaleString()}</span>
-             </div>
-             <button className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-white/70 hover:bg-white/5 transition-all">
-                <Share2 className="w-5 h-5" />
-                <span className="font-semibold">206</span>
-             </button>
+            <button
+              onClick={handleLike}
+              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl transition-all duration-300 ${isLiked ? "bg-red-500/20 text-red-400" : "bg-transparent text-white/70 hover:bg-white/5"}`}
+            >
+              <Heart className={`w-5 h-5 ${isLiked ? "fill-red-400" : ""}`} />
+              <span className="font-semibold">{likes.toLocaleString()}</span>
+            </button>
+            <div className="flex-1 flex items-center justify-center gap-2 py-3 border-x border-white/5">
+              <Eye className="w-5 h-5 text-brand-sky" />
+              <span className="font-semibold text-white/70">
+                {views.toLocaleString()}
+              </span>
+            </div>
+            <button className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-white/70 hover:bg-white/5 transition-all">
+              <Share2 className="w-5 h-5" />
+              <span className="font-semibold">206</span>
+            </button>
           </div>
 
           {/* Metadata Card */}
           <div className="bg-linear-to-br from-white/10 to-transparent p-8 rounded-3xl border border-white/10 backdrop-blur-xl">
-             <div className="space-y-6">
-                <div className="flex justify-between items-start border-b border-white/5 pb-4">
-                    <div>
-                        <p className="text-white/40 text-xs uppercase tracking-widest mb-1">{lang === 'ar' ? 'تاريخ النشر' : 'Publication Date'}</p>
-                        <p className="font-medium">{dateFormatted}</p>
-                    </div>
-                    <div>
-                        <p className="text-white/40 text-xs uppercase tracking-widest mb-1 text-right">{lang === 'ar' ? 'التصنيف' : 'Category'}</p>
-                        <p className="font-medium text-right text-brand-sky">{categoryName}</p>
-                    </div>
+            <div className="space-y-6">
+              <div className="flex justify-between items-start border-b border-white/5 pb-4">
+                <div>
+                  <p className="text-white/40 text-xs uppercase tracking-widest mb-1">
+                    {lang === "ar" ? "تاريخ النشر" : "Publication Date"}
+                  </p>
+                  <p className="font-medium">{dateFormatted}</p>
                 </div>
-                <div className="flex justify-between items-start pt-2">
-                    <div>
-                        <p className="text-white/40 text-xs uppercase tracking-widest mb-1">{lang === 'ar' ? 'وقت القراءة' : 'Reading Time'}</p>
-                        <p className="font-medium">{readingTime}</p>
-                    </div>
-                    <div>
-                        <p className="text-white/40 text-xs uppercase tracking-widest mb-1 text-right">{lang === 'ar' ? 'اسم الكاتب' : 'Author Name'}</p>
-                        <p className="font-medium text-right flex items-center gap-2 italic">
-                            {author}
-                        </p>
-                    </div>
+                <div>
+                  <p className="text-white/40 text-xs uppercase tracking-widest mb-1 text-right">
+                    {lang === "ar" ? "التصنيف" : "Category"}
+                  </p>
+                  <p className="font-medium text-right text-brand-sky">
+                    {categoryName}
+                  </p>
                 </div>
-             </div>
+              </div>
+              <div className="flex justify-between items-start pt-2">
+                <div>
+                  <p className="text-white/40 text-xs uppercase tracking-widest mb-1">
+                    {lang === "ar" ? "وقت القراءة" : "Reading Time"}
+                  </p>
+                  <p className="font-medium">{readingTime}</p>
+                </div>
+                <div>
+                  <p className="text-white/40 text-xs uppercase tracking-widest mb-1 text-right">
+                    {lang === "ar" ? "اسم الكاتب" : "Author Name"}
+                  </p>
+                  <p className="font-medium text-right flex items-center gap-2 italic">
+                    {author}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Table of Contents */}
           {tableOfContents.length > 0 && (
             <div className="bg-white/5 p-8 rounded-3xl border border-white/5">
-                <h3 className="text-lg font-bold mb-6 text-white/30 uppercase tracking-widest flex items-center gap-2">
-                    {lang === 'ar' ? 'محتويات المقال' : 'Table of Contents'}
-                </h3>
-                <nav className="space-y-4">
-                    {tableOfContents.map((heading, idx) => (
-                        <a 
-                            key={idx}
-                            href={`#${heading.id}`}
-                            className={`block text-sm transition-all hover:text-brand-sky ${heading.level === 'h1' || heading.level === 'h2' ? 'text-white/70 font-medium' : 'text-white/40 pl-4'} flex items-center gap-2`}
-                        >
-                            <span className="w-1.5 h-1.5 rounded-full bg-brand-sky opacity-40 shrink-0" />
-                            {heading.text}
-                        </a>
-                    ))}
-                </nav>
+              <h3 className="text-lg font-bold mb-6 text-white/30 uppercase tracking-widest flex items-center gap-2">
+                {lang === "ar" ? "محتويات المقال" : "Table of Contents"}
+              </h3>
+              <nav className="space-y-4">
+                {tableOfContents.map((heading, idx) => (
+                  <a
+                    key={idx}
+                    href={`#${heading.id}`}
+                    className={`block text-sm transition-all hover:text-brand-sky ${heading.level === "h1" || heading.level === "h2" ? "text-white/70 font-medium" : "text-white/40 pl-4"} flex items-center gap-2`}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand-sky opacity-40 shrink-0" />
+                    {heading.text}
+                  </a>
+                ))}
+              </nav>
             </div>
           )}
-
         </aside>
-
       </div>
 
       {similarArticles?.length > 0 && (
@@ -340,7 +367,7 @@ export default function FullBlog({ article, similarArticles }) {
             <div className="h-0.5 flex-1 bg-linear-to-r from-brand-sky/30 to-transparent" />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Similar articles list could go here */}
+            {/* Similar articles list could go here */}
           </div>
         </section>
       )}

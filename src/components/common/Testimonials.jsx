@@ -38,7 +38,7 @@ const Testimonials = () => {
               toggleActions: "play none none reverse",
             },
             delay: index * 0.2,
-          }
+          },
         );
       });
     }, containerRef);
@@ -90,7 +90,6 @@ const Testimonials = () => {
         "
           >
             <div className="skew-x-3 sm:skew-x-6 md:skew-x-8">
-
               {/* Header */}
               <div className="flex sm:flex-row items-center sm:items-start gap-4 sm:gap-6 mb-6">
                 <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full overflow-hidden border-4 border-gray-100 shadow shrink-0">
@@ -100,12 +99,14 @@ const Testimonials = () => {
                     width={112}
                     height={112}
                     className="w-full h-full object-cover"
+                    loading="lazy"
                   />
                 </div>
 
                 <div
-                  className={`text-center sm:text-start ${isRTL ? "sm:text-right" : ""
-                    }`}
+                  className={`text-center sm:text-start ${
+                    isRTL ? "sm:text-right" : ""
+                  }`}
                 >
                   <h4 className="font-bold text-black text-lg sm:text-xl md:text-2xl">
                     {testimonial.name}
@@ -118,11 +119,11 @@ const Testimonials = () => {
 
               {/* Quote */}
               <div className="relative px-2 sm:px-4 md:px-6">
-
                 {/* Top quote */}
                 <div
-                  className={`absolute ${isRTL ? "right-0" : "left-0"
-                    } -top-5 sm:-top-7`}
+                  className={`absolute ${
+                    isRTL ? "right-0" : "left-0"
+                  } -top-5 sm:-top-7`}
                 >
                   <Image
                     src="/images/quote1.png"
@@ -130,20 +131,23 @@ const Testimonials = () => {
                     width={60}
                     height={60}
                     className="w-8 sm:w-12 md:w-14 opacity-80"
+                    loading="lazy"
                   />
                 </div>
 
                 <p
-                  className={`text-gray-600 text-sm sm:text-base leading-relaxed italic px-3 sm:px-4 py-4 sm:py-6 -skew-x-3 sm:-skew-x-6 md:-skew-x-8 ${isRTL ? "text-right" : "text-left"
-                    }`}
+                  className={`text-gray-600 text-sm sm:text-base leading-relaxed italic px-3 sm:px-4 py-4 sm:py-6 -skew-x-3 sm:-skew-x-6 md:-skew-x-8 ${
+                    isRTL ? "text-right" : "text-left"
+                  }`}
                 >
                   {testimonial.quote}
                 </p>
 
                 {/* Bottom quote */}
                 <div
-                  className={`absolute ${isRTL ? "left-0" : "right-0"
-                    } -bottom-5 sm:-bottom-7`}
+                  className={`absolute ${
+                    isRTL ? "left-0" : "right-0"
+                  } -bottom-5 sm:-bottom-7`}
                 >
                   <Image
                     src="/images/quote.png"
@@ -151,6 +155,7 @@ const Testimonials = () => {
                     width={60}
                     height={60}
                     className="w-8 sm:w-12 md:w-14 rotate-180 opacity-80"
+                    loading="lazy"
                   />
                 </div>
               </div>

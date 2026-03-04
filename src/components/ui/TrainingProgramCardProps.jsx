@@ -23,7 +23,7 @@ const TrainingProgramCard = ({
   isRTL = false,
 }) => {
   const { i18n } = useTranslation();
-  const rtl = isRTL || i18n?.language === 'ar';
+  const rtl = isRTL || i18n?.language === "ar";
   const pathname = usePathname();
 
   const isSpaceNoonTraining = pathname === "/spaceNoonTraining";
@@ -32,7 +32,9 @@ const TrainingProgramCard = ({
   const renderTitle = () => {
     if (titleLines && titleLines.length > 0) {
       return (
-        <h4 className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 ${rtl ? 'text-right' : ''}`}>
+        <h4
+          className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 ${rtl ? "text-right" : ""}`}
+        >
           {titleLines.map((line, index) => (
             <React.Fragment key={index}>
               {line}
@@ -44,17 +46,23 @@ const TrainingProgramCard = ({
     }
 
     return (
-      <h4 className={` font-bold mb-4 sm:mb-6 ${rtl ? 'text-right' : ''}`}>
+      <h4 className={` font-bold mb-4 sm:mb-6 ${rtl ? "text-right" : ""}`}>
         {title}
       </h4>
     );
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6" dir={rtl ? 'rtl' : 'ltr'}>
+    <div
+      className="max-w-5xl mx-auto px-4 sm:px-6 animate-fade-in"
+      dir={rtl ? "rtl" : "ltr"}
+    >
       <div className="shadow-[0_0_6px_rgba(255,255,255,0.6)] rounded-xl overflow-hidden">
-        <div className={`flex flex-col md:flex-row items-start gap-6 sm:gap-8 p-6 sm:p-8 lg:p-10 ${rtl ? 'md:flex-row-reverse' : ''
-          }`}>
+        <div
+          className={`flex flex-col md:flex-row items-start gap-6 sm:gap-8 p-6 sm:p-8 lg:p-10 ${
+            rtl ? "md:flex-row-reverse" : ""
+          }`}
+        >
           {/* Image - Responsive sizing */}
           <div className="flex justify-center w-full md:w-1/2">
             <div className="relative w-full max-w-[350px] sm:max-w-[400px] md:max-w-full">
@@ -70,12 +78,18 @@ const TrainingProgramCard = ({
           </div>
 
           {/* Content - مع عرض أصغر للوصف */}
-          <div className={`w-full md:w-1/2 text-white h-full flex flex-col justify-between ${rtl ? 'text-right' : ''
-            }`}>
+          <div
+            className={`w-full md:w-1/2 text-white h-full flex flex-col justify-between ${
+              rtl ? "text-right" : ""
+            }`}
+          >
             <div>
               {renderTitle()}
-              <p className={`text-gray-300 text-sm sm:text-base leading-6 sm:leading-7 max-w-md ${rtl ? 'text-right mr-0' : 'text-left ml-0'
-                }`}>
+              <p
+                className={`text-gray-300 text-sm sm:text-base leading-6 sm:leading-7 max-w-md ${
+                  rtl ? "text-right mr-0" : "text-left ml-0"
+                }`}
+              >
                 {description}
               </p>
             </div>

@@ -34,7 +34,9 @@ const Container = ({
 
   return (
     <div
-      className={[base, padding, background, className].join(" ")}
+      className={[base, padding, background, className, "animate-fade-in"].join(
+        " ",
+      )}
       {...props}
     >
       {children}

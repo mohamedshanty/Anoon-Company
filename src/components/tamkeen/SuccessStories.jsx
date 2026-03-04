@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Testimonials from "../common/Testimonials";
 import SectionHeader from "../ui/SectionHeader";
@@ -16,20 +16,36 @@ const SuccessStories = () => {
           title={t("success_stories.title")}
           subtitle={{
             highlightedWords: [
-              { text: t("success_stories.subtitle.from_the"), color: "text-brand-sky" },
-              { text: t("success_stories.subtitle.ashes"), color: "text-brand-orange" },
-              { text: t("success_stories.subtitle.we"), color: "text-brand-sky" },
-              { text: t("success_stories.subtitle.rise_again"), color: "text-brand-orange" },
+              {
+                text: t("success_stories.subtitle.from_the"),
+                color: "text-brand-sky",
+              },
+              {
+                text: t("success_stories.subtitle.ashes"),
+                color: "text-brand-orange",
+              },
+              {
+                text: t("success_stories.subtitle.we"),
+                color: "text-brand-sky",
+              },
+              {
+                text: t("success_stories.subtitle.rise_again"),
+                color: "text-brand-orange",
+              },
             ],
           }}
-          description={t("success_stories.description", { returnObjects: true })}
+          description={t("success_stories.description", {
+            returnObjects: true,
+          })}
           starsCount={20}
           maxWidth="3xl"
           align="center"
           titleClassName="text-5xl md:text-6xl"
         />
 
-        <Testimonials />
+        <div>
+          <Testimonials lazyLoadImages />
+        </div>
       </div>
     </section>
   );
