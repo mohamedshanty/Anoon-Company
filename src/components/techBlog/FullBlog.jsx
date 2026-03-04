@@ -9,7 +9,9 @@ import CommentSection from "./comments/CommentSection";
 export default function FullBlog({ article, similarArticles }) {
   const [likes, setLikes] = useState(article?.likes || 0);
   const [views, setViews] = useState(article?.views || 0);
-  const [commentsCount, setCommentsCount] = useState(article?.comments_count || 0);
+  const [commentsCount, setCommentsCount] = useState(
+    article?.comments_count || 0,
+  );
   const [isLiked, setIsLiked] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [hasViewed, setHasViewed] = useState(false);
@@ -19,66 +21,55 @@ export default function FullBlog({ article, similarArticles }) {
 
   useEffect(() => {
     const registerView = async () => {
-      if (!article?.id || hasViewed) return;
+      // نستخدم الـ documentId كمعرف فريد ومستقر في Strapi v5
+      const identifier = article?.documentId;
+      if (!identifier || hasViewed) return;
 
-      const viewedInSession = sessionStorage.getItem(`viewed_${article.id}`);
-      if (viewedInSession) return;
+      const sessionKey = `viewed_${identifier}`;
+      if (sessionStorage.getItem(sessionKey)) {
+        setHasViewed(true);
+        return;
+      }
 
       try {
-        const articleId = article?.documentId || article?.id;
-
-        const res = await fetch(`/api/articles/${articleId}/views`, {
+        const res = await fetch(`/api/articles/${identifier}/views`, {
           method: "POST",
         });
-
-        if (!res.ok) return;
-
-        const data = await res.json();
-        if (data.success) {
-          setViews(data.views);
-          setHasViewed(true);
-          sessionStorage.setItem(`viewed_${article.id}`, "true");
-
-          // تحديث localStorage للمشاهدة
-          const viewedArticles = JSON.parse(
-            localStorage.getItem("viewed_articles") || "{}",
-          );
-          viewedArticles[article.id] = true;
-          localStorage.setItem(
-            "viewed_articles",
-            JSON.stringify(viewedArticles),
-          );
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success) {
+            setViews(data.views);
+            setHasViewed(true);
+            sessionStorage.setItem(sessionKey, "true");
+          }
         }
       } catch (error) {
-        console.error("Error registering view:", error);
+        console.error("View registration error:", error);
       }
     };
 
     registerView();
-  }, [article, hasViewed]);
+  }, [article?.documentId, hasViewed]);
 
+  // التحقق من حالة الإعجاب عند التحميل
   useEffect(() => {
-    if (article?.id) {
-      const liked = localStorage.getItem(`liked_${article.id}`);
-      setIsLiked(liked === "true");
-
-      if (liked === "true" && likes === article?.likes) {
-        setLikes((prev) => prev + 1);
-      }
+    const identifier = article?.documentId;
+    if (identifier) {
+      const likedState = localStorage.getItem(`liked_${identifier}`);
+      setIsLiked(likedState === "true");
     }
-  }, [article?.id, article?.likes]);
-
+  }, [article?.documentId]);
 
   const handleLike = async () => {
-    if (isUpdating || !article?.id) return;
+    const identifier = article.documentId || article.id;
+    if (isUpdating || !identifier) return;
 
     setIsUpdating(true);
 
     try {
       const newLikedState = !isLiked;
-      const articleIdentifier = article.documentId || article.id;
 
-      const res = await fetch(`/api/articles/${articleIdentifier}/likes`, {
+      const res = await fetch(`/api/articles/${identifier}/likes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -87,8 +78,7 @@ export default function FullBlog({ article, similarArticles }) {
       });
 
       if (!res.ok) {
-        const errorData = await res.json();
-        console.error("Error response:", errorData);
+        console.error("Error updating likes");
         return;
       }
 
@@ -96,7 +86,10 @@ export default function FullBlog({ article, similarArticles }) {
       if (data.success) {
         setLikes(data.likes);
         setIsLiked(newLikedState);
-        localStorage.setItem(`liked_${article.id}`, newLikedState);
+        localStorage.setItem(
+          `liked_${identifier}`,
+          newLikedState ? "true" : "false",
+        );
       }
     } catch (error) {
       console.error("Error updating like:", error);
@@ -124,24 +117,26 @@ export default function FullBlog({ article, similarArticles }) {
     article.image.length > 0
   ) {
     const imageData = article.image[0];
-    if (imageData.formats?.large?.url) {
-      heroImageUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL}${imageData.formats.large.url}`;
-    } else if (imageData.formats?.medium?.url) {
-      heroImageUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL}${imageData.formats.medium.url}`;
-    } else if (imageData.url) {
-      heroImageUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL}${imageData.url}`;
+    let rawUrl =
+      imageData.formats?.large?.url ||
+      imageData.formats?.medium?.url ||
+      imageData.url;
+    if (rawUrl) {
+      heroImageUrl = rawUrl.startsWith("http")
+        ? rawUrl
+        : `${process.env.NEXT_PUBLIC_STRAPI_URL}${rawUrl}`;
     }
   }
 
   const dateFormatted = article.publishedAt
     ? new Date(article.publishedAt).toLocaleDateString(
-      lang === "ar" ? "ar-EG" : "en-US",
-      {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      },
-    )
+        lang === "ar" ? "ar-EG" : "en-US",
+        {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        },
+      )
     : "غير محدد";
 
   return (
@@ -194,14 +189,16 @@ export default function FullBlog({ article, similarArticles }) {
           <button
             onClick={handleLike}
             disabled={isUpdating}
-            className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 ${isLiked
-              ? "bg-red-500/20 text-red-400"
-              : "bg-white/5 text-white/70 hover:bg-white/10"
-              }`}
+            className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 ${
+              isLiked
+                ? "bg-red-500/20 text-red-400"
+                : "bg-white/5 text-white/70 hover:bg-white/10"
+            }`}
           >
             <Heart
-              className={`w-5 h-5 transition-all duration-300 ${isLiked ? "fill-red-400 text-red-400 scale-110" : ""
-                }`}
+              className={`w-5 h-5 transition-all duration-300 ${
+                isLiked ? "fill-red-400 text-red-400 scale-110" : ""
+              }`}
             />
             <span>{likes.toLocaleString()}</span>
           </button>
@@ -222,7 +219,11 @@ export default function FullBlog({ article, similarArticles }) {
                 image: ({ src, alt, width, height }) => (
                   <div className="my-10">
                     <Image
-                      src={`${process.env.NEXT_PUBLIC_STRAPI_URL}${src}`}
+                      src={
+                        src.startsWith("http")
+                          ? src
+                          : `${process.env.NEXT_PUBLIC_STRAPI_URL}${src}`
+                      }
                       alt={alt || "صورة في المقال"}
                       width={width || 800}
                       height={height || 500}
@@ -240,7 +241,7 @@ export default function FullBlog({ article, similarArticles }) {
         <CommentSection
           articleId={article.id}
           articleDocumentId={article.documentId}
-          onCommentAdded={() => setCommentsCount(prev => prev + 1)}
+          onCommentAdded={() => setCommentsCount((prev) => prev + 1)}
         />
 
         {similarArticles?.length > 0 && (

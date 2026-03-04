@@ -10,7 +10,7 @@ export async function POST(request, { params }) {
 
     console.log("Updating views for article with ID:", id);
 
-    // جلب المقال الحالي
+    // جلب المقال الحالي باستخدام المعرف
     const getRes = await fetch(`${STRAPI_URL}/api/articles/${id}`, {
       headers: {
         'Authorization': `Bearer ${API_TOKEN}`,
@@ -19,19 +19,15 @@ export async function POST(request, { params }) {
     });
 
     if (!getRes.ok) {
-      const errorText = await getRes.text();
-      console.error("Error fetching article:", errorText);
-      return NextResponse.json(
-        { success: false, error: "Article not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ success: false, error: "Article not found" }, { status: 404 });
     }
 
-    const articleData = await getRes.json();
-    const currentViews = articleData.data?.views || 0;
+    const resData = await getRes.json();
+    const article = resData.data;
+    const currentViews = article?.views || 0;
     const newViews = currentViews + 1;
 
-    // تحديث المقال
+    // تحديث المقال - في Strapi v5 نستخدم نفس الـ documentId للتحديث
     const updateRes = await fetch(`${STRAPI_URL}/api/articles/${id}`, {
       method: 'PUT',
       headers: {
@@ -39,26 +35,15 @@ export async function POST(request, { params }) {
         'Authorization': `Bearer ${API_TOKEN}`,
       },
       body: JSON.stringify({
-        data: {
-          views: newViews
-        }
+        data: { views: newViews }
       }),
     });
 
-    if (!updateRes.ok) {
-      const errorText = await updateRes.text();
-      console.error("Strapi update error:", errorText);
-      return NextResponse.json(
-        { success: false, error: "Failed to update views" },
-        { status: updateRes.status }
-      );
-    }
-
-    const updatedData = await updateRes.json();
+    if (!updateRes.ok) throw new Error("Update failed");
 
     return NextResponse.json({ 
       success: true, 
-      views: updatedData.data?.views || newViews 
+      views: newViews 
     });
   } catch (error) {
     console.error("Error in views API:", error);

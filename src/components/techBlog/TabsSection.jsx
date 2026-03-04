@@ -39,19 +39,19 @@ export default function TabsSection() {
     const loadLocalData = () => {
       // تحميل الإعجابات
       const likedStates = {};
-      Object.keys(localStorage).forEach(key => {
-        if (key.startsWith('liked_')) {
-          const articleId = key.replace('liked_', '');
-          likedStates[articleId] = localStorage.getItem(key) === 'true';
+      Object.keys(localStorage).forEach((key) => {
+        if (key.startsWith("liked_")) {
+          const articleId = key.replace("liked_", "");
+          likedStates[articleId] = localStorage.getItem(key) === "true";
         }
       });
       setLocalLikes(likedStates);
 
       // تحميل المشاهدات المسجلة في هذه الجلسة
       const viewedStates = {};
-      Object.keys(sessionStorage).forEach(key => {
-        if (key.startsWith('viewed_')) {
-          const articleId = key.replace('viewed_', '');
+      Object.keys(sessionStorage).forEach((key) => {
+        if (key.startsWith("viewed_")) {
+          const articleId = key.replace("viewed_", "");
           viewedStates[articleId] = true;
         }
       });
@@ -99,9 +99,11 @@ export default function TabsSection() {
         }
       } catch (err) {
         console.error("Error loading data:", err);
-        setError(currentLang === "ar"
-          ? "غير قادر على الاتصال بالسيرفر. تأكد من تشغيل خادم Strapi."
-          : "Unable to connect to the server. Please ensure Strapi is running.");
+        setError(
+          currentLang === "ar"
+            ? "غير قادر على الاتصال بالسيرفر. تأكد من تشغيل خادم Strapi."
+            : "Unable to connect to the server. Please ensure Strapi is running.",
+        );
       } finally {
         setIsLoading(false);
       }
@@ -119,11 +121,7 @@ export default function TabsSection() {
   }
 
   if (error) {
-    return (
-      <div className="py-24 text-center text-red-400">
-        {error}
-      </div>
-    );
+    return <div className="py-24 text-center text-red-400">{error}</div>;
   }
 
   if (tabs.length === 0) {
@@ -148,10 +146,11 @@ export default function TabsSection() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-6 py-2.5 rounded-full border transition-all duration-300 cursor-pointer text-sm md:text-base ${activeTab === tab.id
-                ? "bg-brand-sky border-brand-sky text-white shadow-lg shadow-brand-sky/20"
-                : "border-white/20 text-white/70 hover:bg-white/10 hover:border-white/30"
-                }`}
+              className={`px-6 py-2.5 rounded-full border transition-all duration-300 cursor-pointer text-sm md:text-base ${
+                activeTab === tab.id
+                  ? "bg-brand-sky border-brand-sky text-white shadow-lg shadow-brand-sky/20"
+                  : "border-white/20 text-white/70 hover:bg-white/10 hover:border-white/30"
+              }`}
             >
               {tab.title}
             </button>
@@ -161,21 +160,31 @@ export default function TabsSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {articlesByTab[activeTab]?.length > 0 ? (
             articlesByTab[activeTab].map((item) => {
-              const title = item[`title_${currentLang}`] || item.title || "بدون عنوان";
+              const title =
+                item[`title_${currentLang}`] || item.title || "بدون عنوان";
 
-              const excerptBlocks = item[`excerpt_${currentLang}`] || item.excerpt;
-              const excerpt = excerptBlocks ? extractTextFromBlocks(excerptBlocks) : "";
+              const excerptBlocks =
+                item[`excerpt_${currentLang}`] || item.excerpt;
+              const excerpt = excerptBlocks
+                ? extractTextFromBlocks(excerptBlocks)
+                : "";
 
               let imageUrl = "/images/blogImage.png";
 
-              if (item.image && Array.isArray(item.image) && item.image.length > 0) {
+              if (
+                item.image &&
+                Array.isArray(item.image) &&
+                item.image.length > 0
+              ) {
                 const imageData = item.image[0];
-                if (imageData.formats?.medium?.url) {
-                  imageUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL}${imageData.formats.medium.url}`;
-                } else if (imageData.formats?.small?.url) {
-                  imageUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL}${imageData.formats.small.url}`;
-                } else if (imageData.url) {
-                  imageUrl = `${process.env.NEXT_PUBLIC_STRAPI_URL}${imageData.url}`;
+                let rawUrl =
+                  imageData.formats?.medium?.url ||
+                  imageData.formats?.small?.url ||
+                  imageData.url;
+                if (rawUrl) {
+                  imageUrl = rawUrl.startsWith("http")
+                    ? rawUrl
+                    : `${process.env.NEXT_PUBLIC_STRAPI_URL}${rawUrl}`;
                 }
               }
 
@@ -185,17 +194,18 @@ export default function TabsSection() {
                   ? "غير مصنف"
                   : "Uncategorized";
 
-              const author = item[`author_${currentLang}`] || item.author || "غير معروف";
+              const author =
+                item[`author_${currentLang}`] || item.author || "غير معروف";
 
               const dateFormatted = item.publishedAt
                 ? new Date(item.publishedAt).toLocaleDateString(
-                  currentLang === "ar" ? "ar-EG" : "en-US",
-                  {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  }
-                )
+                    currentLang === "ar" ? "ar-EG" : "en-US",
+                    {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    },
+                  )
                 : t("common.unknown_date", "غير محدد");
 
               // التحقق مما إذا كان المستخدم معجب بهذه المقالة
@@ -228,8 +238,9 @@ export default function TabsSection() {
                   <div className="p-5 space-y-4">
                     <Link href={`/techBlog/${item.slug}`}>
                       <h3
-                        className={`text-xl font-semibold text-white group-hover:text-brand-sky transition-colors line-clamp-2 ${isRTL ? "text-right" : "text-left"
-                          }`}
+                        className={`text-xl font-semibold text-white group-hover:text-brand-sky transition-colors line-clamp-2 ${
+                          isRTL ? "text-right" : "text-left"
+                        }`}
                       >
                         {title}
                       </h3>
@@ -237,16 +248,18 @@ export default function TabsSection() {
 
                     {excerpt && (
                       <p
-                        className={`text-white/70 text-sm leading-relaxed line-clamp-3 ${isRTL ? "text-right" : "text-left"
-                          }`}
+                        className={`text-white/70 text-sm leading-relaxed line-clamp-3 ${
+                          isRTL ? "text-right" : "text-left"
+                        }`}
                       >
                         {excerpt}
                       </p>
                     )}
 
                     <div
-                      className={`flex flex-wrap items-center gap-2 text-xs text-white/50 ${isRTL ? "flex-row-reverse" : ""
-                        }`}
+                      className={`flex flex-wrap items-center gap-2 text-xs text-white/50 ${
+                        isRTL ? "flex-row-reverse" : ""
+                      }`}
                     >
                       <span className="px-2 py-1 bg-white/10 rounded-full">
                         {categoryName}
@@ -258,24 +271,24 @@ export default function TabsSection() {
                     </div>
 
                     <div
-                      className={`flex items-center gap-4 text-sm ${isRTL ? "flex-row-reverse" : ""
-                        }`}
+                      className={`flex items-center gap-4 text-sm ${
+                        isRTL ? "flex-row-reverse" : ""
+                      }`}
                     >
                       <div className="flex items-center gap-1 text-white/60">
                         <Heart
-                          className={`w-4 h-4 transition-all duration-300 ${isLiked
-                            ? 'fill-red-400 text-red-400'
-                            : 'text-red-400'
-                            }`}
+                          className={`w-4 h-4 transition-all duration-300 ${
+                            isLiked
+                              ? "fill-red-400 text-red-400"
+                              : "text-red-400"
+                          }`}
                         />
                         <span>{(item.likes || 0) + (isLiked ? 1 : 0)}</span>
                       </div>
 
                       <div className="flex items-center gap-1 text-white/60">
                         <Eye className="w-4 h-4 text-brand-sky" />
-                        <span>
-                          {(item.views || 0) + (isViewed ? 1 : 0)}
-                        </span>
+                        <span>{(item.views || 0) + (isViewed ? 1 : 0)}</span>
                       </div>
 
                       <div className="flex items-center gap-1 text-white/60">
@@ -299,7 +312,7 @@ export default function TabsSection() {
               <p className="text-white/50 text-lg">
                 {t(
                   "blog.tabs.no_articles",
-                  "لا توجد مقالات متاحة في هذا القسم حاليًا"
+                  "لا توجد مقالات متاحة في هذا القسم حاليًا",
                 )}
               </p>
             </div>

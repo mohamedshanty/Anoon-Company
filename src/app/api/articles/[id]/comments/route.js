@@ -6,9 +6,9 @@ export async function GET(request, { params }) {
     const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL;
     const API_TOKEN = process.env.STRAPI_API_TOKEN;
 
-    // محاولة جلب التعليقات باستخدام الـ documentId
+
     const res = await fetch(
-      `${STRAPI_URL}/api/comments/api::article.article:${id}`,
+      `${STRAPI_URL}/api/comments?filters[article][documentId][$eq]=${id}&sort=createdAt:desc`,
       {
         headers: { Authorization: `Bearer ${API_TOKEN}` },
         cache: 'no-store'
@@ -16,12 +16,12 @@ export async function GET(request, { params }) {
     );
 
     if (!res.ok) {
+      console.error("Fetch Custom Comments Failed:", res.status);
       return NextResponse.json({ success: true, data: [] });
     }
 
     const data = await res.json();
-    const comments = Array.isArray(data) ? data : (data.data || []);
-    return NextResponse.json({ success: true, data: comments });
+    return NextResponse.json({ success: true, data: data.data || [] });
   } catch (error) {
     console.error("GET Comments Error:", error);
     return NextResponse.json({ success: true, data: [] });
@@ -35,102 +35,41 @@ export async function POST(request, { params }) {
     const API_TOKEN = process.env.STRAPI_API_TOKEN;
     const body = await request.json();
 
-    // تجهيز البيانات الأساسية
-    const authorData = {
-      name: body.authorName || "Guest",
-      email: body.authorEmail || "guest@example.com"
+    // تجهيز بيانات التعليق للجدول الجديد
+    const payload = {
+      data: {
+        content: body.content,
+        authorName: body.authorName || "Guest",
+        authorEmail: body.authorEmail || "guest@example.com",
+        article: { connect: [id] } // ربط التعليق بالمقال
+      }
     };
 
-    // المحاولة الأولى: الإرسال لمسار المقال المباشر (الأكثر استقراراً في بعض نسخ v5)
-    const directUrl = `${STRAPI_URL}/api/comments/api::article.article:${id}`;
-    
-    // تجربة هيكلية المؤلف المتداخلة أولاً
-    const payload1 = {
-      content: body.content,
-      author: authorData
-    };
+    console.log("[Custom Comments] POSTing to /api/comments for article:", id);
 
-    console.log("Attempting POST to:", directUrl);
-
-    let res = await fetch(directUrl, {
+    const res = await fetch(`${STRAPI_URL}/api/comments`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${API_TOKEN}`,
       },
-      body: JSON.stringify(payload1),
+      body: JSON.stringify(payload),
     });
 
-    let responseData;
-    const contentType = res.headers.get("content-type");
-    
-    if (contentType && contentType.includes("application/json")) {
-      responseData = await res.json();
-    } else {
-      const text = await res.text();
-      console.warn("Strapi returned non-JSON response:", text);
-      responseData = { message: text };
-    }
-
-    // إذا فشل المحاولة الأولى (مثلاً 405 أو 400 بسبب الهيكلية)
     if (!res.ok) {
-      console.warn("First attempt failed, trying alternative payload/endpoint...");
-
-      // المحاولة الثانية: هيكلية المؤلف المسطحة (Flat author)
-      const payload2 = {
-        content: body.content,
-        authorName: authorData.name,
-        authorEmail: authorData.email,
-        // بعض النسخ تحتاج الـ related حتى في المسار المباشر
-        related: `api::article.article:${id}` 
-      };
-
-      const res2 = await fetch(directUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${API_TOKEN}`,
-        },
-        body: JSON.stringify(payload2),
-      });
-
-      if (res2.ok) {
-        res = res2;
-        responseData = await res2.json();
-      } else {
-        // المحاولة الأخيرة: المسار العام /api/comments
-        const generalUrl = `${STRAPI_URL}/api/comments`;
-        const payload3 = {
-          content: body.content,
-          related: `api::article.article:${id}`,
-          author: authorData
-        };
-
-        const res3 = await fetch(generalUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${API_TOKEN}`,
-          },
-          body: JSON.stringify(payload3),
-        });
-
-        if (res3.ok) {
-          res = res3;
-          responseData = await res3.json();
-        } else {
-          const finalErrorData = (await res3.json().catch(() => ({})));
-          return NextResponse.json({ 
-            success: false, 
-            error: finalErrorData?.error?.message || responseData.message || "فشلت جميع محاولات الربط. تأكد من صلاحيات Public في الـ Comments Plugin."
-          }, { status: res3.status || 400 });
-        }
-      }
+      const errorData = await res.json().catch(() => ({}));
+      console.error("[Custom Comments] Error:", errorData);
+      return NextResponse.json({ 
+        success: false, 
+        error: errorData.error?.message || "فشلت عملية إضافة التعليق. تأكد من صلاحيات Public لجدول Comment في Strapi."
+      }, { status: res.status });
     }
 
-    // تحديث عداد التعليقات (اختياري، لن يؤثر فشله على التعليق)
+    const result = await res.json();
+
+    // تحديث عداد التعليقات في المقال
     try {
-      fetch(`${STRAPI_URL}/api/articles/${id}`, {
+      await fetch(`${STRAPI_URL}/api/articles/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -139,12 +78,14 @@ export async function POST(request, { params }) {
         body: JSON.stringify({
           data: { comments_count: (body.currentCommentsCount || 0) + 1 },
         }),
-      }).catch(e => console.error("Counter update failed silently"));
-    } catch (e) {}
+      });
+    } catch (e) {
+      console.error("Counter update failed silently");
+    }
 
-    return NextResponse.json({ success: true, data: responseData });
+    return NextResponse.json({ success: true, data: result.data });
   } catch (error) {
-    console.error("POST Route Critical Error:", error);
+    console.error("POST Route Error:", error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }
