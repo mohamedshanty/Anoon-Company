@@ -13,21 +13,22 @@ export default function TamkeenHero() {
 
   return (
     <Hero>
-      <Hero.Title className="gap-y-6">
+      <Hero.Title className="gap-y-4 md:gap-y-6">
         <span>{t("tamkeen.hero.title_part1", "Enabling")}</span>
         <span className="text-brand-orange">
           {t("tamkeen.hero.title_highlight", "The Future Generation")}
         </span>
-        <span className="flex items-center gap-4 flex-wrap justify-center">
+        <span className="flex items-center gap-2 md:gap-4 flex-wrap justify-center">
           <span>{t("tamkeen.hero.title_part2", "With")}</span>
-          <Image
-            src="/images/tamkeen-image.png"
-            alt={t("tamkeen.hero.logo_alt", "Tamkeen")}
-            width={200}
-            height={80}
-            className="object-contain"
-            priority
-          />
+          <div className="relative w-32 h-12 md:w-48 md:h-20">
+            <Image
+              src="/images/tamkeen-image.png"
+              alt={t("tamkeen.hero.logo_alt", "Tamkeen")}
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
         </span>
       </Hero.Title>
 

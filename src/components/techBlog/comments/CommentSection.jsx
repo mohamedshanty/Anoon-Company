@@ -145,9 +145,49 @@ export default function CommentSection({ articleId, articleDocumentId, onComment
 
   if (isLoading) {
     return (
-      <div className="mt-12 flex justify-center py-10">
-        <div className="w-8 h-8 border-2 border-brand-sky border-t-transparent rounded-full animate-spin" />
-      </div>
+      <section className="mt-16 pt-8 space-y-8 animate-pulse">
+        {/* Header Skeleton */}
+        <div className="flex items-center gap-2 border-b border-white/5 pb-4">
+          <div className="w-6 h-6 rounded-md bg-white/10" />
+          <div className="w-32 h-6 rounded-md bg-white/10" />
+        </div>
+
+        <div className="space-y-8">
+          {/* Input Skeleton */}
+          <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
+            <div className="flex gap-3">
+              <div className="w-10 h-10 rounded-xl bg-white/10" />
+              <div className="flex-1 space-y-3">
+                <div className="h-20 bg-white/5 rounded-xl w-full" />
+                <div className="flex justify-between">
+                  <div className="w-20 h-6 rounded-full bg-white/10" />
+                  <div className="w-24 h-8 rounded-xl bg-white/10" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Comment List Skeletons */}
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="flex gap-6">
+              <div className="shrink-0 flex flex-col items-center gap-2">
+                <div className="w-14 h-14 rounded-2xl bg-white/10" />
+                <div className="w-0.5 h-12 bg-white/5" />
+              </div>
+              <div className="flex-1 space-y-3 pt-2">
+                <div className="flex justify-between">
+                   <div className="h-4 bg-white/10 rounded-md w-32" />
+                   <div className="h-3 bg-white/5 rounded-md w-24" />
+                </div>
+                <div className="space-y-2">
+                   <div className="h-3 bg-white/5 rounded-md w-full" />
+                   <div className="h-3 bg-white/5 rounded-md w-5/6" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
     );
   }
 

@@ -99,7 +99,7 @@ const ChatWindow = ({ onClose }) => {
   return (
     <div
       className={cn(
-        "flex flex-col h-[600px] w-[380px] md:w-[420px] bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-200/50 transition-all duration-500 animate-in fade-in zoom-in slide-in-from-bottom-10 backdrop-blur-lg",
+        "flex flex-col h-[70vh] max-h-[600px] w-[calc(100vw-2rem)] sm:w-[380px] md:w-[420px] bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-200/50 transition-all duration-500 animate-in fade-in zoom-in slide-in-from-bottom-10 backdrop-blur-lg",
         isRTL ? "font-alexandria" : ""
       )}
       dir={isRTL ? 'rtl' : 'ltr'}

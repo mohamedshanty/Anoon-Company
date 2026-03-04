@@ -124,9 +124,34 @@ export default function TabsSection() {
 
   if (isLoading) {
     return (
-      <div className="py-24 text-center text-white">
-        {t("common.loading", "جاري التحميل...")}
-      </div>
+      <section className="py-24 relative overflow-hidden">
+        <div className="main-container relative z-10">
+          <div className="flex flex-wrap gap-3 mb-12 justify-center">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="w-24 h-10 rounded-full bg-white/5 animate-pulse" />
+            ))}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
+                <div className="h-48 bg-white/10 animate-pulse" />
+                <div className="p-5 space-y-4">
+                  <div className="h-6 bg-white/10 rounded-md animate-pulse w-3/4" />
+                  <div className="space-y-2">
+                    <div className="h-4 bg-white/5 rounded-md animate-pulse w-full" />
+                    <div className="h-4 bg-white/5 rounded-md animate-pulse w-5/6" />
+                  </div>
+                  <div className="flex gap-2">
+                    <div className="h-4 bg-white/10 rounded-full animate-pulse w-16" />
+                    <div className="h-4 bg-white/10 rounded-full animate-pulse w-16" />
+                  </div>
+                  <div className="h-10 bg-white/10 rounded-xl animate-pulse w-full" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     );
   }
 

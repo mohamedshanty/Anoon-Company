@@ -130,7 +130,7 @@ export default function Hero({ children }) {
   return (
     <section
       ref={container}
-      className="relative flex items-center justify-center py-36 overflow-hidden min-h-screen"
+      className="relative flex items-center justify-center py-20 md:py-36 overflow-hidden min-h-screen"
     >
       {/* Background */}
       <div className="absolute inset-0 pointer-events-none">

@@ -25,7 +25,7 @@ export default function HeroSection({ children, translations }) {
     ];
 
     return (
-        <section className="relative flex items-center justify-center py-36 overflow-hidden h-screen">
+        <section className="relative flex items-center justify-center py-20 md:py-36 overflow-hidden min-h-screen md:h-screen">
             {/* Background */}
             <div className="absolute inset-0 pointer-events-none -z-10">
                 <div className="absolute top-10 right-10 w-[45%] h-[45%] bg-blue-600/5 blur-[120px] rounded-full" />
@@ -57,7 +57,7 @@ export default function HeroSection({ children, translations }) {
 // Named exports for consistency
 export const HeroTitle = ({ children, className = "" }) => (
     <Reveal type="slide-up" duration={0.6} stagger={0.1}>
-        <h1 className={`font-bold text-white mb-5 flex flex-col items-center ${className}`}>
+        <h1 className={`font-bold text-white mb-5 flex flex-col items-center text-4xl sm:text-5xl md:text-7xl lg:text-8xl ${className}`}>
             {children}
         </h1>
     </Reveal>

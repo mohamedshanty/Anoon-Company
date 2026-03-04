@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function MainHeroServer({ t }) {
     return (
         <HeroSection>
-            <HeroTitle className="leading-27">
+            <HeroTitle className="md:leading-27">
                 <span>{t.title_rising}</span>
                 <span className="text-brand-orange"> {t.title_ashes}</span>
                 <span>
