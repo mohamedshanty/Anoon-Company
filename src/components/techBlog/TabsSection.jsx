@@ -72,11 +72,19 @@ export default function TabsSection() {
         if (!json.success) throw new Error(json.error);
 
         // تنسيق التصنيفات (Tabs)
-        const formattedTabs = json.categories.map((item) => ({
-          id: item.id,
-          slug: item.slug,
-          title: item[`name_${currentLang}`] || item.name || "بدون اسم",
-        }));
+        const allTab = {
+          id: "all",
+          slug: "all",
+          title: currentLang === "ar" ? "الكل" : "All",
+        };
+        const formattedTabs = [
+          allTab,
+          ...json.categories.map((item) => ({
+            id: item.id,
+            slug: item.slug,
+            title: item[`name_${currentLang}`] || item.name || "بدون اسم",
+          })),
+        ];
 
         setTabs(formattedTabs);
 
@@ -91,6 +99,8 @@ export default function TabsSection() {
             grouped[categoryId].push(article);
           }
         });
+        // إضافة جميع المقالات تحت تبويب "الكل"
+        grouped["all"] = json.articles;
 
         setArticlesByTab(grouped);
 
