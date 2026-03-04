@@ -29,9 +29,9 @@ export default function PartnersClient({ partners, isRTL }) {
 
         const getDuration = () => {
             const width = window.innerWidth;
-            if (width < 640) return 25;
-            if (width < 1024) return 20;
-            return 18;
+            if (width < 640) return 15;
+            if (width < 1024) return 12;
+            return 10;
         };
 
         const xPercent = isRTL ? 50 : -50;
@@ -40,7 +40,7 @@ export default function PartnersClient({ partners, isRTL }) {
             xPercent: xPercent,
             repeat: -1,
             duration: getDuration(),
-            ease: "linear",
+            ease: "none",
         });
 
         return () => {
@@ -50,39 +50,45 @@ export default function PartnersClient({ partners, isRTL }) {
 
     const handleMouseEnter = () => {
         setIsHovered(true);
-        animationRef.current?.pause();
+        gsap.to(animationRef.current, { timeScale: 0.2, duration: 0.5 });
     };
 
     const handleMouseLeave = () => {
         setIsHovered(false);
-        animationRef.current?.resume();
+        gsap.to(animationRef.current, { timeScale: 1, duration: 0.5 });
     };
 
     return (
         <div className="w-full flex justify-center px-4 sm:px-6">
             <div
-                className="relative w-full max-w-4xl overflow-hidden group"
+                className="relative w-full max-w-5xl overflow-hidden group"
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
             >
+                {/* Gradient Masks for Premium Look */}
+                <div className="absolute left-0 top-0 bottom-0 w-20 bg-linear-to-r from-background to-transparent z-10 pointer-events-none" />
+                <div className="absolute right-0 top-0 bottom-0 w-20 bg-linear-to-l from-background to-transparent z-10 pointer-events-none" />
+
                 <div
                     ref={scrollRef}
-                    className={`flex items-center w-[200%] mt-10 ${isRTL ? "flex-row" : ""}`}
-                    style={{ willChange: "transform" }}
+                    className={`flex items-center w-[200%] mt-10 py-4 ${isRTL ? "flex-row-reverse" : ""}`}
+                    style={{ WILL_CHANGE: "transform" }}
                 >
                     {[...partners, ...partners].map((partner, idx) => (
                         <div
                             key={`${partner.name}-${idx}`}
-                            className="flex flex-col items-center transition-all duration-300 hover:scale-110 min-w-[120px] sm:min-w-[150px] md:min-w-[180px] lg:min-w-[200px]"
+                            className="flex flex-col items-center transition-all duration-500 hover:scale-110 min-w-[140px] sm:min-w-[180px] md:min-w-[220px] lg:min-w-[250px] px-4"
                         >
-                            <Image
-                                src={partner.image}
-                                alt={partner.name}
-                                width={imageSize.width}
-                                height={imageSize.height}
-                                className="mb-2 object-contain w-auto h-auto"
-                                loading="lazy"
-                            />
+                            <div className="relative group/card">
+                                <Image
+                                    src={partner.image}
+                                    alt={partner.name}
+                                    width={imageSize.width}
+                                    height={imageSize.height}
+                                    className="mb-2 object-contain w-auto h-12 md:h-16 lg:h-20 grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500"
+                                    loading="lazy"
+                                />
+                            </div>
                             <span className="sr-only">{partner.name}</span>
                         </div>
                     ))}
