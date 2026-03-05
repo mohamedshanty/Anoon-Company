@@ -35,7 +35,12 @@ export default function InfoSection({
       id={id}
       className={`pb-16 md:pb-20 lg:pb-24 pt-8 md:pt-10 lg:pt-12 relative overflow-hidden ${glowClasses[backgroundGlow]} ${customClass}`}
     >
-      {showPattern && <PatternBackground direction={patternDirection} priority={imagePriority} />}
+      {showPattern && (
+        <PatternBackground
+          direction={patternDirection}
+          priority={imagePriority}
+        />
+      )}
 
       <div className="main-container">
         <div
@@ -81,15 +86,15 @@ InfoSection.Header = ({ children, className = "" }) => (
 );
 
 InfoSection.Subtitle = ({ children, className = "" }) => (
-  <p className={`font-semibold tracking-[1px] text-brand-orange text-sm md:text-base uppercase ${className}`}>
+  <p
+    className={`font-semibold tracking-[1px] text-brand-orange text-sm md:text-base uppercase ${className}`}
+  >
     {children}
   </p>
 );
 
 InfoSection.Title = ({ children, className = "" }) => (
-  <div className={`space-y-1 ${className}`}>
-    {children}
-  </div>
+  <div className={`space-y-1 ${className}`}>{children}</div>
 );
 
 InfoSection.TitleLine = ({
@@ -101,7 +106,9 @@ InfoSection.TitleLine = ({
   color = "text-brand-sky",
   className = "",
 }) => (
-  <h2 className={`font-bold leading-tight text-xl sm:text-2xl md:text-3xl lg:text-4xl ${className}`}>
+  <h2
+    className={`font-bold leading-tight text-xl sm:text-2xl md:text-3xl lg:text-4xl ${className}`}
+  >
     {text && <span className={color}>{text} </span>}
     {highlight && <span className={highlightColor}>{highlight}</span>}
     {textAfter && <span className={color}> {textAfter}</span>}
@@ -110,14 +117,18 @@ InfoSection.TitleLine = ({
 );
 
 InfoSection.Description = ({ children, className = "" }) => (
-  <p className={`text-sm sm:text-base md:text-lg leading-[1.6] max-w-xl text-white/80 ${className}`}>
+  <p
+    className={`text-sm sm:text-base md:text-lg leading-[1.6] max-w-xl text-white/80 ${className}`}
+  >
     {children}
   </p>
 );
 
 InfoSection.Features = ({ children, className = "" }) => (
   <Reveal type="slide-up" stagger={0.2}>
-    <div className={`grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5 lg:gap-6 xl:gap-8 pt-3 md:pt-4 ${className}`}>
+    <div
+      className={`grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5 lg:gap-6 xl:gap-8 pt-3 md:pt-4 ${className}`}
+    >
       {children}
     </div>
   </Reveal>
@@ -133,7 +144,9 @@ InfoSection.Feature = ({
   className = "",
   href,
 }) => (
-  <div className={`flex items-start gap-3 md:gap-4 lg:gap-5 xl:gap-8 ${className}`}>
+  <div
+    className={`flex items-start gap-3 md:gap-4 lg:gap-5 xl:gap-8 ${className}`}
+  >
     {icon && (
       <div className="mt-1 pt-1 md:pt-2 lg:pt-3 xl:pt-4 shrink-0">
         <Image
@@ -146,7 +159,9 @@ InfoSection.Feature = ({
       </div>
     )}
     <div className="flex-1 min-w-0">
-      <h3 className={`text-base md:text-lg lg:text-xl font-bold mb-0.5 md:mb-1 lg:mb-2 ${color}`}>
+      <h3
+        className={`text-base md:text-lg lg:text-xl font-bold mb-0.5 md:mb-1 lg:mb-2 ${color}`}
+      >
         {title}
       </h3>
       <p className="text-brand-white/70 text-xs md:text-sm mb-1 md:mb-2 lg:mb-4 line-clamp-2">
@@ -171,7 +186,8 @@ InfoSection.CTA = ({
   href,
   onClick,
 }) => {
-  const buttonSize = "px-4 md:px-6 lg:px-8 xl:px-10 py-1.5 md:py-2 lg:py-2.5 xl:py-3 text-xs md:text-sm lg:text-base";
+  const buttonSize =
+    "px-4 md:px-6 lg:px-8 xl:px-10 py-1.5 md:py-2 lg:py-2.5 xl:py-3 text-xs md:text-sm lg:text-base";
 
   const handleClick = (e) => {
     if (onClick) {
