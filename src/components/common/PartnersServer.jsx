@@ -93,7 +93,7 @@ export default function PartnersSection({
   return (
     <section
       ref={sectionRef}
-      id="partners"
+      id="partner"
       className="relative py-16 md:py-20 overflow-hidden"
       dir={dir}
     >

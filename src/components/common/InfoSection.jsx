@@ -60,7 +60,7 @@ export default function InfoSection({
               type={layout === "image-left" ? "slide-left" : "slide-right"}
               className="w-full lg:w-1/2 flex justify-center lg:justify-start"
             >
-              <div className="relative w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] md:w-[400px] md:h-[400px] lg:w-[450px] lg:h-[450px] xl:w-[500px] xl:h-[500px] 2xl:w-[550px] 2xl:h-[550px]">
+              <div className="relative w-70 h-70 sm:w-87.5 sm:h-87.5 md:w-100 md:h-100 lg:w-112.5 lg:h-112.5 xl:w-125 xl:h-125 2xl:w-137.5 2xl:h-137.5">
                 <Image
                   src={image}
                   alt={imageAlt}
@@ -154,7 +154,7 @@ InfoSection.Feature = ({
           alt={title}
           width={40}
           height={40}
-          className="md:w-[40px] md:h-[40px] lg:w-[50px] lg:h-[50px] xl:w-[60px] xl:h-[60px]"
+          className="md:w-10 md:h-10 lg:w-12.5 lg:h-12.5 xl:w-15 xl:h-15"
         />
       </div>
     )}
@@ -216,3 +216,12 @@ InfoSection.CTA = ({
     </Reveal>
   );
 };
+
+InfoSection.Header.displayName = "InfoSection.Header";
+InfoSection.Subtitle.displayName = "InfoSection.Subtitle";
+InfoSection.Title.displayName = "InfoSection.Title";
+InfoSection.TitleLine.displayName = "InfoSection.TitleLine";
+InfoSection.Description.displayName = "InfoSection.Description";
+InfoSection.Features.displayName = "InfoSection.Features";
+InfoSection.Feature.displayName = "InfoSection.Feature";
+InfoSection.CTA.displayName = "InfoSection.CTA";

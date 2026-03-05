@@ -22,7 +22,7 @@ export default async function Home() {
   return (
     <div className="relative">
       <div className="relative z-10">
-        <MainHero t={trans.hero} isRTL={isRTL} />
+        <MainHero t={{...trans.hero, lang}} isRTL={isRTL} />
         <MainInfoSection t={trans.who_we_are_page} isRTL={isRTL} />
         <ProgramsServer t={trans.programs_page} isRTL={isRTL} />
         <AIAgentServer t={trans.ai_agent} isRTL={isRTL} />

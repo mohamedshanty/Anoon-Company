@@ -109,7 +109,8 @@ export default function FullBlog({ article, similarArticles }) {
   if (!article) return null;
 
   const title = article[`title_${lang}`] || article.title || "بدون عنوان";
-  const introduction = article[`introduction_${lang}`] || "";
+  const introduction =
+    lang === "ar" ? article.introduction_ar || "" : article.introduction || "";
   const content = article[`content_${lang}`] || article.content || "";
   const author = article[`author_${lang}`] || article.author || "غير معروف";
   const categoryName =
@@ -221,13 +222,15 @@ export default function FullBlog({ article, similarArticles }) {
         {/* Left Column: Content */}
         <article className="lg:col-span-8 space-y-12">
           {introduction && (
-            <div className="relative">
+            <div className="relative mb-8">
               <div className="absolute -left-6 top-0 bottom-0 w-1 bg-brand-sky/50 rounded-full" />
               <p className="text-xl md:text-2xl text-white/80 leading-relaxed font-light pl-4">
                 {introduction}
               </p>
             </div>
           )}
+          {/* خط فاصل بين المقدمة والمحتوى */}
+          {introduction && <hr className="my-8 border-t border-brand-sky/30" />}
 
           <div className="prose prose-invert prose-headings:font-bold prose-headings:text-white prose-p:text-white/80 prose-p:leading-relaxed prose-p:text-lg prose-a:text-brand-sky prose-img:rounded-3xl prose-img:shadow-2xl max-w-none">
             {typeof content === "string" ? (
