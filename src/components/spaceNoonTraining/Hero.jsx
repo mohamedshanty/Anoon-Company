@@ -11,7 +11,7 @@ export default function SpaceNoonTrainingHero() {
 
   return (
     <Hero>
-      <Hero.Title className={`${isRTL ? 'gap-y-8' : 'gap-y-3'}`}>
+      <Hero.Title className={`${isRTL ? "gap-y-8" : "gap-y-3"}`}>
         <span>{t("tech_training.hero.title_part1", "Enabling")}</span>
         <span className="text-brand-orange">
           {t("tech_training.hero.title_highlight", "The Future Generation")}
@@ -26,10 +26,8 @@ export default function SpaceNoonTrainingHero() {
         </span>
       </Hero.Title>
 
-      <Hero.Subtitle className={`tracking-[0.5px] ${isRTL ? 'mt-10' : ''}`}>
-        <p
-          className={`text-subtitle text-white/80`}
-        >
+      <Hero.Subtitle className={`tracking-[0.5px] ${isRTL ? "mt-10" : ""}`}>
+        <p className={`text-subtitle text-white/80`}>
           {t(
             "tech_training.hero.subtitle",
             "Empowering students and professionals with cutting-edge skills to shape the digital future inside Palestine & Gaza.",
@@ -38,12 +36,16 @@ export default function SpaceNoonTrainingHero() {
       </Hero.Subtitle>
 
       <Hero.Buttons>
-        <Link href="/spaceNoonTraining#contact" >
+        <Link href="/spaceNoonTraining#contact">
           <Button variant="outline" color="orange">
             {t("tech_training.hero.button1", "Explore Our Services")}
           </Button>
         </Link>
-        <Link href="https://maps.app.goo.gl/ars1q5FHPEMyP1zo6" target="_blank" rel="noopener noreferrer">
+        <Link
+          href="https://maps.app.goo.gl/G4uycW6GEBeUjnMv7"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <Button variant="outline" color="sky">
             {t("tech_training.hero.button2", "Visit Our Space")}
           </Button>

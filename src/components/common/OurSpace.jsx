@@ -14,16 +14,24 @@ const OurSpace = () => {
 
   const subtitleWords = t("space_noon.our_space.subtitle_words", {
     returnObjects: true,
-    defaultValue: ["Your", "Future", "Network"]
+    defaultValue: ["Your", "Future", "Network"],
   });
 
-  const wordsArray = Array.isArray(subtitleWords) ? subtitleWords : ["Your", "Future", "Network"];
+  const wordsArray = Array.isArray(subtitleWords)
+    ? subtitleWords
+    : ["Your", "Future", "Network"];
 
   const highlightedWords = [
-    ...(wordsArray[0] ? [{ text: wordsArray[0], color: "text-brand-sky" }] : []),
-    ...(wordsArray[1] ? [{ text: wordsArray[1], color: "text-brand-orange" }] : []),
-    ...(wordsArray[2] ? [{ text: wordsArray[2], color: "text-brand-sky" }] : []),
-  ].filter(item => item.text);
+    ...(wordsArray[0]
+      ? [{ text: wordsArray[0], color: "text-brand-sky" }]
+      : []),
+    ...(wordsArray[1]
+      ? [{ text: wordsArray[1], color: "text-brand-orange" }]
+      : []),
+    ...(wordsArray[2]
+      ? [{ text: wordsArray[2], color: "text-brand-sky" }]
+      : []),
+  ].filter((item) => item.text);
 
   return (
     <section className="relative py-24 overflow-hidden" dir={dir}>
@@ -36,7 +44,10 @@ const OurSpace = () => {
             highlightedWords: highlightedWords,
           }}
           description={[
-            t("space_noon.our_space.description", "We provide everything your need in our space. We give you the skill you have to acquire to get in the digital work space with professional guidance regarding Freelancing & Networking, and the platform to be able to achieve it."),
+            t(
+              "space_noon.our_space.description",
+              "We provide everything your need in our space. We give you the skill you have to acquire to get in the digital work space with professional guidance regarding Freelancing & Networking, and the platform to be able to achieve it.",
+            ),
           ]}
           starsCount={20}
           maxWidth="3xl"
@@ -44,7 +55,11 @@ const OurSpace = () => {
           titleClassName="text-5xl md:text-6xl"
         />
         <div className="mt-12">
-          <Link href="https://maps.app.goo.gl/AHQxMFpHrhuP86qq6" target="_blank" rel="noopener noreferrer">
+          <Link
+            href="https://maps.app.goo.gl/G4uycW6GEBeUjnMv7"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <Button variant="outline" color="sky" className="px-8 py-3 text-lg">
               {t("space_noon.our_space.button", "Visit Our Location")}
             </Button>

@@ -347,7 +347,7 @@ const GetInTouch = () => {
           >
             <iframe
               title="Company Location"
-              src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d520.4477972203446!2d34.45441480937426!3d31.511226388100226!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sar!2s!4v1772448029590!5m2!1sar!2s"
+              src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d850.3659826430599!2d34.454040238200285!3d31.51141560541474!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMzHCsDMwJzQwLjciTiAzNMKwMjcnMTQuOCJF!5e0!3m2!1sar!2s!4v1772710212552!5m2!1sar!2s"
               width="100%"
               height="100%"
               style={{ border: 0 }}

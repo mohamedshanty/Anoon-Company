@@ -97,7 +97,7 @@ const TrainingProgramCard = ({
             <div className="mt-6 md:mt-8">
               {isSpaceNoonTraining ? (
                 <Link
-                  href="https://maps.app.goo.gl/ars1q5FHPEMyP1zo6"
+                  href="https://maps.app.goo.gl/G4uycW6GEBeUjnMv7"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
