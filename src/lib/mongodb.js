@@ -1,7 +1,7 @@
 // src/lib/mongodb.js
 import { MongoClient } from "mongodb";
 
-const uri = process.env.MONGODB_URI; // ضع هنا رابط قاعدة البيانات
+const uri = process.env.MONGODB_URI;
 const options = {};
 
 let client;

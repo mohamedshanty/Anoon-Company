@@ -6,13 +6,12 @@ export async function GET(request, { params }) {
     const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL;
     const API_TOKEN = process.env.STRAPI_API_TOKEN;
 
-
     const res = await fetch(
       `${STRAPI_URL}/api/comments?filters[article][documentId][$eq]=${id}&sort=createdAt:desc`,
       {
         headers: { Authorization: `Bearer ${API_TOKEN}` },
-        cache: 'no-store'
-      }
+        cache: "no-store",
+      },
     );
 
     if (!res.ok) {
@@ -30,7 +29,7 @@ export async function GET(request, { params }) {
 
 export async function POST(request, { params }) {
   try {
-    const { id } = await params; 
+    const { id } = await params;
     const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL;
     const API_TOKEN = process.env.STRAPI_API_TOKEN;
     const body = await request.json();
@@ -41,8 +40,8 @@ export async function POST(request, { params }) {
         content: body.content,
         authorName: body.authorName || "Guest",
         authorEmail: body.authorEmail || "guest@example.com",
-        article: { connect: [id] } // ربط التعليق بالمقال
-      }
+        article: { connect: [id] }, // ربط التعليق بالمقال
+      },
     };
 
     console.log("[Custom Comments] POSTing to /api/comments for article:", id);
@@ -59,10 +58,15 @@ export async function POST(request, { params }) {
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
       console.error("[Custom Comments] Error:", errorData);
-      return NextResponse.json({ 
-        success: false, 
-        error: errorData.error?.message || "فشلت عملية إضافة التعليق. تأكد من صلاحيات Public لجدول Comment في Strapi."
-      }, { status: res.status });
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            errorData.error?.message ||
+            "فشلت عملية إضافة التعليق. تأكد من صلاحيات Public لجدول Comment في Strapi.",
+        },
+        { status: res.status },
+      );
     }
 
     const result = await res.json();
@@ -86,6 +90,9 @@ export async function POST(request, { params }) {
     return NextResponse.json({ success: true, data: result.data });
   } catch (error) {
     console.error("POST Route Error:", error);
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 500 },
+    );
   }
 }
