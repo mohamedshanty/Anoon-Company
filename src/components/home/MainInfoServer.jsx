@@ -33,7 +33,7 @@ export default function MainInfoServer({ t, isRTL }) {
         </InfoSection.Title>
       </InfoSection.Header>
 
-      <InfoSection.Description>{t.description}</InfoSection.Description>
+      <InfoSection.Description>{t.description} </InfoSection.Description>
 
       <InfoSection.Features className={isRTL ? "rtl-gap" : ""}>
         <InfoSection.Feature
