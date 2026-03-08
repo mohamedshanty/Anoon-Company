@@ -34,14 +34,14 @@ export default function SectionHeader({
 
     if (typeof subtitle === "string") {
       return (
-        <h3
+        <h4
           className={cn(
-            "font-bold mb-6 md:mb-8 lg:mb-10 leading-tight",
+            "font-bold mb-6 md:mb-8 lg:mb-10 leading-tight text-2xl md:text-3xl lg:text-4xl",
             subtitleClassName,
           )}
         >
           {subtitle}
-        </h3>
+        </h4>
       );
     }
 
@@ -49,7 +49,7 @@ export default function SectionHeader({
       return (
         <h3
           className={cn(
-            "font-bold mb-6 md:mb-8 lg:mb-10 leading-tight text-xl md:text-2xl lg:text-3xl",
+            "font-bold mb-6 md:mb-8 lg:mb-10 leading-tight text-3xl md:text-4xl lg:text-5xl",
             subtitleClassName,
           )}
         >

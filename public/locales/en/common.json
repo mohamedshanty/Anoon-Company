@@ -2,7 +2,7 @@
   "nav": {
     "about": "About Us",
     "programs": "Programs",
-    "agency": "Tech Agency",
+    "agency": "Tech Solutions",
     "impact": "Our Impact",
     "team": "Our Team",
     "partner": "Our Partner",
@@ -90,7 +90,7 @@
       "quote": "I Believe That i was my destiny, i am amazing UX Designer yet i learned a lot of empathy from the staff i needed a place to feel where i belong and i found it here, Now i am in a better place, happy where i am and still rising and i will never give up"
     }
   },
-   "impact_page": {
+  "impact_page": {
     "title": {
       "first_word": "Our",
       "second_word": "Impact"
@@ -105,22 +105,22 @@
     "description": "We didn't wait for permission. While the world watched in silence, we chose to build. Alongside those who truly stood by us, we carved a path through the impossible. We didn't just bring frameworks; we brought the tools for our people to reclaim their own future. We are still here, we are still building, and our will is stronger than any struggle.",
     "additional_text": "We Are Going To Be The Different"
   },
-  
+
   "tamkeen_impact": {
     "description": "Fly So High , We Reach The Sky and now its time to go beyond We are , we help , we care and we are proud of that.",
     "additional_text": "Building The Next Generation"
   },
-  
+
   "noon_hub_impact": {
     "description": "Noon Hub provides a safe and collaborative space for freelancers and students to network, learn, and grow together, creating a vibrant tech community in Gaza.",
     "additional_text": "Connecting Minds, Building Futures"
   },
-  
+
   "tech_training_impact": {
     "description": "Our technical training programs have equipped over 500 students with in-demand skills in web development, UI/UX design, and AI, with an 85% success rate in freelancing.",
     "additional_text": "Skills That Last Forever"
   },
-  
+
   "space_noon_impact": {
     "description": "Space Noon offers modern co-working facilities with reliable electricity, high-speed internet, and networking events, creating the perfect environment for productivity.",
     "additional_text": "Your Space To Shine"
@@ -140,9 +140,9 @@
     "title_line2_highlight": "Dream",
     "description": "Anoon LLC doesn't just build software. When the world went dark, we stayed. We met our mission head-on in Gaza by offering a future. We equipped students with the technical mastery to rise, because they can take everything else, but they can't take what you know.",
     "feature1_title": "Tech Solution",
-    "feature1_desc": "We deliver scalable, secure & impact-oriented systems.",
+    "feature1_desc": "We deliver scalable, secure & impact-oriented digital systems specializing in AI Agent",
     "feature2_title": "Social",
-    "feature2_desc": "Our Programs provide infrastructure and skills.",
+    "feature2_desc": "Our Programs Provides the infrastructure and skills freelancers need to remain economically active.",
     "feature1_cta": "Know More",
     "feature2_cta": "Know More"
   },
@@ -337,11 +337,10 @@
   },
   "tech_training": {
     "hero": {
-      "badge": "The New Area Of Technology",
-      "title_part1": "Creating",
-      "title_part2": "Next Generation Solution",
-      "title_part3_prefix": "With",
-      "title_highlight": "Tech Agency",
+      "title_part1": "Enabling",
+      "title_part2": "With",
+      "title_part3_prefix": "",
+      "title_highlight": "The Future Generation",
       "prompt_placeholder": "Ask about our services, projects, or how we can help you!",
       "prompt_button": "Ask Now"
     },
@@ -385,7 +384,7 @@
       "title_part2": "Next Generation Solution",
       "title_part3": "With",
       "title_part3_prefix": "With",
-      "title_highlight": "Tech Agency",
+      "title_highlight": "Tech Solutions",
       "prompt_placeholder": "Ask about our services, projects, or how we can help you!",
       "prompt_button": "Ask Now",
       "ask_ai_button": "Ask Ai"
@@ -517,7 +516,7 @@
   "comingSoon": {
     "title": "This feature will be available soon"
   },
-    "partner": {
+  "partner": {
     "description_en": "A registered Scottish charity providing humanitarian aid worldwide.",
     "supports_anoon": "Scot Aid proudly supports Anoon's mission to empower youth in Gaza through technology education and sustainable development programs.",
     "visit_website": "Visit Website",

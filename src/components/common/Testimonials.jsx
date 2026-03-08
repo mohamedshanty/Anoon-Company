@@ -72,7 +72,7 @@ const Testimonials = () => {
   return (
     <div
       ref={containerRef}
-      className="flex items-center justify-center p-4 sm:p-8 md:p-12 lg:p-16 mt-8 sm:mt-12 md:mt-16 lg:mt-24 mb-12 sm:mb-16 overflow-hidden"
+      className="flex items-center justify-center p-4 sm:p-8 md:p-12 lg:p-16 mt-8 md:mt-0 mb-12 sm:mb-16 overflow-hidden"
       dir={isRTL ? "rtl" : "ltr"}
     >
       <div className="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-10">

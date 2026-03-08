@@ -1,20 +1,18 @@
 import InfoSection from "@/components/common/InfoSection";
 
-export default function MainInfoServer({ t }) {
-  const isRTL = false; // Initial SSR is LTR unless we detect it server-side
-
+export default function MainInfoServer({ t, isRTL }) {
   return (
     <InfoSection
       id="about"
       layout="image-right"
       backgroundGlow="default"
-      image="/images/whoWeAre1.png"
+      image="/images/info1.png"
       imageAlt={t.subtitle}
       imagePriority={true}
     >
       <InfoSection.Header>
         <InfoSection.Subtitle className="text-brand-white">
-          <span className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+          <span className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
             {t.subtitle}
           </span>
         </InfoSection.Subtitle>
@@ -54,7 +52,7 @@ export default function MainInfoServer({ t }) {
           color="text-brand-sky"
           className={isRTL ? "" : "lg:-mr-12 xl:-mr-16"}
           ctaText={t.feature2_cta || "Know More"}
-          href="/noonHub"
+          href="/tamkeen"
         />
       </InfoSection.Features>
     </InfoSection>

@@ -164,7 +164,7 @@ Hero.Title = function HeroTitle({ children, className = "" }) {
   return (
     <h1
       data-hero="title"
-      className={`font-bold text-white mb-5 flex flex-col items-center  text-4xl sm:text-5xl md:text-6xl xl:text-8xl ${className}`}
+      className={`font-bold text-white mb-5 flex flex-col items-center  text-4xl sm:text-5xl md:text-6xl xl:text-[80px] ${className}`}
     >
       {children}
     </h1>

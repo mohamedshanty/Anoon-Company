@@ -5,7 +5,7 @@ export default function AIAgentImage({ className = "" }) {
     <div className={`relative flex items-center justify-center ${className}`}>
       {/* Light Glow */}
       <div className="absolute inset-0 -z-10 flex items-center justify-center">
-        <div className="w-[140%] h-[140%] rounded-full bg-[radial-gradient(circle,rgba(120,200,255,0.4)_0%,rgba(40,120,255,0.5)_50%,transparent_70%)] blur-[90px] animate-pulse" />
+        <div className="w-[140%] h-[90%] rounded-full bg-[radial-gradient(circle,rgba(120,200,255,0.4)_0%,rgba(40,120,255,0.5)_50%,transparent_70%)] blur-[90px] animate-pulse" />
       </div>
 
       {/* Rotating Circle */}

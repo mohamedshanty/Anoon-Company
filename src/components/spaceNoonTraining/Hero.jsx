@@ -26,17 +26,17 @@ export default function SpaceNoonTrainingHero() {
         </span>
       </Hero.Title>
 
-      <Hero.Subtitle className={`tracking-[0.5px] ${isRTL ? "mt-10" : ""}`}>
+      <Hero.Subtitle className={`tracking-[0.5px] ${isRTL ? "my-10" : ""}`}>
         <p className={`text-subtitle text-white/80`}>
           {t(
             "tech_training.hero.subtitle",
-            "Empowering students and professionals with cutting-edge skills to shape the digital future inside Palestine & Gaza.",
+            "Empowering students and professionals with cutting-edge skills to shape the digital future inside Palestine & Gaza . ",
           )}
         </p>
       </Hero.Subtitle>
 
       <Hero.Buttons>
-        <Link href="/spaceNoonTraining#contact">
+        <Link href="/spaceNoonTraining#tech">
           <Button variant="outline" color="orange">
             {t("tech_training.hero.button1", "Explore Our Services")}
           </Button>

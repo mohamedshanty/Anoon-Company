@@ -57,14 +57,14 @@ const ProgramCard = ({
   };
 
   return (
-    <div className="relative group h-full rounded-[20px] bg-[#14235d] p-10 lg:p-14 border border-white/10 shadow-[0_0_6px_rgba(255,255,255,0.6)] flex flex-col items-center text-center overflow-hidden transition-all duration-500">
+    <div className="relative group h-full rounded-[20px] bg-[#010057] p-10 lg:p-14 border border-white/10 shadow-[0_0_6px_rgba(255,255,255,0.6)] flex flex-col items-center text-center overflow-hidden transition-all duration-500">
       {/* Subtle Inner Glow */}
       <div
-        className={`absolute inset-0 bg-gradient-to-b ${accentGlowClass} to-transparent pointer-events-none`}
+        className={`absolute inset-0 bg-gradient-to-b ${accentGlowClass} opacity-40 to-transparent pointer-events-none`}
       />
 
       <div className="relative z-10 w-full flex-1 flex flex-col items-center gap-6">
-        {/* Logo */}
+        {/* Logo at top */}
         <div className={logoContainerClassName}>
           <Image
             src={logo.src}
@@ -75,14 +75,14 @@ const ProgramCard = ({
           />
         </div>
 
-        {/* Heading */}
-        <div className="text-[24px] md:text-[28px] font-bold text-white leading-[1.15]">
-          {title}
+        {/* Heading - two lines, centered */}
+        <div className="flex flex-col items-center justify-center text-center">
+          <span className="text-[24px] md:text-[28px] font-bold text-white leading-[1.55]">
+            {title}
+          </span>
         </div>
-
-        {/* Description */}
-        <p className="card-description mb-4">{description}</p>
-
+        {/* Description under title */}
+        <p className="card-description mb-4 text-center">{description}</p>
         {/* Buttons */}
         <div className="mt-auto flex flex-col xl:flex-row gap-4 w-full">
           {/* Primary Button */}
@@ -94,7 +94,6 @@ const ProgramCard = ({
             onClick: primaryBtnOnClick,
             external: primaryBtnExternal,
           })}
-
           {/* Secondary Button */}
           {renderButton({
             text: secondaryBtnText,

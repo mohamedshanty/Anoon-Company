@@ -87,7 +87,7 @@ InfoSection.Header = ({ children, className = "" }) => (
 
 InfoSection.Subtitle = ({ children, className = "" }) => (
   <p
-    className={`font-semibold tracking-[1px] text-brand-orange text-sm md:text-base uppercase ${className}`}
+    className={`font-semibold tracking-[1px] text-brand-orange text-sm md:text-base ${className}`}
   >
     {children}
   </p>
@@ -107,7 +107,7 @@ InfoSection.TitleLine = ({
   className = "",
 }) => (
   <h2
-    className={`font-bold leading-tight text-xl sm:text-2xl md:text-3xl lg:text-4xl ${className}`}
+    className={`font-semibold leading-tight text-xl sm:text-2xl md:text-3xl lg:text-3xl ${className}`}
   >
     {text && <span className={color}>{text} </span>}
     {highlight && <span className={highlightColor}>{highlight}</span>}
@@ -164,9 +164,7 @@ InfoSection.Feature = ({
       >
         {title}
       </h3>
-      <p className="text-brand-white/70 text-xs md:text-sm mb-1 md:mb-2 lg:mb-4 line-clamp-2">
-        {text}
-      </p>
+      <p className="text-brand-white/70 text-xs mb-1 md:mb-2 lg:mb-4">{text}</p>
       <Link
         href={href || "#"}
         className={`font-bold text-xs md:text-sm flex items-center gap-1 hover:gap-2 transition-all cursor-pointer ${color}`}

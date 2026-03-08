@@ -142,8 +142,10 @@ export default function Footer() {
 
         {/* Bottom Copyright */}
         <div className="pt-8 border-t border-gray-800 text-center flex flex-col items-center gap-2">
-          <p className={`text-white text-sm font-medium`}>
-            {t("footer.copyright", { year: new Date().getFullYear() })}
+          <p className="text-white text-sm font-medium flex items-center justify-center gap-2">
+            <span>&copy;</span>
+            <span>{new Date().getFullYear()}</span>
+            <span>{t("footer.copyright")}</span>
           </p>
         </div>
       </div>

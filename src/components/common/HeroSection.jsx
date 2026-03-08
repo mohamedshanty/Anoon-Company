@@ -27,10 +27,10 @@ export default function HeroSection({ children, translations }) {
   return (
     <section className="relative flex items-center justify-center py-20 md:py-36 overflow-hidden min-h-screen md:h-screen">
       {/* Background */}
-      <div className="absolute inset-0 pointer-events-none -z-10">
-        <div className="absolute top-10 right-10 w-[45%] h-[45%] bg-blue-600/5 blur-[120px] rounded-full" />
-        <div className="absolute bottom-10 left-10 w-[35%] h-[35%] bg-brand-orange/5 blur-[100px] rounded-full" />
-        <Stars count={15} zIndex={-5} opacity={0.6} />
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-10 right-10 w-[45%] h-[45%] bg-blue-600/10 blur-[120px] rounded-full" />
+        <div className="absolute bottom-10 left-10 w-[35%] h-[35%] bg-brand-orange/10 blur-[100px] rounded-full" />
+        <Stars count={20} zIndex={-5} opacity={0.8} />
       </div>
 
       {/* Floating Icons - Client reveal */}
@@ -58,7 +58,7 @@ export default function HeroSection({ children, translations }) {
 export const HeroTitle = ({ children, className = "" }) => (
   <Reveal type="slide-up" duration={0.6} stagger={0.1}>
     <h1
-      className={`font-semibold text-white mb-3 flex flex-col items-center text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-8xl ${className}`}
+      className={`font-semibold text-white mb-3 flex flex-col items-center text-3xl sm:text-4xl md:text-6xl lg:text-7xl xl:text-[80px] ${className}`}
     >
       {children}
     </h1>

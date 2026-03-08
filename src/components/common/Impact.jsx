@@ -50,9 +50,13 @@ export default function Impact({
 
   const childrenArray = React.Children.toArray(children);
   const titleChild = childrenArray.find((c) => c.type === Impact.Title);
-  const additionalTextChild = childrenArray.find((c) => c.type === Impact.AdditionalText);
+  const additionalTextChild = childrenArray.find(
+    (c) => c.type === Impact.AdditionalText,
+  );
   const subtitleChild = childrenArray.find((c) => c.type === Impact.Subtitle);
-  const descriptionChild = childrenArray.find((c) => c.type === Impact.Description);
+  const descriptionChild = childrenArray.find(
+    (c) => c.type === Impact.Description,
+  );
   const statsChild = childrenArray.find((c) => c.type === Impact.Stats);
 
   const finalTitle = title || titleChild;
@@ -74,9 +78,7 @@ export default function Impact({
               {finalSubtitle}
               {finalDescription}
             </div>
-            <div className="w-full lg:w-1/2">
-              {finalStats}
-            </div>
+            <div className="w-full lg:w-1/2">{finalStats}</div>
           </div>
         </div>
       </section>
@@ -108,9 +110,7 @@ export default function Impact({
               {finalTitle}
             </div>
           )}
-          <div className="text-center md:text-start">
-            {finalAdditionalText}
-          </div>
+          <div className="text-center md:text-start">{finalAdditionalText}</div>
         </div>
 
         <div
@@ -124,12 +124,12 @@ export default function Impact({
             suppressHydrationWarning
           >
             {finalSubtitle && (
-              <div className={subtitleClassName}>
-                {finalSubtitle}
-              </div>
+              <div className={subtitleClassName}>{finalSubtitle}</div>
             )}
             {finalDescription && (
-              <div className={`${descriptionClassName} text-sm sm:text-base md:text-lg text-white/80 font-light leading-relaxed mb-6 md:mb-8 max-w-xl`}>
+              <div
+                className={`${descriptionClassName} text-sm sm:text-base md:text-lg text-white/80 font-light leading-relaxed mb-6 md:mb-8 max-w-xl`}
+              >
                 {finalDescription}
               </div>
             )}
@@ -152,15 +152,18 @@ export default function Impact({
 // Sub-components للتوافق مع الاستخدام القديم
 Impact.Title = function ImpactTitle({ children, className = "" }) {
   return (
-    <h2 className={`font-bold tracking-tight ${className}`}>
-      {children}
-    </h2>
+    <h2 className={`font-bold tracking-tight ${className}`}>{children}</h2>
   );
 };
 
-Impact.AdditionalText = function ImpactAdditionalText({ children, className = "" }) {
+Impact.AdditionalText = function ImpactAdditionalText({
+  children,
+  className = "",
+}) {
   return (
-    <h3 className={`text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold text-white mt-3 md:mt-4 lg:mt-5 ${className}`}>
+    <h3
+      className={`text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-semibold text-white mt-3 md:mt-4 lg:mt-5 ${className}`}
+    >
       {children}
     </h3>
   );
@@ -178,7 +181,9 @@ Impact.Subtitle = function ImpactSubtitle({ children, className = "" }) {
 
 Impact.Description = function ImpactDescription({ children, className = "" }) {
   return (
-    <p className={`text-sm sm:text-base md:text-lg text-white/80 font-light leading-relaxed mb-6 md:mb-8 max-w-xl ${className}`}>
+    <p
+      className={`text-sm sm:text-base md:text-lg text-white/80 font-light leading-relaxed mb-6 md:mb-8 max-w-xl ${className}`}
+    >
       {children}
     </p>
   );
@@ -186,12 +191,15 @@ Impact.Description = function ImpactDescription({ children, className = "" }) {
 
 Impact.Stats = function ImpactStats({ stats, className = "" }) {
   return (
-    <section className={`grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 lg:gap-8 p-4 md:p-5 pb-16 md:pb-20 lg:pb-24 pt-8 md:pt-10 lg:pt-12 relative overflow-hidden ${className}`}>
+    <section
+      className={`grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 lg:gap-8 p-4 md:p-5 pb-16 md:pb-20 lg:pb-24 pt-8 md:pt-10 lg:pt-12 relative overflow-hidden ${className}`}
+    >
       {stats?.map((stat) => (
         <div key={stat.id} className="flex items-center gap-3 md:gap-4">
           <div className="text-brand-orange shrink-0">
             {React.cloneElement(stat.icon, {
-              className: "w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9 xl:w-10 xl:h-10",
+              className:
+                "w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 lg:w-9 lg:h-9 xl:w-10 xl:h-10",
             })}
           </div>
           <div>

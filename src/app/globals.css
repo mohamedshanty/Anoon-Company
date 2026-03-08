@@ -87,12 +87,16 @@
   --color-brand-green: #219652;
   --color-noon-bg: #030303;
   --color-noon-card: #0a0a0a;
-  --background-image-noon-gradient: radial-gradient(circle at top right,
-      #0156fe20 0%,
-      #030303 100%);
-  --background-image-accent-gradient: linear-gradient(135deg,
-      #f99d1b 0%,
-      #64b9ff 100%);
+  --background-image-noon-gradient: radial-gradient(
+    circle at top right,
+    #0156fe20 0%,
+    #030303 100%
+  );
+  --background-image-accent-gradient: linear-gradient(
+    135deg,
+    #f99d1b 0%,
+    #64b9ff 100%
+  );
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -337,7 +341,6 @@
 }
 
 @keyframes float {
-
   0%,
   100% {
     transform: translateY(0);
@@ -380,7 +383,6 @@
 /* Add to your global.css or tailwind.css */
 
 @layer utilities {
-
   /* Custom scrollbar */
   .scrollbar-thin::-webkit-scrollbar {
     width: 6px;

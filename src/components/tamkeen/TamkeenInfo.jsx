@@ -39,7 +39,7 @@ export default function TamkeenHelpSection() {
             {t("tamkeen.who_we_are.subtitle")}
           </span>
         </InfoSection.Subtitle>
-        <InfoSection.Title>
+        <InfoSection.Title className="my-10">
           <InfoSection.TitleLine
             text={t("tamkeen.who_we_are.title_line1.text")}
             highlight={t("tamkeen.who_we_are.title_line1.highlight")}

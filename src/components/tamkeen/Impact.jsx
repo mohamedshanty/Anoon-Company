@@ -49,7 +49,7 @@ const ImpactSection = () => {
         </span>
       </Impact.Title>
 
-      <Impact.Subtitle>
+      <Impact.Subtitle className="space-y-6 mb-14">
         <h4>{t("impact_page.subtitle.line1")}</h4>
         <h4 className="text-brand-orange">
           {t("impact_page.subtitle.line2.highlight")}

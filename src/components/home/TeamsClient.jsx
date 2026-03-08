@@ -1,139 +1,454 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, EffectCoverflow } from "swiper/modules";
+// ✅ FIX #5: Added Keyboard to imports
+import {
+  Navigation,
+  EffectCoverflow,
+  Keyboard,
+  Pagination,
+} from "swiper/modules";
 import { useRTL } from "@/hooks/useRTL";
 
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/effect-coverflow";
+import "swiper/css/pagination";
 
 export default function TeamsClient({ members, tRoles }) {
-    const { isRTL, dir, rotate } = useRTL();
-    const [swiperKey, setSwiperKey] = useState(0);
+  const { isRTL, dir, rotate } = useRTL();
+  const [swiperKey, setSwiperKey] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
+  // ✅ FIX #4: Use refs to bind nav buttons reliably after re-mount
+  const prevRef = useRef(null);
+  const nextRef = useRef(null);
 
-    // Re-initialize swiper when direction changes
-    useEffect(() => {
-        setSwiperKey((prev) => prev + 1);
-    }, [dir]);
+  useEffect(() => {
+    setSwiperKey((prev) => prev + 1);
+  }, [dir]);
 
-    const getTranslatedRole = (role) => {
-        return tRoles[role] || role;
-    };
+  const getTranslatedRole = (role) => {
+    // ✅ FIX #1: tRoles is empty — this is fine as a passthrough, but now clearly documented
+    return tRoles[role] || role;
+  };
 
-    return (
-        <div className={`slider-container ${isRTL ? "rtl-slider" : ""}`}>
-            <Swiper
-                key={swiperKey}
-                modules={[Navigation, EffectCoverflow]}
-                slidesPerView={"auto"}
-                centeredSlides={true}
-                loop={true}
-                speed={800}
-                effect={"coverflow"}
-                grabCursor={true}
-                dir={dir}
-                coverflowEffect={{
-                    rotate: rotate(15),
-                    stretch: 0,
-                    depth: 200,
-                    modifier: 2.5,
-                    slideShadows: true,
-                }}
-                navigation={{
-                    nextEl: ".swiper-button-next",
-                    prevEl: ".swiper-button-prev",
-                }}
-                keyboard={{
-                    enabled: true,
-                    onlyInViewport: true,
-                }}
-                breakpoints={{
-                    320: { slidesPerView: 1, spaceBetween: 20 },
-                    640: { slidesPerView: 2, spaceBetween: 30 },
-                    968: { slidesPerView: 3, spaceBetween: 40 },
-                    1200: { slidesPerView: 4, spaceBetween: 40 },
-                }}
-                className="teams-swiper"
-            >
-                {members.map((member, index) => (
-                    <SwiperSlide key={`${member.name}-${index}`}>
-                        <div className={`team-card team-card-${index} flex flex-col items-center justify-center group`}>
-                            <div className="relative w-[280px] h-[380px] overflow-hidden rounded-2xl shadow-2xl">
-                                <Image
-                                    src={member.image}
-                                    alt={member.name}
-                                    width={300}
-                                    height={400}
-                                    className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
-                                    loading="lazy"
-                                />
-                                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/40 to-transparent opacity-0 lg:group-hover:opacity-100 transition-all duration-500 hidden lg:flex items-end justify-center pb-8">
-                                    <div className="text-center transform translate-y-4 lg:group-hover:translate-y-0 transition-transform duration-500">
-                                        <h4 className="text-white font-bold text-xl capitalize mb-1">
-                                            {member.name}
-                                        </h4>
-                                        <p className="text-gray-300 text-sm font-medium">
-                                            {getTranslatedRole(member.role)}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="mt-5 text-center lg:hidden w-full">
-                                <h4 className="text-white font-bold text-xl capitalize mb-1">
-                                    {member.name}
-                                </h4>
-                                <p className="text-brand-sky text-sm font-semibold uppercase tracking-wider">
-                                    {getTranslatedRole(member.role)}
-                                </p>
-                            </div>
-                        </div>
-                    </SwiperSlide>
-                ))}
-            </Swiper>
+  return (
+    <div className={`slider-container ${isRTL ? "rtl-slider" : ""}`}>
+      {/* Modern ambient glow backdrop */}
+      <div className="glow-backdrop" aria-hidden="true" />
 
-            <div className={`navigation-wrapper ${isRTL ? "rtl-navigation" : ""}`}>
-                <button className="swiper-button-prev" aria-label="Previous slide">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ transform: isRTL ? "rotate(180deg)" : "none" }}>
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                    </svg>
-                </button>
-                <button className="swiper-button-next" aria-label="Next slide">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{ transform: isRTL ? "rotate(180deg)" : "none" }}>
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                </button>
+      <Swiper
+        key={swiperKey}
+        // ✅ FIX #5: Keyboard module added
+        modules={[Navigation, EffectCoverflow, Keyboard, Pagination]}
+        // ✅ FIX #2: Remove top-level slidesPerView="auto" — let breakpoints fully control it
+        centeredSlides={true}
+        loop={true}
+        speed={700}
+        effect={"coverflow"}
+        grabCursor={true}
+        dir={dir}
+        coverflowEffect={{
+          rotate: rotate(12),
+          stretch: 0,
+          depth: 180,
+          modifier: 2.2,
+          slideShadows: true,
+        }}
+        // ✅ FIX #4: Use onSwiper callback + refs for reliable nav binding
+        navigation={{
+          prevEl: prevRef.current,
+          nextEl: nextRef.current,
+        }}
+        onSwiper={(swiper) => {
+          // Rebind after mount
+          swiper.params.navigation.prevEl = prevRef.current;
+          swiper.params.navigation.nextEl = nextRef.current;
+          swiper.navigation.init();
+          swiper.navigation.update();
+        }}
+        onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
+        keyboard={{ enabled: true, onlyInViewport: true }}
+        pagination={{ el: ".swiper-pagination", clickable: true }}
+        // ✅ FIX #2: Clean breakpoints without top-level override
+        breakpoints={{
+          320: { slidesPerView: 1, spaceBetween: 20 },
+          640: { slidesPerView: 2, spaceBetween: 30 },
+          968: { slidesPerView: 3, spaceBetween: 40 },
+          1200: { slidesPerView: 4, spaceBetween: 40 },
+        }}
+        className="teams-swiper"
+      >
+        {members.map((member, index) => (
+          <SwiperSlide key={`${member.name}-${index}`}>
+            <div className="team-card group">
+              {/* Card image */}
+              <div className="card-image-wrapper">
+                <Image
+                  src={member.image}
+                  alt={member.name}
+                  width={300}
+                  height={400}
+                  className="card-image"
+                  loading="lazy"
+                />
+                {/* ✅ FIX #3: bg-gradient-to-t (was bg-linear-to-t) */}
+                <div className="card-overlay">
+                  <div className="card-overlay-text">
+                    <h4 className="card-name">{member.name}</h4>
+                    <p className="card-role">
+                      {getTranslatedRole(member.role)}
+                    </p>
+                  </div>
+                </div>
+                {/* Active indicator ring */}
+                <div className="active-ring" />
+              </div>
+
+              {/* Mobile name/role (shown below card on small screens) */}
+              <div className="card-mobile-info">
+                <h4 className="card-name-mobile">{member.name}</h4>
+                <p className="card-role-mobile">
+                  {getTranslatedRole(member.role)}
+                </p>
+              </div>
             </div>
-            <div className="swiper-pagination"></div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
 
-            <style jsx>{`
-        .slider-container { position: relative; width: 100%; margin: 0 auto; padding: 40px 60px; }
-        .rtl-slider { direction: rtl; }
-        :global(.teams-swiper) { overflow: visible !important; padding: 40px 0 60px 0; width: 100%; }
-        :global(.teams-swiper .swiper-wrapper) { align-items: center; padding: 20px 0; }
-        :global(.teams-swiper .swiper-slide) { 
-          transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
-          display: flex; justify-content: center; align-items: center; 
-          opacity: 0.6; filter: blur(2px); transform: scale(0.85); 
-        }
-        :global(.teams-swiper .swiper-slide-active) { opacity: 1; filter: blur(0); transform: scale(1.15); z-index: 10; }
-        :global(.teams-swiper .swiper-slide-active .relative) { box-shadow: 0 30px 50px -10px rgba(0, 191, 255, 0.4); }
-        :global(.team-card) { width: 280px; height: auto; min-height: 380px; position: relative; cursor: pointer; }
-        .navigation-wrapper { position: absolute; top: 50%; left: 0; right: 0; transform: translateY(-50%); display: flex; justify-content: space-between; pointer-events: none; z-index: 20; padding: 0 10px; }
-        :global(.swiper-button-prev), :global(.swiper-button-next) { 
-          position: relative !important; width: 50px !important; height: 50px !important; 
-          background: rgba(255, 255, 255, 0.15) !important; backdrop-filter: blur(10px) !important; 
-          border-radius: 50% !important; color: white !important; display: flex !important; 
-          align-items: center !important; justify-content: center !important; 
-          pointer-events: auto !important; border: 1px solid rgba(255, 255, 255, 0.2) !important; 
-        }
-        :global(.swiper-button-prev:after), :global(.swiper-button-next:after) { display: none !important; }
-        :global(.swiper-pagination) { bottom: 0 !important; }
-        :global(.swiper-pagination-bullet) { width: 10px !important; height: 10px !important; background: rgba(255, 255, 255, 0.3) !important; margin: 0 5px !important; }
-        :global(.swiper-pagination-bullet-active) { width: 30px !important; background: #00bfff !important; border-radius: 5px !important; }
-      `}</style>
+      {/* Active member name display */}
+      {members[activeIndex] && (
+        <div className="active-label" aria-live="polite">
+          <span className="active-label-name">{members[activeIndex].name}</span>
+          <span className="active-label-dot">·</span>
+          <span className="active-label-role">
+            {getTranslatedRole(members[activeIndex].role)}
+          </span>
         </div>
-    );
+      )}
+
+      {/* Navigation — refs ensure Swiper finds them post-mount */}
+      <div className={`navigation-wrapper ${isRTL ? "rtl-navigation" : ""}`}>
+        <button ref={prevRef} className="nav-btn" aria-label="Previous slide">
+          <svg
+            width="20"
+            height="20"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            style={{ transform: isRTL ? "rotate(180deg)" : "none" }}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </button>
+        <button ref={nextRef} className="nav-btn" aria-label="Next slide">
+          <svg
+            width="20"
+            height="20"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            style={{ transform: isRTL ? "rotate(180deg)" : "none" }}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </button>
+      </div>
+
+      <div className="swiper-pagination" />
+
+      <style jsx>{`
+        /* Layout */
+        .slider-container {
+          position: relative;
+          width: 100%;
+          margin: 0 auto;
+          padding: 60px 70px 80px;
+          overflow: hidden;
+        }
+        .rtl-slider {
+          direction: rtl;
+        }
+
+        /* Ambient glow */
+        .glow-backdrop {
+          position: absolute;
+          top: 30%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 60%;
+          height: 300px;
+          background: radial-gradient(
+            ellipse,
+            rgba(0, 191, 255, 0.12) 0%,
+            transparent 70%
+          );
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        /* Swiper overrides */
+        :global(.teams-swiper) {
+          overflow: visible !important;
+          padding: 50px 0 70px;
+          width: 100%;
+          position: relative;
+          z-index: 1;
+        }
+        :global(.teams-swiper .swiper-wrapper) {
+          align-items: center;
+        }
+        :global(.teams-swiper .swiper-slide) {
+          transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          opacity: 0.5;
+          filter: blur(1.5px) brightness(0.7);
+          transform: scale(0.82);
+        }
+        :global(.teams-swiper .swiper-slide-active) {
+          opacity: 1;
+          filter: blur(0) brightness(1);
+          transform: scale(1.12);
+          z-index: 10;
+        }
+        :global(.teams-swiper .swiper-slide-prev),
+        :global(.teams-swiper .swiper-slide-next) {
+          opacity: 0.75;
+          filter: blur(0.5px) brightness(0.85);
+          transform: scale(0.93);
+        }
+
+        /* Card */
+        .team-card {
+          width: 260px;
+          cursor: pointer;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        .card-image-wrapper {
+          position: relative;
+          width: 260px;
+          height: 360px;
+          border-radius: 20px;
+          overflow: hidden;
+          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+        // :global(.swiper-slide-active) .card-image-wrapper {
+        //   box-shadow:
+        //     0 30px 80px rgba(0, 191, 255, 0.35),
+        //     0 0 0 1.5px rgba(0, 191, 255, 0.3);
+        // }
+        :global(.card-image) {
+          width: 100% !important;
+          height: 100% !important;
+          object-fit: cover;
+          transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .team-card:hover :global(.card-image) {
+          transform: scale(1.07);
+        }
+
+        /* Overlay — ✅ uses bg-gradient not bg-linear */
+        .card-overlay {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            to top,
+            rgba(0, 0, 0, 0.85) 0%,
+            rgba(0, 0, 0, 0.3) 50%,
+            transparent 100%
+          );
+          opacity: 0;
+          transition: opacity 0.4s ease;
+          display: flex;
+          align-items: flex-end;
+          justify-content: center;
+          padding-bottom: 24px;
+        }
+        @media (min-width: 1024px) {
+          .team-card:hover .card-overlay {
+            opacity: 1;
+          }
+        }
+        .card-overlay-text {
+          text-align: center;
+          transform: translateY(10px);
+          transition: transform 0.4s ease;
+        }
+        .team-card:hover .card-overlay-text {
+          transform: translateY(0);
+        }
+        .card-name {
+          color: #fff;
+          font-weight: 700;
+          font-size: 1.15rem;
+          text-transform: capitalize;
+          margin-bottom: 4px;
+          letter-spacing: 0.02em;
+        }
+        .card-role {
+          color: rgba(0, 191, 255, 0.9);
+          font-size: 0.8rem;
+          font-weight: 500;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+        }
+
+        /* Active ring pulse */
+        .active-ring {
+          position: absolute;
+          inset: 0;
+          border-radius: 20px;
+          pointer-events: none;
+        }
+        :global(.swiper-slide-active) .active-ring {
+          border-color: rgba(0, 191, 255, 0.5);
+          animation: ring-pulse 2.5s ease-in-out infinite;
+        }
+        @keyframes ring-pulse {
+          0%,
+          100% {
+            box-shadow: 0 0 0 0 rgba(0, 191, 255, 0.3);
+          }
+          50% {
+            box-shadow: 0 0 0 8px rgba(0, 191, 255, 0);
+          }
+        }
+
+        /* Mobile info */
+        .card-mobile-info {
+          margin-top: 16px;
+          text-align: center;
+          display: block;
+        }
+        @media (min-width: 1024px) {
+          .card-mobile-info {
+            display: none;
+          }
+        }
+        .card-name-mobile {
+          color: #fff;
+          font-weight: 700;
+          font-size: 1.05rem;
+          text-transform: capitalize;
+          margin-bottom: 4px;
+        }
+        .card-role-mobile {
+          color: #00bfff;
+          font-size: 0.75rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+        }
+
+        /* Active label */
+        .active-label {
+          text-align: center;
+          margin-top: -20px;
+          margin-bottom: 20px;
+          display: none;
+          gap: 10px;
+          align-items: center;
+          justify-content: center;
+        }
+        @media (min-width: 1024px) {
+          .active-label {
+            display: flex;
+          }
+        }
+        .active-label-name {
+          color: #fff;
+          font-weight: 700;
+          font-size: 1.1rem;
+          letter-spacing: 0.03em;
+        }
+        .active-label-dot {
+          color: rgba(0, 191, 255, 0.5);
+          font-size: 1.4rem;
+          line-height: 1;
+        }
+        .active-label-role {
+          color: #00bfff;
+          font-size: 0.85rem;
+          font-weight: 500;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+        }
+
+        /* Navigation */
+        .navigation-wrapper {
+          position: absolute;
+          top: 50%;
+          left: 0;
+          right: 0;
+          transform: translateY(-50%);
+          display: flex;
+          justify-content: space-between;
+          pointer-events: none;
+          z-index: 20;
+          padding: 0 8px;
+        }
+        .nav-btn {
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.08);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          color: #fff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          pointer-events: auto;
+          cursor: pointer;
+          transition:
+            background 0.2s ease,
+            border-color 0.2s ease,
+            transform 0.2s ease;
+        }
+        .nav-btn:hover {
+          background: rgba(0, 191, 255, 0.2);
+          border-color: rgba(0, 191, 255, 0.5);
+          transform: scale(1.08);
+        }
+        .nav-btn:active {
+          transform: scale(0.95);
+        }
+
+        /* Pagination */
+        :global(.swiper-pagination) {
+          bottom: 0 !important;
+        }
+        :global(.swiper-pagination-bullet) {
+          width: 8px !important;
+          height: 8px !important;
+          background: rgba(255, 255, 255, 0.25) !important;
+          margin: 0 5px !important;
+          transition: all 0.3s ease !important;
+        }
+        :global(.swiper-pagination-bullet-active) {
+          width: 28px !important;
+          background: #00bfff !important;
+          border-radius: 4px !important;
+        }
+      `}</style>
+    </div>
+  );
 }

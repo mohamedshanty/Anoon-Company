@@ -34,7 +34,17 @@ const OurSpace = () => {
   ].filter((item) => item.text);
 
   return (
-    <section className="relative py-24 overflow-hidden" dir={dir}>
+    <section
+      className="relative py-24 overflow-hidden bg-no-repeat bg-center"
+      style={{
+        backgroundImage: "url(/images/vist-space.png)",
+        minHeight: "100vh",
+        backgroundSize: "contain",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+      dir={dir}
+    >
       <Stars count={20} zIndex={-5} opacity={0.8} />
 
       <div className="main-container flex flex-col items-center">

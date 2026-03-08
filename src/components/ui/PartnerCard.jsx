@@ -86,6 +86,10 @@ export default function PartnerCard({
         </div>
       </div>
 
+      {/* Decorative Elements */}
+      <div className="absolute top-0 right-0 w-32 h-32 bg-brand-sky/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="absolute bottom-0 left-0 w-32 h-32 bg-brand-orange/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
       {/* Content */}
       <div className="text-center space-y-4">
         {/* Description */}
@@ -96,10 +100,6 @@ export default function PartnerCard({
         {/* Detailed Content */}
         {variant === "detailed" && detailedContent}
       </div>
-
-      {/* Decorative Elements */}
-      <div className="absolute top-0 right-0 w-32 h-32 bg-brand-sky/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      <div className="absolute bottom-0 left-0 w-32 h-32 bg-brand-orange/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
     </div>
   );
 }
