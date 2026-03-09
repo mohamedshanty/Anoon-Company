@@ -25,10 +25,12 @@ export default function FullBlog({ article, similarArticles }) {
   const [isLiked, setIsLiked] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [hasViewed, setHasViewed] = useState(false);
+  const [tableOfContents, setTableOfContents] = useState([]);
 
   const { i18n } = useTranslation();
   const lang = i18n.language.startsWith("ar") ? "ar" : "en";
 
+  // Register view
   useEffect(() => {
     const registerView = async () => {
       const identifier = article?.documentId;
@@ -60,6 +62,7 @@ export default function FullBlog({ article, similarArticles }) {
     registerView();
   }, [article?.documentId, hasViewed]);
 
+  // Check if liked from localStorage
   useEffect(() => {
     const identifier = article?.documentId;
     if (identifier) {
@@ -67,6 +70,30 @@ export default function FullBlog({ article, similarArticles }) {
       setIsLiked(likedState === "true");
     }
   }, [article?.documentId]);
+
+  // Generate table of contents (client-side only)
+  useEffect(() => {
+    // تأكد أننا في المتصفح
+    if (typeof window !== "undefined") {
+      const content = article[`content_${lang}`] || article.content || "";
+      if (typeof content === "string") {
+        try {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(content, "text/html");
+          const headings = Array.from(doc.querySelectorAll("h1, h2, h3")).map(
+            (h) => ({
+              text: h.innerText,
+              id: h.id || h.innerText.toLowerCase().replace(/\s+/g, "-"),
+              level: h.tagName.toLowerCase(),
+            }),
+          );
+          setTableOfContents(headings);
+        } catch (error) {
+          console.error("Error generating table of contents:", error);
+        }
+      }
+    }
+  }, [article, lang]);
 
   const handleLike = async () => {
     const identifier = article.documentId || article.id;
@@ -148,7 +175,7 @@ export default function FullBlog({ article, similarArticles }) {
       )
     : "غير محدد";
 
-  // Calculate Reading Time (rough estimate)
+  // Reading Time (rough estimate)
   const readingTime = useMemo(() => {
     const text =
       typeof content === "string" ? content : JSON.stringify(content);
@@ -158,27 +185,9 @@ export default function FullBlog({ article, similarArticles }) {
     return `${minutes} ${lang === "ar" ? "دقائق" : "Min"}`;
   }, [content, lang]);
 
-  // Extract headings for Table of Contents
-  const tableOfContents = useMemo(() => {
-    if (typeof content !== "string") {
-      // Simple extraction for blocks content if possible, or skip
-      return [];
-    }
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(content, "text/html");
-    const headings = Array.from(doc.querySelectorAll("h1, h2, h3")).map(
-      (h) => ({
-        text: h.innerText,
-        id: h.id || h.innerText.toLowerCase().replace(/\s+/g, "-"),
-        level: h.tagName.toLowerCase(),
-      }),
-    );
-    return headings;
-  }, [content]);
-
   return (
     <main className="min-h-screen pb-20">
-      {/* Hero Section - Shorter Height, Landing Page Style */}
+      {/* Hero Section */}
       <section className="relative h-[45vh] md:h-[55vh] flex items-center justify-center overflow-hidden">
         <Image
           src={heroImageUrl}
@@ -188,11 +197,9 @@ export default function FullBlog({ article, similarArticles }) {
           className="object-cover brightness-[0.45] transition-transform duration-[2s] scale-105"
           priority
         />
-        {/* Overlay Gradients */}
         <div className="absolute inset-x-0 top-0 h-1/3 bg-linear-to-b from-black/40 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-2/3 bg-linear-to-t from-black/80 via-black/20 to-transparent" />
 
-        {/* Centered Content - Similar to Landing Page */}
         <div className="relative z-10 container mx-auto px-6 text-center">
           <div className="mb-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-sky/10 border border-brand-sky/20 text-brand-sky text-xs font-semibold uppercase tracking-widest backdrop-blur-sm">
             {categoryName}
@@ -229,7 +236,6 @@ export default function FullBlog({ article, similarArticles }) {
               </p>
             </div>
           )}
-          {/* خط فاصل بين المقدمة والمحتوى */}
           {introduction && <hr className="my-8 border-t border-brand-sky/30" />}
 
           <div className="prose prose-invert prose-headings:font-bold prose-headings:text-white prose-p:text-white/80 prose-p:leading-relaxed prose-p:text-lg prose-a:text-brand-sky prose-img:rounded-3xl prose-img:shadow-2xl max-w-none">
@@ -283,7 +289,11 @@ export default function FullBlog({ article, similarArticles }) {
           <div className="flex gap-4 p-1 bg-white/5 rounded-2xl backdrop-blur-md border border-white/10">
             <button
               onClick={handleLike}
-              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl transition-all duration-300 ${isLiked ? "bg-red-500/20 text-red-400" : "bg-transparent text-white/70 hover:bg-white/5"}`}
+              className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl transition-all duration-300 ${
+                isLiked
+                  ? "bg-red-500/20 text-red-400"
+                  : "bg-transparent text-white/70 hover:bg-white/5"
+              }`}
             >
               <Heart className={`w-5 h-5 ${isLiked ? "fill-red-400" : ""}`} />
               <span className="font-semibold">{likes.toLocaleString()}</span>
@@ -349,7 +359,11 @@ export default function FullBlog({ article, similarArticles }) {
                   <a
                     key={idx}
                     href={`#${heading.id}`}
-                    className={`block text-sm transition-all hover:text-brand-sky ${heading.level === "h1" || heading.level === "h2" ? "text-white/70 font-medium" : "text-white/40 pl-4"} flex items-center gap-2`}
+                    className={`block text-sm transition-all hover:text-brand-sky ${
+                      heading.level === "h1" || heading.level === "h2"
+                        ? "text-white/70 font-medium"
+                        : "text-white/40 pl-4"
+                    } flex items-center gap-2`}
                   >
                     <span className="w-1.5 h-1.5 rounded-full bg-brand-sky opacity-40 shrink-0" />
                     {heading.text}

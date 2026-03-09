@@ -1,9 +1,11 @@
 "use client";
+import { Suspense } from "react";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 
-export default function LoginPage() {
+// فصل محتوى الفورم في مكون منفصل
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") || "/dashboard";
@@ -32,7 +34,6 @@ export default function LoginPage() {
       return;
     }
 
-    // Explicitly set session if available
     if (data && data.session) {
       await supabase.auth.setSession({
         access_token: data.session.access_token,
@@ -49,7 +50,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-[#030712]">
-      {/* Background */}
+      {/* Background - نفس الكود الموجود */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-sky-500/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl" />
@@ -167,5 +168,20 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+// المكون الرئيسي مع Suspense
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-[#030712]">
+          <div className="text-white/60 text-lg">Loading login page...</div>
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }
