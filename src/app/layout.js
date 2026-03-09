@@ -14,16 +14,17 @@ const alexandria = {
 
 export const metadata = {
   title: "Anoon Solutions",
-  description: "Welcome to Anoon Solutions, a simple and anonymous pastebin service.",
+  description:
+    "Welcome to Anoon Solutions, a simple and anonymous pastebin service.",
   icons: {
     icon: [
       {
         url: "/images/logo1.png",
-        sizes: "32x32",  
+        sizes: "32x32",
         type: "image/png",
       },
       {
-        url: "/images/logo1.png",  
+        url: "/images/logo1.png",
         sizes: "192x192",
         type: "image/png",
       },
@@ -31,7 +32,7 @@ export const metadata = {
     apple: [
       {
         url: "/images/logo1.png",
-        sizes: "180x180",  
+        sizes: "180x180",
         type: "image/png",
       },
     ],

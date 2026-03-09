@@ -1,55 +1,31 @@
-// تحديث route.js للمشاهدات
 import { NextResponse } from "next/server";
+import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
-export async function POST(request, { params }) {
+export async function POST(_req, { params }) {
+  const { id } = await params;
   try {
-    const { id } = await params;
-    
-    const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL;
-    const API_TOKEN = process.env.STRAPI_API_TOKEN;
-
-    console.log("Updating views for article with ID:", id);
-
-    // جلب المقال الحالي باستخدام المعرف
-    const getRes = await fetch(`${STRAPI_URL}/api/articles/${id}`, {
-      headers: {
-        'Authorization': `Bearer ${API_TOKEN}`,
-        'Content-Type': 'application/json',
-      },
+    const { data, error } = await supabaseAdmin.rpc("increment_views", {
+      article_id: id,
     });
 
-    if (!getRes.ok) {
-      return NextResponse.json({ success: false, error: "Article not found" }, { status: 404 });
+    if (error) {
+      const { data: article } = await supabaseAdmin
+        .from("articles")
+        .select("views")
+        .eq("id", id)
+        .maybeSingle();
+
+      if (!article) {
+        return NextResponse.json({ success: false, error: "Not found" }, { status: 404 });
+      }
+
+      const newViews = (article.views || 0) + 1;
+      await supabaseAdmin.from("articles").update({ views: newViews }).eq("id", id);
+      return NextResponse.json({ success: true, views: newViews });
     }
 
-    const resData = await getRes.json();
-    const article = resData.data;
-    const currentViews = article?.views || 0;
-    const newViews = currentViews + 1;
-
-    // تحديث المقال - في Strapi v5 نستخدم نفس الـ documentId للتحديث
-    const updateRes = await fetch(`${STRAPI_URL}/api/articles/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${API_TOKEN}`,
-      },
-      body: JSON.stringify({
-        data: { views: newViews }
-      }),
-    });
-
-    if (!updateRes.ok) throw new Error("Update failed");
-
-    return NextResponse.json({ 
-      success: true, 
-      views: newViews 
-    });
+    return NextResponse.json({ success: true, views: data });
   } catch (error) {
-    console.error("Error in views API:", error);
-    return NextResponse.json(
-      { success: false, error: error.message },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }

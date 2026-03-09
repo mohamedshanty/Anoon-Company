@@ -7,16 +7,25 @@ const nextConfig = {
         hostname: "images.unsplash.com",
       },
       {
-        protocol: 'http',
-        hostname: 'localhost',
-        port: '1337',
-        pathname: '/uploads/**',
+        protocol: "http",
+        hostname: "localhost",
+        port: "1337",
+        pathname: "/uploads/**",
+      },
+      // Cloudinary
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/**",
+      },
+      // Supabase Storage (if used)
+      {
+        protocol: "https",
+        hostname: "*.supabase.co",
+        pathname: "/storage/v1/object/public/**",
       },
     ],
     formats: ["image/avif", "image/webp"],
-  },
-  env: {
-    STRAPI_URL: "http://localhost:1337",
   },
   compress: true,
   poweredByHeader: false,

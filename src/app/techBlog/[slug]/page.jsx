@@ -1,57 +1,40 @@
 import FullBlog from "@/components/techBlog/FullBlog";
 import Link from "next/link";
+import { getArticleBySlug } from "@/lib/articlesApi.server";
+import { getPublishedArticles } from "@/lib/articlesApi.client";
 
-async function getArticleBySlug(slug) {
-  const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL;
-  const API_TOKEN = process.env.STRAPI_API_TOKEN;
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const article = await getArticleBySlug(slug);
 
-  const fullUrl = `${STRAPI_URL}/api/articles?filters[slug][$eq]=${encodeURIComponent(slug)}&populate[0]=image&populate[1]=category&publicationState=live`;
-
-  try {
-    const res = await fetch(fullUrl, {
-      headers: {
-        Authorization: `Bearer ${API_TOKEN}`,
-      },
-      next: { revalidate: 60 },
-    });
-
-    if (!res.ok) return null;
-
-    const json = await res.json();
-    return json.data?.[0] || null;
-  } catch (error) {
-    console.error("خطأ في جلب المقال:", error);
-    return null;
+  if (!article) {
+    return { title: "Article Not Found | Anoon Blog" };
   }
+
+  return {
+    title: `${article.title} | Anoon Blog`,
+    description: article.excerpt || article.introdaction || "",
+    openGraph: {
+      title: article.title,
+      description: article.excerpt || "",
+      images: article.cover_image ? [{ url: article.cover_image }] : [],
+      type: "article",
+      publishedTime: article.published_at,
+    },
+  };
 }
 
-async function getSimilarArticles(categoryId, currentArticleId, currentLang = 'en') {
-  const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL;
-  const API_TOKEN = process.env.STRAPI_API_TOKEN;
-
-  const fullUrl = `${STRAPI_URL}/api/articles?filters[category][id][$eq]=${categoryId}&filters[id][$ne]=${currentArticleId}&populate=image,category&sort=publishedAt:desc&pagination[limit]=3`;
-
+export async function generateStaticParams() {
   try {
-    const res = await fetch(fullUrl, {
-      headers: {
-        Authorization: `Bearer ${API_TOKEN}`,
-      },
-      next: { revalidate: 300 },
-    });
-
-    if (!res.ok) return [];
-
-    const json = await res.json();
-    return json.data || [];
-  } catch (error) {
-    console.error("خطأ في جلب مقالات مشابهة:", error);
+    const articles = await getPublishedArticles();
+    return articles.map((a) => ({ slug: a.slug }));
+  } catch {
     return [];
   }
 }
 
 export default async function ArticlePage({ params }) {
   const { slug } = await params;
-
   const article = await getArticleBySlug(slug);
 
   if (!article) {
@@ -75,10 +58,46 @@ export default async function ArticlePage({ params }) {
     );
   }
 
-  const categoryId = article.category?.id;
-  const similarArticles = categoryId
-    ? await getSimilarArticles(categoryId, article.id)
-    : [];
+  // Normalize article to match FullBlog component expectations
+  const normalizedArticle = {
+    ...article,
+    documentId: article.id,
+    publishedAt: article.published_at,
+    introduction: article.introdaction,
+    introduction_ar: article.introdaction_ar,
+    image: article.cover_image
+      ? [{ url: article.cover_image, formats: {} }]
+      : [],
+    category: article.category
+      ? {
+          id: article.category,
+          name: article.category,
+          name_ar: article.category_ar,
+          slug: article.category,
+        }
+      : null,
+    comments_count: 0,
+  };
 
-  return <FullBlog article={article} similarArticles={similarArticles} />;
+  // Get similar articles (same category)
+  let similarArticles = [];
+  try {
+    const allArticles = await getPublishedArticles();
+    similarArticles = allArticles
+      .filter((a) => a.category === article.category && a.id !== article.id)
+      .slice(0, 3)
+      .map((a) => ({
+        ...a,
+        documentId: a.id,
+        publishedAt: a.published_at,
+        image: a.cover_image ? [{ url: a.cover_image }] : [],
+        category: { id: a.category, name: a.category, name_ar: a.category_ar },
+      }));
+  } catch {
+    similarArticles = [];
+  }
+
+  return (
+    <FullBlog article={normalizedArticle} similarArticles={similarArticles} />
+  );
 }
