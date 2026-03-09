@@ -11,6 +11,10 @@ import {
   Globe,
   FileText,
 } from "lucide-react";
+import dynamic from "next/dynamic";
+const TipTapEditor = dynamic(() => import("@/components/ui/TipTapEditor"), {
+  ssr: false,
+});
 
 const EMPTY_FORM = {
   title: "",
@@ -39,9 +43,7 @@ export default function ArticleEditor({ article, onSave, onClose }) {
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(
-    article?.cover_image || null,
-  );
+  const [previewUrl, setPreviewUrl] = useState(article?.cover_image || null);
   const [activeSection, setActiveSection] = useState("en");
   const fileInputRef = useRef(null);
 
@@ -141,17 +143,25 @@ export default function ArticleEditor({ article, onSave, onClose }) {
                 {article ? "Edit Article" : "New Article"}
               </h2>
               <p className="text-white/30 text-xs">
-                {article ? `Editing: ${article.title}` : "Fill in the details below"}
+                {article
+                  ? `Editing: ${article.title}`
+                  : "Fill in the details below"}
               </p>
             </div>
           </div>
-          <button onClick={onClose} className="p-2 rounded-xl text-white/30 hover:text-white/70 hover:bg-white/5 transition-all">
+          <button
+            onClick={onClose}
+            className="p-2 rounded-xl text-white/30 hover:text-white/70 hover:bg-white/5 transition-all"
+          >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Body */}
-        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto px-8 py-6 space-y-6">
+        <form
+          onSubmit={handleSubmit}
+          className="flex-1 overflow-y-auto px-8 py-6 space-y-6"
+        >
           {/* Language toggle */}
           <div className="flex gap-2 p-1 bg-white/5 rounded-xl w-fit">
             <button
@@ -175,7 +185,11 @@ export default function ArticleEditor({ article, onSave, onClose }) {
             <label className={labelClass}>Cover Image</label>
             <div
               className={`relative border-2 border-dashed rounded-2xl transition-all cursor-pointer ${
-                isUploading ? "border-sky-500/50 bg-sky-500/5" : uploadError ? "border-red-500/40 bg-red-500/5" : "border-white/10 hover:border-white/20 bg-white/3"
+                isUploading
+                  ? "border-sky-500/50 bg-sky-500/5"
+                  : uploadError
+                    ? "border-red-500/40 bg-red-500/5"
+                    : "border-white/10 hover:border-white/20 bg-white/3"
               }`}
               onDrop={handleDrop}
               onDragOver={(e) => e.preventDefault()}
@@ -195,7 +209,11 @@ export default function ArticleEditor({ article, onSave, onClose }) {
 
               {previewUrl ? (
                 <div className="relative">
-                  <img src={previewUrl} alt="Cover preview" className="w-full h-48 object-cover rounded-2xl" />
+                  <img
+                    src={previewUrl}
+                    alt="Cover preview"
+                    className="w-full h-48 object-cover rounded-2xl"
+                  />
                   <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-2xl opacity-0 hover:opacity-100 transition-opacity">
                     <span className="text-white text-sm font-medium flex items-center gap-2">
                       <Upload className="w-4 h-4" /> Change image
@@ -215,7 +233,9 @@ export default function ArticleEditor({ article, onSave, onClose }) {
                     <ImageIcon className="w-10 h-10 mb-3" />
                   )}
                   <p className="text-sm font-medium">
-                    {isUploading ? "Uploading to Cloudinary..." : "Drop image or click to upload"}
+                    {isUploading
+                      ? "Uploading to Cloudinary..."
+                      : "Drop image or click to upload"}
                   </p>
                   <p className="text-xs mt-1">PNG, JPG, WebP up to 10MB</p>
                 </div>
@@ -238,26 +258,73 @@ export default function ArticleEditor({ article, onSave, onClose }) {
             <div className="space-y-4">
               <div>
                 <label className={labelClass}>Title (English) *</label>
-                <input id="field-title" type="text" required value={form.title || ""} onChange={(e) => handleTitleChange(e.target.value)} placeholder="Article title..." className={inputClass} />
+                <input
+                  id="field-title"
+                  type="text"
+                  required
+                  value={form.title || ""}
+                  onChange={(e) => handleTitleChange(e.target.value)}
+                  placeholder="Article title..."
+                  className={inputClass}
+                />
               </div>
               <div>
                 <label className={labelClass}>Slug *</label>
                 <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 text-sm">/techBlog/</span>
-                  <input id="field-slug" type="text" required value={form.slug || ""} onChange={(e) => handleChange("slug", e.target.value)} placeholder="article-slug" className={`${inputClass} pl-24`} />
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 text-sm">
+                    /techBlog/
+                  </span>
+                  <input
+                    id="field-slug"
+                    type="text"
+                    required
+                    value={form.slug || ""}
+                    onChange={(e) => handleChange("slug", e.target.value)}
+                    placeholder="article-slug"
+                    className={`${inputClass} pl-24`}
+                  />
                 </div>
               </div>
               <div>
                 <label className={labelClass}>Introduction</label>
-                <textarea id="field-introdaction" value={form.introdaction || ""} onChange={(e) => handleChange("introdaction", e.target.value)} placeholder="Brief introduction paragraph..." className={textareaClass} rows={3} />
+                <textarea
+                  id="field-introdaction"
+                  value={form.introdaction || ""}
+                  onChange={(e) => handleChange("introdaction", e.target.value)}
+                  placeholder="Brief introduction paragraph..."
+                  className={textareaClass}
+                  rows={3}
+                />
               </div>
               <div>
                 <label className={labelClass}>Excerpt</label>
-                <textarea id="field-excerpt" value={form.excerpt || ""} onChange={(e) => handleChange("excerpt", e.target.value)} placeholder="Short summary for cards..." className={textareaClass} rows={3} />
+                <textarea
+                  id="field-excerpt"
+                  value={form.excerpt || ""}
+                  onChange={(e) => handleChange("excerpt", e.target.value)}
+                  placeholder="Short summary for cards..."
+                  className={textareaClass}
+                  rows={3}
+                />
               </div>
               <div>
-                <label className={labelClass}>Content (HTML or Markdown)</label>
-                <textarea id="field-content" value={form.content || ""} onChange={(e) => handleChange("content", e.target.value)} placeholder="Full article content..." className={`${inputClass} resize-none`} rows={10} />
+                <label className={labelClass}>Content (Rich Text)</label>
+                <TipTapEditor
+                  value={form.content}
+                  onChange={(val) => handleChange("content", val)}
+                  placeholder="Write article content in English..."
+                  dir="ltr"
+                  imageUploadHandler={async (file) => {
+                    const formData = new FormData();
+                    formData.append("file", file);
+                    const res = await fetch("/api/upload", {
+                      method: "POST",
+                      body: formData,
+                    });
+                    const json = await res.json();
+                    return json.url;
+                  }}
+                />
               </div>
             </div>
           )}
@@ -266,20 +333,65 @@ export default function ArticleEditor({ article, onSave, onClose }) {
           {activeSection === "ar" && (
             <div className="space-y-4" dir="rtl">
               <div>
-                <label className={`${labelClass} text-right`}>العنوان (عربي)</label>
-                <input id="field-title-ar" type="text" value={form.title_ar || ""} onChange={(e) => handleChange("title_ar", e.target.value)} placeholder="عنوان المقال..." className={inputClass} dir="rtl" />
+                <label className={`${labelClass} text-right`}>
+                  العنوان (عربي)
+                </label>
+                <input
+                  id="field-title-ar"
+                  type="text"
+                  value={form.title_ar || ""}
+                  onChange={(e) => handleChange("title_ar", e.target.value)}
+                  placeholder="عنوان المقال..."
+                  className={inputClass}
+                  dir="rtl"
+                />
               </div>
               <div>
                 <label className={`${labelClass} text-right`}>المقدمة</label>
-                <textarea id="field-introdaction-ar" value={form.introdaction_ar || ""} onChange={(e) => handleChange("introdaction_ar", e.target.value)} placeholder="مقدمة المقال..." className={textareaClass} dir="rtl" rows={3} />
+                <textarea
+                  id="field-introdaction-ar"
+                  value={form.introdaction_ar || ""}
+                  onChange={(e) =>
+                    handleChange("introdaction_ar", e.target.value)
+                  }
+                  placeholder="مقدمة المقال..."
+                  className={textareaClass}
+                  dir="rtl"
+                  rows={3}
+                />
               </div>
               <div>
                 <label className={`${labelClass} text-right`}>الملخص</label>
-                <textarea id="field-excerpt-ar" value={form.excerpt_ar || ""} onChange={(e) => handleChange("excerpt_ar", e.target.value)} placeholder="ملخص قصير..." className={textareaClass} dir="rtl" rows={3} />
+                <textarea
+                  id="field-excerpt-ar"
+                  value={form.excerpt_ar || ""}
+                  onChange={(e) => handleChange("excerpt_ar", e.target.value)}
+                  placeholder="ملخص قصير..."
+                  className={textareaClass}
+                  dir="rtl"
+                  rows={3}
+                />
               </div>
               <div>
-                <label className={`${labelClass} text-right`}>المحتوى</label>
-                <textarea id="field-content-ar" value={form.content_ar || ""} onChange={(e) => handleChange("content_ar", e.target.value)} placeholder="محتوى المقال الكامل..." className={`${inputClass} resize-none`} dir="rtl" rows={10} />
+                <label className={`${labelClass} text-right`}>
+                  المحتوى (نص غني)
+                </label>
+                <TipTapEditor
+                  value={form.content_ar}
+                  onChange={(val) => handleChange("content_ar", val)}
+                  placeholder="اكتب محتوى المقال بالعربية..."
+                  dir="rtl"
+                  imageUploadHandler={async (file) => {
+                    const formData = new FormData();
+                    formData.append("file", file);
+                    const res = await fetch("/api/upload", {
+                      method: "POST",
+                      body: formData,
+                    });
+                    const json = await res.json();
+                    return json.url;
+                  }}
+                />
               </div>
             </div>
           )}
@@ -288,27 +400,72 @@ export default function ArticleEditor({ article, onSave, onClose }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-white/5">
             <div>
               <label className={labelClass}>Category (EN)</label>
-              <input id="field-category" type="text" value={form.category || ""} onChange={(e) => handleChange("category", e.target.value)} placeholder="Technology" className={inputClass} />
+              <input
+                id="field-category"
+                type="text"
+                value={form.category || ""}
+                onChange={(e) => handleChange("category", e.target.value)}
+                placeholder="Technology"
+                className={inputClass}
+              />
             </div>
             <div>
               <label className={labelClass}>التصنيف (AR)</label>
-              <input id="field-category-ar" type="text" value={form.category_ar || ""} onChange={(e) => handleChange("category_ar", e.target.value)} placeholder="تقنية" className={inputClass} dir="rtl" />
+              <input
+                id="field-category-ar"
+                type="text"
+                value={form.category_ar || ""}
+                onChange={(e) => handleChange("category_ar", e.target.value)}
+                placeholder="تقنية"
+                className={inputClass}
+                dir="rtl"
+              />
             </div>
             <div>
               <label className={labelClass}>Author (EN)</label>
-              <input id="field-author" type="text" value={form.author || ""} onChange={(e) => handleChange("author", e.target.value)} placeholder="John Doe" className={inputClass} />
+              <input
+                id="field-author"
+                type="text"
+                value={form.author || ""}
+                onChange={(e) => handleChange("author", e.target.value)}
+                placeholder="John Doe"
+                className={inputClass}
+              />
             </div>
             <div>
               <label className={labelClass}>الكاتب (AR)</label>
-              <input id="field-author-ar" type="text" value={form.author_ar || ""} onChange={(e) => handleChange("author_ar", e.target.value)} placeholder="محمد أحمد" className={inputClass} dir="rtl" />
+              <input
+                id="field-author-ar"
+                type="text"
+                value={form.author_ar || ""}
+                onChange={(e) => handleChange("author_ar", e.target.value)}
+                placeholder="محمد أحمد"
+                className={inputClass}
+                dir="rtl"
+              />
             </div>
             <div>
               <label className={labelClass}>Tags (comma separated)</label>
-              <input id="field-tags" type="text" value={form.tags?.join(", ") || ""} onChange={(e) => handleTagsChange(e.target.value, "tags")} placeholder="tech, ai, web" className={inputClass} />
+              <input
+                id="field-tags"
+                type="text"
+                value={form.tags?.join(", ") || ""}
+                onChange={(e) => handleTagsChange(e.target.value, "tags")}
+                placeholder="tech, ai, web"
+                className={inputClass}
+              />
             </div>
             <div>
               <label className={labelClass}>الوسوم (مفصولة بفواصل)</label>
-              <input id="field-tags-ar" type="text" value={form.tags_ar?.join(", ") || ""} onChange={(e) => handleTagsChange(e.target.value, "tags_ar")} placeholder="تقنية، ذكاء اصطناعي" className={inputClass} dir="rtl" />
+              <input
+                id="field-tags-ar"
+                type="text"
+                value={form.tags_ar?.join(", ") || ""}
+                onChange={(e) => handleTagsChange(e.target.value, "tags_ar")}
+                placeholder="تقنية، ذكاء اصطناعي"
+                className={inputClass}
+                dir="rtl"
+              />
             </div>
           </div>
 
@@ -329,7 +486,11 @@ export default function ArticleEditor({ article, onSave, onClose }) {
                       : "border-white/10 text-white/40 hover:border-white/20"
                   }`}
                 >
-                  {s === "published" ? <Globe className="w-4 h-4" /> : <FileText className="w-4 h-4" />}
+                  {s === "published" ? (
+                    <Globe className="w-4 h-4" />
+                  ) : (
+                    <FileText className="w-4 h-4" />
+                  )}
                   {s.charAt(0).toUpperCase() + s.slice(1)}
                 </button>
               ))}
@@ -339,7 +500,11 @@ export default function ArticleEditor({ article, onSave, onClose }) {
 
         {/* Footer */}
         <div className="px-8 py-5 border-t border-white/5 flex items-center justify-between gap-4">
-          <button type="button" onClick={onClose} className="px-6 py-2.5 rounded-xl border border-white/10 text-white/40 hover:text-white/70 hover:border-white/20 transition-all text-sm">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-6 py-2.5 rounded-xl border border-white/10 text-white/40 hover:text-white/70 hover:border-white/20 transition-all text-sm"
+          >
             Cancel
           </button>
           <button
@@ -349,8 +514,16 @@ export default function ArticleEditor({ article, onSave, onClose }) {
             onClick={handleSubmit}
             className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-linear-to-r from-sky-500 to-purple-600 text-white font-semibold text-sm hover:opacity-90 transition-all shadow-lg shadow-sky-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
-            {isSaving ? "Saving..." : article ? "Save Changes" : "Create Article"}
+            {isSaving ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Check className="w-4 h-4" />
+            )}
+            {isSaving
+              ? "Saving..."
+              : article
+                ? "Save Changes"
+                : "Create Article"}
           </button>
         </div>
       </div>
