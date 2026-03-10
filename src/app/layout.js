@@ -3,7 +3,7 @@ import { PREMIUM_GRADIENT } from "@/lib/constants";
 import { ChatProvider } from "@/context/ChatContext";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import { I18nProvider } from "./providers";
+import { AppProviders } from "./providers";
 import "../i18n";
 import ChatWidgetClient from "@/components/chat/ChatWidgetClient";
 
@@ -53,14 +53,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" dir="ltr">
       <body className="antialiased overflow-x-hidden" style={backgroundStyle}>
-        <I18nProvider>
+        <AppProviders>
           <ChatProvider>
             <Navbar />
             <main className="relative z-10">{children}</main>
             <ChatWidgetClient />
             <Footer />
           </ChatProvider>
-        </I18nProvider>
+        </AppProviders>
       </body>
     </html>
   );

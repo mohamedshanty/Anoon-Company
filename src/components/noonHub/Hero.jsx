@@ -13,7 +13,7 @@ export default function NoonHero() {
 
   return (
     <Hero>
-      <Hero.Title className="gap-y-6">
+      <Hero.Title className="gap-y-2 md:gap-y-6">
         <span className="font-semibold">
           {t("noon_hub.hero.title_part1", "Providing")}
         </span>
@@ -42,7 +42,7 @@ export default function NoonHero() {
         </div>
       </Hero.Title>
 
-      <Hero.Subtitle className="tracking-[0.15px] my-10 mb-10">
+      <Hero.Subtitle className="tracking-[0.15px] md:my-10 md:mb-10">
         <p className={`text-subtitle text-white/80`}>
           {t(
             "noon_hub.hero.subtitle",

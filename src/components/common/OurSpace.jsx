@@ -35,24 +35,32 @@ const OurSpace = () => {
 
   return (
     <section
-      className="relative py-24 overflow-hidden bg-no-repeat bg-center"
-      style={{
-        backgroundImage: "url(/images/vist-space.png)",
-        minHeight: "100vh",
-        backgroundSize: "contain",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
+      className="relative overflow-hidden bg-no-repeat bg-center"
+      style={{ minHeight: "120svh" }}
       dir={dir}
     >
+      {/* Background image — cover on mobile so cards don't spill over text,
+          contain on larger screens to show the full fan layout */}
+      <div
+        className="absolute inset-0 -z-10"
+        style={{
+          backgroundImage: "url(/images/vist-space.png)",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+          // cover on mobile keeps cards behind content; switch to contain ≥ md
+          backgroundSize: "cover",
+        }}
+      />
+      {/* Extra dark scrim on mobile so text stays readable over the image */}
+      <div className="absolute inset-0 -z-10 md:bg-transparent" />
+
       <Stars count={20} zIndex={-5} opacity={0.8} />
 
-      <div className="main-container flex flex-col items-center">
+      {/* Generous vertical padding: more on mobile, less on desktop */}
+      <div className="main-container flex flex-col items-center py-20 sm:py-24 md:py-28 lg:py-32 px-5 sm:px-6">
         <SectionHeader
           title={t("space_noon.our_space.title", "Our Space")}
-          subtitle={{
-            highlightedWords: highlightedWords,
-          }}
+          subtitle={{ highlightedWords }}
           description={[
             t(
               "space_noon.our_space.description",
@@ -62,15 +70,23 @@ const OurSpace = () => {
           starsCount={20}
           maxWidth="3xl"
           align="center"
-          titleClassName="text-5xl md:text-6xl"
+          // Smaller title on mobile, scale up from sm onward
+          titleClassName="text-4xl sm:text-5xl md:text-6xl"
         />
-        <div className="mt-12">
+
+        <div className="mt-8 sm:mt-10 md:mt-12 w-full flex justify-center">
           <Link
             href="https://maps.app.goo.gl/G4uycW6GEBeUjnMv7"
             target="_blank"
             rel="noopener noreferrer"
+            className="w-full sm:w-auto"
           >
-            <Button variant="outline" color="sky" className="px-8 py-3 text-lg">
+            <Button
+              variant="outline"
+              color="sky"
+              // Full-width button on very small screens, auto on sm+
+              className="w-full sm:w-auto px-8 py-3 text-base sm:text-lg"
+            >
               {t("space_noon.our_space.button", "Visit Our Location")}
             </Button>
           </Link>

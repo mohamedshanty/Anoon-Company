@@ -1,23 +1,33 @@
 "use client";
+// components/layout/Footer.jsx
+// Wrapped with NavbarGuard so it disappears on /dashboard routes.
 
 import Link from "next/link";
 import { MapPin, Mail, Phone } from "lucide-react";
-
 import {
   FaFacebookF,
   FaInstagram,
   FaLinkedinIn,
   FaWhatsapp,
 } from "react-icons/fa";
-
 import Image from "next/image";
 import Button from "../ui/Button";
 import { useTranslation } from "react-i18next";
 import { useRTL } from "@/hooks/useRTL";
+import { usePathname } from "next/navigation";
+
+const HIDDEN_ROUTES = ["/dashboard", "/login"];
 
 export default function Footer() {
   const { t } = useTranslation();
   const { isRTL, dir } = useRTL();
+  const pathname = usePathname();
+
+  // Hide footer on dashboard and all sub-routes
+  const isHidden = HIDDEN_ROUTES.some(
+    (route) => pathname === route || pathname.startsWith(route + "/"),
+  );
+  if (isHidden) return null;
 
   const socialLinks = [
     {
@@ -70,12 +80,10 @@ export default function Footer() {
                   <span>{t("footer.addressFormatted.line2")}</span>
                 </div>
               </li>
-
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-orange-500 flex-shrink-0" />
                 <span className="text-white">{t("footer.email")}</span>
               </li>
-
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-orange-500 flex-shrink-0" />
                 <span className="text-white" dir="ltr">
@@ -122,9 +130,7 @@ export default function Footer() {
                     "footer.newsletter.placeholder",
                     "Enter Your Email",
                   )}
-                  className={`w-full px-4 py-3 bg-transparent border border-gray-300 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-orange-500 transition-colors ${
-                    isRTL ? "text-right" : ""
-                  }`}
+                  className={`w-full px-4 py-3 bg-transparent border border-gray-300 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-orange-500 transition-colors ${isRTL ? "text-right" : ""}`}
                 />
                 <div className="mt-5">
                   <Button

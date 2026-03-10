@@ -1,6 +1,7 @@
 "use client";
 import { useState, useCallback, useRef, useEffect } from "react";
 import { generateSlug } from "@/lib/slugUtils";
+import { idb } from "@/lib/idb";
 import {
   X,
   Upload,
@@ -52,6 +53,25 @@ export default function ArticleEditor({ article, onSave, onClose }) {
       setForm((prev) => ({ ...prev, slug: generateSlug(form.title) }));
     }
   }, [form.title, article]);
+
+  const draftKey = `article-draft-${article?.id ?? "new"}`;
+
+  // Restore draft on first mount (new articles only)
+  useEffect(() => {
+    if (article) return;
+    idb.getDraft(draftKey).then((saved) => {
+      if (saved) setForm(saved);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Autosave to IndexedDB every 30 seconds
+  useEffect(() => {
+    const id = setInterval(() => {
+      idb.saveDraft(draftKey, form);
+    }, 30_000);
+    return () => clearInterval(id);
+  }, [form, draftKey]);
 
   const handleChange = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -118,6 +138,7 @@ export default function ArticleEditor({ article, onSave, onClose }) {
     setIsSaving(true);
     try {
       await onSave(form);
+      idb.deleteDraft(draftKey);
     } finally {
       setIsSaving(false);
     }

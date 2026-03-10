@@ -13,7 +13,7 @@ export default function TamkeenHero() {
 
   return (
     <Hero className="animate-fade-in">
-      <Hero.Title className="gap-y-4 md:gap-y-6">
+      <Hero.Title className="gap-y-2 md:gap-y-6">
         <span>{t("tamkeen.hero.title_part1", "Enabling")}</span>
         <span className="text-brand-orange">
           {t("tamkeen.hero.title_highlight", "The Future Generation")}
@@ -32,7 +32,7 @@ export default function TamkeenHero() {
         </span>
       </Hero.Title>
 
-      <Hero.Subtitle className="tracking-[0.15px] my-10 mb-10">
+      <Hero.Subtitle className="tracking-[0.15px] md:my-10 md:mb-10">
         <p className={`text-subtitle text-white/80 text-center`}>
           {t(
             "tamkeen.hero.subtitle",

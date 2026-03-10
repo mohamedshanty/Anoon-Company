@@ -12,7 +12,7 @@ export default function SpaceNoonHero() {
 
   return (
     <Hero>
-      <Hero.Title className="gap-y-6 -mt-7">
+      <Hero.Title className="gap-y-2 md:gap-y-6 md:-mt-7">
         <span>{t("space_noon.hero.title_part1", "Enabling")}</span>
         <span className="text-brand-orange">
           {t("space_noon.hero.title_highlight", "The Future Generation")}
@@ -27,7 +27,7 @@ export default function SpaceNoonHero() {
         </span>
       </Hero.Title>
 
-      <Hero.Subtitle className="tracking-[0.15px] my-10 mb-10">
+      <Hero.Subtitle className="tracking-[0.15px] md:my-10 md:mb-10">
         <p className={`text-subtitle text-white/80`}>
           {t(
             "space_noon.hero.subtitle",

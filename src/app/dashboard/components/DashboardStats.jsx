@@ -1,5 +1,12 @@
 "use client";
-import { FileText, Eye, Heart, TrendingUp, BookOpen, Edit3 } from "lucide-react";
+import {
+  FileText,
+  Eye,
+  Heart,
+  TrendingUp,
+  BookOpen,
+  Edit3,
+} from "lucide-react";
 
 export default function DashboardStats({ stats, articles, isLoading }) {
   const recentArticles = [...articles]
@@ -57,7 +64,7 @@ export default function DashboardStats({ stats, articles, isLoading }) {
               {isLoading ? (
                 <span className="block w-16 h-8 bg-white/10 animate-pulse rounded-lg" />
               ) : (
-                value ?? "0"
+                (value ?? "0")
               )}
             </div>
             <div className="text-white/40 text-sm mt-1">{label}</div>
@@ -76,7 +83,10 @@ export default function DashboardStats({ stats, articles, isLoading }) {
           <div className="space-y-3">
             {isLoading
               ? Array.from({ length: 4 }).map((_, i) => (
-                  <div key={i} className="h-14 bg-white/5 rounded-xl animate-pulse" />
+                  <div
+                    key={i}
+                    className="h-14 bg-white/5 rounded-xl animate-pulse"
+                  />
                 ))
               : recentArticles.map((article) => (
                   <div
@@ -99,11 +109,14 @@ export default function DashboardStats({ stats, articles, isLoading }) {
                         {article.title}
                       </p>
                       <p className="text-white/30 text-xs mt-0.5">
-                        {new Date(article.created_at).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          year: "numeric",
-                        })}
+                        {new Date(article.created_at).toLocaleDateString(
+                          "en-US",
+                          {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          },
+                        )}
                       </p>
                     </div>
                     <span
@@ -134,13 +147,18 @@ export default function DashboardStats({ stats, articles, isLoading }) {
                 <div className="flex justify-between text-sm mb-1.5">
                   <span className="text-white/50">Published rate</span>
                   <span className="text-green-400">
-                    {stats.total > 0 ? Math.round((stats.published / stats.total) * 100) : 0}%
+                    {stats.total > 0
+                      ? Math.round((stats.published / stats.total) * 100)
+                      : 0}
+                    %
                   </span>
                 </div>
                 <div className="h-2 rounded-full bg-white/5">
                   <div
                     className="h-full rounded-full bg-linear-to-r from-green-500 to-emerald-500 transition-all duration-700"
-                    style={{ width: `${stats.total > 0 ? (stats.published / stats.total) * 100 : 0}%` }}
+                    style={{
+                      width: `${stats.total > 0 ? (stats.published / stats.total) * 100 : 0}%`,
+                    }}
                   />
                 </div>
               </div>
@@ -148,13 +166,18 @@ export default function DashboardStats({ stats, articles, isLoading }) {
                 <div className="flex justify-between text-sm mb-1.5">
                   <span className="text-white/50">Drafts</span>
                   <span className="text-yellow-400">
-                    {stats.total > 0 ? Math.round((stats.drafts / stats.total) * 100) : 0}%
+                    {stats.total > 0
+                      ? Math.round((stats.drafts / stats.total) * 100)
+                      : 0}
+                    %
                   </span>
                 </div>
                 <div className="h-2 rounded-full bg-white/5">
                   <div
                     className="h-full rounded-full bg-linear-to-r from-yellow-500 to-orange-500 transition-all duration-700"
-                    style={{ width: `${stats.total > 0 ? (stats.drafts / stats.total) * 100 : 0}%` }}
+                    style={{
+                      width: `${stats.total > 0 ? (stats.drafts / stats.total) * 100 : 0}%`,
+                    }}
                   />
                 </div>
               </div>
@@ -162,9 +185,13 @@ export default function DashboardStats({ stats, articles, isLoading }) {
           </div>
 
           <div className="bg-linear-to-br from-sky-500/10 to-purple-500/10 border border-sky-500/20 rounded-2xl p-6">
-            <div className="text-sky-400 text-xs uppercase tracking-widest mb-2">Database</div>
+            <div className="text-sky-400 text-xs uppercase tracking-widest mb-2">
+              Database
+            </div>
             <p className="text-white font-medium text-sm">Supabase</p>
-            <p className="text-white/30 text-xs mt-1">PostgreSQL · Row Level Security</p>
+            <p className="text-white/30 text-xs mt-1">
+              PostgreSQL · Row Level Security
+            </p>
             <div className="mt-3 flex items-center gap-1.5">
               <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
               <span className="text-green-400 text-xs">Connected</span>

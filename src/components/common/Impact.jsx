@@ -15,7 +15,6 @@ export default function Impact({
   patternDirection = "diagonal",
   patternOpacity = "opacity-100",
   patternTranslateY = "-translate-y-30",
-
   title,
   subtitle,
   description,
@@ -33,9 +32,11 @@ export default function Impact({
   const leftSide = useRef(null);
   const statsContainerRef = useRef(null);
 
+  // Only run animations after mount — but refs are always attached to the DOM
+  // so stats are never hidden waiting for animation setup
   useAnimation({
     ref: leftSide,
-    type: "slide-up",
+    type: mounted ? "slide-up" : "none",
     stagger: 0.15,
     disabled: !mounted,
   });
@@ -65,42 +66,27 @@ export default function Impact({
   const finalAdditionalText = additionalText || additionalTextChild;
   const finalStats = stats || statsChild;
 
-  if (!mounted || !ready) {
-    return (
-      <section className={`relative overflow-hidden ${className}`}>
-        <div className="main-container">
-          <div className="mb-12 md:mb-16 lg:mb-20 text-left">
-            {finalTitle}
-            {finalAdditionalText}
-          </div>
-          <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-8 md:gap-10 lg:gap-12">
-            <div className="w-full lg:w-1/2 text-left">
-              {finalSubtitle}
-              {finalDescription}
-            </div>
-            <div className="w-full lg:w-1/2">{finalStats}</div>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
+  // Single render path — refs always attach to real DOM nodes.
+  // Pattern + animations are skipped pre-mount but content is always visible.
   return (
     <section
       id="impact"
       className={`relative overflow-hidden ${className}`}
       suppressHydrationWarning
     >
-      <div className="absolute inset-0 pointer-events-none -z-20 opacity-100">
-        <PatternBackground
-          direction={patternDirection}
-          translateY={patternTranslateY}
-          opacity={patternOpacity}
-        />
-      </div>
+      {/* Pattern only after mount to avoid SSR mismatch */}
+      {mounted && (
+        <div className="absolute inset-0 pointer-events-none -z-20 opacity-100">
+          <PatternBackground
+            direction={patternDirection}
+            translateY={patternTranslateY}
+            opacity={patternOpacity}
+          />
+        </div>
+      )}
 
       <div className="main-container" suppressHydrationWarning>
-        {/* Title & Additional Text Section */}
+        {/* Title & Additional Text */}
         <div
           className={`mb-12 md:mb-16 lg:mb-20 ${isRTL ? "text-right" : "text-left"}`}
           suppressHydrationWarning
@@ -117,7 +103,7 @@ export default function Impact({
           className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-8 md:gap-10 lg:gap-12"
           suppressHydrationWarning
         >
-          {/* Main Content Side (Subtitle & Description) */}
+          {/* Left: Subtitle & Description — ref always attached */}
           <div
             ref={leftSide}
             className={`w-full lg:w-1/2 ${isRTL ? "text-right" : "text-left"}`}
@@ -135,7 +121,7 @@ export default function Impact({
             )}
           </div>
 
-          {/* Stats Side */}
+          {/* Right: Stats — ref always attached, never conditionally hidden */}
           <div
             ref={statsContainerRef}
             className="w-full lg:w-1/2"
@@ -149,7 +135,8 @@ export default function Impact({
   );
 }
 
-// Sub-components للتوافق مع الاستخدام القديم
+// ── Sub-components ────────────────────────────────────────────────────────────
+
 Impact.Title = function ImpactTitle({ children, className = "" }) {
   return (
     <h2 className={`font-bold tracking-tight ${className}`}>{children}</h2>

@@ -11,7 +11,7 @@ export default function SpaceNoonTrainingHero() {
 
   return (
     <Hero>
-      <Hero.Title className={`${isRTL ? "gap-y-8" : "gap-y-3"}`}>
+      <Hero.Title className={`${isRTL ? "gap-y-2 md:gap-y-8" : "gap-y-3"}`}>
         <span>{t("tech_training.hero.title_part1", "Enabling")}</span>
         <span className="text-brand-orange">
           {t("tech_training.hero.title_highlight", "The Future Generation")}

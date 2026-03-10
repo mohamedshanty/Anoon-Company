@@ -1,15 +1,23 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useRTL } from "@/hooks/useRTL";
 import TrainingProgramsSection from "../common/TrainingProgramsSection";
 
 const TrainingPrograms = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { isRTL } = useRTL();
+  const [dbCourses, setDbCourses] = useState(null);
 
-  // ✅ أضف كل دورة جديدة هنا — ستظهر تلقائياً في الـ Swiper
-  const courses = [
+  useEffect(() => {
+    fetch("/api/admin/training-programs")
+      .then((r) => r.json())
+      .then((json) => setDbCourses(json.programs || []))
+      .catch(() => setDbCourses([]));
+  }, []);
+
+  const fallbackCourses = [
     {
       title: t(
         "noon_hub.tech_training.training.card.title",
@@ -28,8 +36,6 @@ const TrainingPrograms = () => {
       buttonColor: "sky",
       buttonHref: "/spaceNoonTraining",
     },
-
-    // ── أضف الدورات الجديدة هنا ──────────────────────────────────────────
     {
       title: t(
         "noon_hub.tech_training.training.card.title",
@@ -45,8 +51,27 @@ const TrainingPrograms = () => {
       buttonColor: "sky",
       buttonHref: "/webDevTraining",
     },
-    // ─────────────────────────────────────────────────────────────────────
   ];
+
+  const courses =
+    dbCourses && dbCourses.length > 0
+      ? dbCourses.map((program) => ({
+          title: isRTL && program.title_ar ? program.title_ar : program.title,
+          description:
+            isRTL && program.description_ar
+              ? program.description_ar
+              : program.description,
+          imageSrc: program.image_url || "/images/trainingPrograms.png",
+          imageAlt: program.title,
+          buttonText:
+            (isRTL && program.button_text_ar
+              ? program.button_text_ar
+              : program.button_text) ||
+            t("noon_hub.tech_training.training.card.button", "Visit Us"),
+          buttonColor: "sky",
+          buttonHref: program.button_href || "/spaceNoonTraining",
+        }))
+      : fallbackCourses;
 
   return (
     <TrainingProgramsSection
@@ -83,7 +108,6 @@ const TrainingPrograms = () => {
       ]}
       cards={courses}
       isRTL={isRTL}
-      showOnlyFirstCard={true} // 👈 أضف هذا السطر لعرض بطاقة واحدة فقط
     />
   );
 };
