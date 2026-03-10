@@ -330,6 +330,7 @@
 @layer base {
   html {
     font-family: var(--font-alexandria), ui-sans-serif, system-ui, sans-serif;
+    scroll-behavior: smooth;
   }
 
   body {

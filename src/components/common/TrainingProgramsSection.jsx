@@ -11,6 +11,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 const TrainingProgramsSection = ({
+  id,
   title,
   subtitleHighlightedWords,
   description,
@@ -26,6 +27,7 @@ const TrainingProgramsSection = ({
 
   return (
     <section
+      id={id ?? "tech"}
       className="relative py-16 md:py-20 lg:py-24 overflow-hidden"
       dir={isRTL ? "rtl" : "ltr"}
     >

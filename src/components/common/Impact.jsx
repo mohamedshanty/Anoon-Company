@@ -157,9 +157,12 @@ Impact.AdditionalText = function ImpactAdditionalText({
 };
 
 Impact.Subtitle = function ImpactSubtitle({ children, className = "" }) {
+  const { isRTL } = useRTL();
   return (
     <h3 className={`mb-4 md:mb-6 lg:mb-8 ${className}`}>
-      <div className="text-white font-medium text-lg md:text-xl lg:text-2xl">
+      <div
+        className={`text-white font-medium text-lg md:text-xl lg:text-2xl ${isRTL ? "space-y-8 leading-8" : "space-y-4"}`}
+      >
         {children}
       </div>
     </h3>

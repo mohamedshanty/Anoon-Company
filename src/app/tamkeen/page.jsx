@@ -10,9 +10,9 @@ import { getTranslations } from "@/lib/i18n-server";
 
 export default async function TamkeenPage() {
   const cookieStore = await cookies();
-  const lang = cookieStore.get('i18next')?.value || 'en';
+  const lang = cookieStore.get("i18next")?.value || "en";
   const trans = await getTranslations(lang);
-  const isRTL = lang === 'ar';
+  const isRTL = lang === "ar";
 
   return (
     <>

@@ -9,6 +9,14 @@ export default function SpaceNoonTrainingHero() {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
 
+  const scrollToSection = (e) => {
+    e.preventDefault();
+    const el = document.getElementById("tech");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
     <Hero>
       <Hero.Title className={`${isRTL ? "gap-y-2 md:gap-y-8" : "gap-y-3"}`}>
@@ -36,11 +44,11 @@ export default function SpaceNoonTrainingHero() {
       </Hero.Subtitle>
 
       <Hero.Buttons>
-        <Link href="/spaceNoonTraining#tech">
+        <a href="/spaceNoonTraining#tech" onClick={scrollToSection}>
           <Button variant="outline" color="orange">
             {t("tech_training.hero.button1", "Explore Our Services")}
           </Button>
-        </Link>
+        </a>
         <Link
           href="https://maps.app.goo.gl/G4uycW6GEBeUjnMv7"
           target="_blank"
