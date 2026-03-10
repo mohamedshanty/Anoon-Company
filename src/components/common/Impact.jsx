@@ -182,7 +182,7 @@ Impact.Description = function ImpactDescription({ children, className = "" }) {
 Impact.Stats = function ImpactStats({ stats, className = "" }) {
   return (
     <section
-      className={`grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 lg:gap-8 p-4 md:p-5 pb-16 md:pb-20 lg:pb-24 pt-8 md:pt-10 lg:pt-12 relative overflow-hidden ${className}`}
+      className={`grid grid-cols-2 gap-4 md:gap-6 lg:gap-8 p-4 md:p-5 pb-16 md:pb-20 lg:pb-24 pt-8 md:pt-10 lg:pt-12 relative overflow-hidden ${className}`}
     >
       {stats?.map((stat) => (
         <div key={stat.id} className="flex items-center gap-3 md:gap-4">

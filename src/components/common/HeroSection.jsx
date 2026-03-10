@@ -68,7 +68,7 @@ export const HeroTitle = ({ children, className = "" }) => (
 export const HeroSubtitle = ({ children, className = "" }) => (
   <Reveal type="slide-up" delay={0.2} duration={0.5} stagger={0.05}>
     <div
-      className={`max-w-3xl text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl mx-auto ${className}`}
+      className={`w-full md:max-w-3xl text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl mx-auto ${className}`}
     >
       {children}
     </div>
