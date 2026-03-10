@@ -1,4 +1,5 @@
 import "./globals.css";
+import { Alexandria } from "next/font/google";
 import { PREMIUM_GRADIENT } from "@/lib/constants";
 import { ChatProvider } from "@/context/ChatContext";
 import Navbar from "@/components/layout/Navbar";
@@ -7,10 +8,12 @@ import { AppProviders } from "./providers";
 import "../i18n";
 import ChatWidgetClient from "@/components/chat/ChatWidgetClient";
 
-// Custom font variable for fallback
-const alexandria = {
-  variable: "font-alexandria",
-};
+const alexandria = Alexandria({
+  subsets: ["latin", "arabic"],
+  weight: ["300", "400", "500", "600", "700", "800"],
+  display: "swap",
+  variable: "--font-alexandria",
+});
 
 export const metadata = {
   title: "Anoon Solutions",
@@ -51,8 +54,11 @@ export default function RootLayout({ children }) {
   };
 
   return (
-    <html lang="en" dir="ltr">
-      <body className="antialiased overflow-x-hidden" style={backgroundStyle}>
+    <html lang="en" dir="ltr" className={alexandria.variable}>
+      <body
+        className={`${alexandria.className} antialiased overflow-x-hidden`}
+        style={backgroundStyle}
+      >
         <AppProviders>
           <ChatProvider>
             <Navbar />

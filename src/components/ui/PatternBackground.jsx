@@ -16,7 +16,7 @@ export default function PatternBackground({
     >
       <div className={`relative w-full h-full ${directionClass}`}>
         <Image
-          src="/images/pattern.png"
+          src="/images/pattern.webp"
           alt="Background Pattern"
           fill
           className={`object-cover ${translateY}`}

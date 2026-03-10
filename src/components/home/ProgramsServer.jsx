@@ -34,7 +34,7 @@ export default function ProgramsServer({ t }) {
     },
     {
       logo: {
-        src: "/images/spaceNoonLogo1.png",
+        src: "/images/spaceNoonLogo1.webp",
         alt: t.cards[1].logo_alt,
         width: 200,
         height: 100,

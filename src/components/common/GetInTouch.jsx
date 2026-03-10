@@ -2,10 +2,9 @@
 
 import { Mail } from "lucide-react";
 import { Phone } from "lucide-react";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useCallback } from "react";
 import { gsap } from "@/lib/gsap-setup";
 import { useTranslation } from "react-i18next";
-import ReCAPTCHA from "react-google-recaptcha";
 
 const GetInTouch = () => {
   const { t } = useTranslation();
@@ -17,7 +16,8 @@ const GetInTouch = () => {
   const contactInfoRef = useRef(null);
   const mapRef = useRef(null);
   const buttonRef = useRef(null);
-  const recaptchaRef = useRef(null);
+  const recaptchaWidgetRef = useRef(null);
+  const [RecaptchaComponent, setRecaptchaComponent] = useState(null);
   const [siteKey, setSiteKey] = useState("");
   const [status, setStatus] = useState({
     loading: false,
@@ -25,31 +25,35 @@ const GetInTouch = () => {
     error: null,
   });
 
-  // تحميل مفتاح reCAPTCHA من المتغيرات البيئية
   useEffect(() => {
     setSiteKey(process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "");
-    console.log(
-      "reCAPTCHA Site Key:",
-      process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
-    );
   }, []);
+
+  // Lazy-load reCAPTCHA only when user focuses any form field
+  const loadRecaptcha = useCallback(() => {
+    if (RecaptchaComponent || !siteKey) return;
+    import("react-google-recaptcha").then((mod) => {
+      setRecaptchaComponent(() => mod.default);
+    });
+  }, [siteKey, RecaptchaComponent]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus({ loading: true, success: false, error: null });
 
-    if (!recaptchaRef.current) {
+    if (!recaptchaWidgetRef.current) {
+      // If recaptcha hasn't loaded yet, load it and ask user to retry
+      loadRecaptcha();
       setStatus({
         loading: false,
         success: false,
-        error: "reCAPTCHA not initialized",
+        error: "Please try again in a moment.",
       });
       return;
     }
 
     try {
-      // ✅ الطريقة الصحيحة لـ reCAPTCHA v3 - executeAsync
-      const recaptchaToken = await recaptchaRef.current.executeAsync();
+      const recaptchaToken = await recaptchaWidgetRef.current.executeAsync();
 
       if (!recaptchaToken) {
         throw new Error("Failed to get reCAPTCHA token");
@@ -79,7 +83,7 @@ const GetInTouch = () => {
       if (response.ok) {
         setStatus({ loading: false, success: true, error: null });
         formRef.current.reset();
-        recaptchaRef.current?.reset();
+        recaptchaWidgetRef.current?.reset();
       } else {
         throw new Error(data.message || "Failed to send message");
       }
@@ -151,7 +155,7 @@ const GetInTouch = () => {
       const onFocus = () => {
         gsap.to(input, {
           scale: 1.01,
-          borderColor: "#38bdf8",
+          opacity: 0.95,
           duration: 0.15,
           ease: "power1.out",
         });
@@ -160,7 +164,7 @@ const GetInTouch = () => {
       const onBlur = () => {
         gsap.to(input, {
           scale: 1,
-          borderColor: "rgba(255,255,255,0.3)",
+          opacity: 1,
           duration: 0.15,
           ease: "power1.out",
         });
@@ -181,7 +185,6 @@ const GetInTouch = () => {
       const onMouseEnter = () => {
         gsap.to(buttonRef.current, {
           scale: 1.03,
-          boxShadow: "0 8px 20px -5px rgba(56, 189, 248, 0.4)",
           duration: 0.15,
           ease: "power1.out",
         });
@@ -190,7 +193,6 @@ const GetInTouch = () => {
       const onMouseLeave = () => {
         gsap.to(buttonRef.current, {
           scale: 1,
-          boxShadow: "none",
           duration: 0.15,
           ease: "power1.out",
         });
@@ -241,6 +243,7 @@ const GetInTouch = () => {
             <form
               ref={formRef}
               onSubmit={handleSubmit}
+              onFocus={loadRecaptcha}
               className="space-y-4 md:space-y-5 lg:space-y-6"
             >
               <input
@@ -248,33 +251,33 @@ const GetInTouch = () => {
                 type="text"
                 placeholder={t("get_in_touch.form.name")}
                 required
-                className="w-full p-3 md:p-4 rounded-md bg-transparent border border-white/30 placeholder-gray-400 outline-none text-sm md:text-base transition-all duration-300 focus:border-brand-sky focus:ring-1 focus:ring-brand-sky"
+                className="w-full p-3 md:p-4 rounded-md bg-transparent border border-white/30 placeholder-gray-400 outline-none text-sm md:text-base focus:border-brand-sky focus:ring-1 focus:ring-brand-sky transition-[border-color,box-shadow] duration-300"
               />
               <input
                 ref={(el) => (formInputsRef.current[1] = el)}
                 type="email"
                 placeholder={t("get_in_touch.form.email")}
                 required
-                className="w-full p-3 md:p-4 rounded-md bg-transparent border border-white/30 placeholder-gray-400 outline-none text-sm md:text-base transition-all duration-300 focus:border-brand-sky focus:ring-1 focus:ring-brand-sky"
+                className="w-full p-3 md:p-4 rounded-md bg-transparent border border-white/30 placeholder-gray-400 outline-none text-sm md:text-base focus:border-brand-sky focus:ring-1 focus:ring-brand-sky transition-[border-color,box-shadow] duration-300"
               />
               <input
                 ref={(el) => (formInputsRef.current[2] = el)}
                 type="tel"
                 placeholder={t("get_in_touch.form.phone")}
-                className="w-full p-3 md:p-4 rounded-md bg-transparent border border-white/30 placeholder-gray-400 outline-none text-sm md:text-base transition-all duration-300 focus:border-brand-sky focus:ring-1 focus:ring-brand-sky"
+                className="w-full p-3 md:p-4 rounded-md bg-transparent border border-white/30 placeholder-gray-400 outline-none text-sm md:text-base focus:border-brand-sky focus:ring-1 focus:ring-brand-sky transition-[border-color,box-shadow] duration-300"
               />
               <textarea
                 ref={(el) => (formInputsRef.current[3] = el)}
                 placeholder={t("get_in_touch.form.find_us")}
                 rows={4}
                 required
-                className="w-full p-3 md:p-4 rounded-md bg-transparent border border-white/30 placeholder-gray-400 outline-none text-sm md:text-base transition-all duration-300 focus:border-brand-sky focus:ring-1 focus:ring-brand-sky resize-none"
+                className="w-full p-3 md:p-4 rounded-md bg-transparent border border-white/30 placeholder-gray-400 outline-none text-sm md:text-base focus:border-brand-sky focus:ring-1 focus:ring-brand-sky transition-[border-color,box-shadow] duration-300 resize-none"
               />
 
-              {/* reCAPTCHA - Hidden but active */}
-              {siteKey && (
-                <ReCAPTCHA
-                  ref={recaptchaRef}
+              {/* reCAPTCHA - Lazy loaded on form focus */}
+              {RecaptchaComponent && siteKey && (
+                <RecaptchaComponent
+                  ref={recaptchaWidgetRef}
                   sitekey={siteKey}
                   size="invisible"
                   theme="dark"

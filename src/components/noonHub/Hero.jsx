@@ -32,7 +32,7 @@ export default function NoonHero() {
           <span>{t("noon_hub.hero.title_part3", "With")} </span>
           <div className="relative w-32 h-12 md:w-48 md:h-20">
             <Image
-              src="/images/spaceNoonLogo1.png"
+              src="/images/spaceNoonLogo1.webp"
               alt={t("space_noon.hero.logo_alt", "Space Noon Logo")}
               fill
               className="object-contain"

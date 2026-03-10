@@ -33,7 +33,7 @@ export default function AIAgentServer({ t }) {
             <div
               className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 md:w-96 md:h-96 lg:w-[420px] lg:h-[420px] z-[1] pointer-events-none"
               style={{
-                backgroundImage: "url(/images/SubBrian.png)",
+                backgroundImage: "url(/images/SubBrian.webp)",
                 backgroundSize: "contain",
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "start",
