@@ -238,7 +238,11 @@ function Sidebar({
   setCollapsed,
   user,
   onLogout,
+  mobileOpen,
+  onMobileClose,
+  isMobile,
 }) {
+  const ec = !isMobile && collapsed; // effectiveCollapsed
   const navItems = [
     { id: "overview", label: "Overview", icon: LayoutDashboard },
     { id: "articles", label: "Articles", icon: FileText },
@@ -253,8 +257,8 @@ function Sidebar({
 
   return (
     <aside
-      className="glass-heavy fixed left-0 top-0 h-full z-30 flex flex-col transition-all duration-300 ease-in-out"
-      style={{ width: collapsed ? "72px" : "240px" }}
+      className={`glass-heavy fixed left-0 top-0 h-full z-30 flex flex-col transition-all duration-300 ease-in-out ${mobileOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
+      style={{ width: ec ? "72px" : "240px" }}
     >
       {/* Logo */}
       <div className="h-16 flex items-center px-4 border-b border-white/6 shrink-0">
@@ -264,7 +268,7 @@ function Sidebar({
         >
           <Sparkles className="w-4 h-4 text-white" />
         </div>
-        {!collapsed && (
+        {!ec && (
           <div className="ml-3 overflow-hidden animate-fade-in">
             <p className="text-white font-bold text-sm leading-none">
               Anoon CMS
@@ -273,10 +277,14 @@ function Sidebar({
           </div>
         )}
         <button
-          onClick={() => setCollapsed(!collapsed)}
+          onClick={() =>
+            isMobile ? onMobileClose() : setCollapsed(!collapsed)
+          }
           className="ml-auto p-1.5 rounded-lg text-white/20 hover:text-white/50 hover:bg-white/5 transition-all"
         >
-          {collapsed ? (
+          {isMobile ? (
+            <X className="w-3.5 h-3.5" />
+          ) : ec ? (
             <ChevronRight className="w-3.5 h-3.5" />
           ) : (
             <ChevronLeft className="w-3.5 h-3.5" />
@@ -286,7 +294,7 @@ function Sidebar({
 
       {/* Nav */}
       <nav className="flex-1 py-4 px-2 space-y-0.5 overflow-y-auto overflow-x-hidden">
-        {!collapsed && (
+        {!ec && (
           <p className="text-white/20 text-[10px] uppercase tracking-widest px-3 pb-2 font-medium">
             Main
           </p>
@@ -294,8 +302,11 @@ function Sidebar({
         {navItems.map(({ id, label, icon: Icon }) => (
           <button
             key={id}
-            onClick={() => setActiveTab(id)}
-            title={collapsed ? label : undefined}
+            onClick={() => {
+              setActiveTab(id);
+              if (isMobile) onMobileClose();
+            }}
+            title={ec ? label : undefined}
             className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 group relative
               ${
                 activeTab === id
@@ -306,15 +317,15 @@ function Sidebar({
             <Icon
               className={`w-4 h-4 shrink-0 sidebar-icon transition-colors ${activeTab === id ? "" : "text-white/30 group-hover:text-white/60"}`}
             />
-            {!collapsed && <span className="truncate">{label}</span>}
-            {activeTab === id && !collapsed && (
+            {!ec && <span className="truncate">{label}</span>}
+            {activeTab === id && !ec && (
               <span className="ml-auto w-1.5 h-1.5 rounded-full bg-sky-400 shrink-0" />
             )}
           </button>
         ))}
 
         <div className="pt-4">
-          {!collapsed && (
+          {!ec && (
             <p className="text-white/20 text-[10px] uppercase tracking-widest px-3 pb-2 font-medium">
               System
             </p>
@@ -322,11 +333,11 @@ function Sidebar({
           {bottomItems.map(({ id, label, icon: Icon }) => (
             <button
               key={id}
-              title={collapsed ? label : undefined}
+              title={ec ? label : undefined}
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/25 hover:text-white/55 hover:bg-white/5 transition-all"
             >
               <Icon className="w-4 h-4 shrink-0" />
-              {!collapsed && <span className="truncate">{label}</span>}
+              {!ec && <span className="truncate">{label}</span>}
             </button>
           ))}
         </div>
@@ -334,7 +345,7 @@ function Sidebar({
 
       {/* User */}
       <div className="p-3 border-t border-white/6">
-        {collapsed ? (
+        {ec ? (
           <button
             onClick={onLogout}
             title="Sign out"
@@ -376,7 +387,14 @@ function Sidebar({
 }
 
 // ─── Top Bar ──────────────────────────────────────────────────────────────────
-function TopBar({ activeTab, onCommandPalette, stats, collapsed }) {
+function TopBar({
+  activeTab,
+  onCommandPalette,
+  stats,
+  collapsed,
+  onMobileMenu,
+  isMobile,
+}) {
   const now = new Date();
   const hour = now.getHours();
   const greeting =
@@ -396,15 +414,21 @@ function TopBar({ activeTab, onCommandPalette, stats, collapsed }) {
 
   return (
     <header
-      className="fixed top-0 right-0 h-16 z-20 flex items-center px-6 border-b border-white/6 transition-all duration-300"
+      className="fixed top-0 right-0 h-16 z-20 flex items-center px-4 sm:px-6 border-b border-white/6 transition-all duration-300"
       style={{
-        left: collapsed ? "72px" : "240px",
+        left: isMobile ? 0 : collapsed ? "72px" : "240px",
         background: "rgba(3,7,18,0.75)",
         backdropFilter: "blur(20px)",
         WebkitBackdropFilter: "blur(20px)",
       }}
     >
-      <div className="flex-1 flex items-center gap-4">
+      <div className="flex-1 flex items-center gap-2 sm:gap-4">
+        <button
+          onClick={onMobileMenu}
+          className="md:hidden p-2 rounded-xl text-white/40 hover:text-white/70 hover:bg-white/5 transition-all"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
         <div>
           <h1 className="text-white font-semibold text-sm">
             {tabTitles[activeTab]}
@@ -589,24 +613,24 @@ function AnalyticsView({ articles, stats }) {
 
   return (
     <div className="space-y-6 animate-slide-in-up">
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
         {metricCards.map(({ label, value, icon: Icon, gradient, glow }, i) => (
           <div
             key={label}
-            className="glass rounded-2xl p-5 card-hover cursor-default animate-count-up"
+            className="glass rounded-2xl p-4 sm:p-5 card-hover cursor-default animate-count-up"
             style={{ animationDelay: `${i * 60}ms` }}
           >
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
               <div
-                className={`w-9 h-9 rounded-xl flex items-center justify-center bg-gradient-to-br ${gradient}`}
+                className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center bg-gradient-to-br ${gradient}`}
                 style={{ boxShadow: `0 4px 16px ${glow}` }}
               >
-                <Icon className="w-4 h-4 text-white" />
+                <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
               </div>
-              <ArrowUpRight className="w-3.5 h-3.5 text-white/15" />
+              <ArrowUpRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white/15" />
             </div>
             <div
-              className={`text-2xl font-bold bg-gradient-to-r ${gradient} bg-clip-text text-transparent`}
+              className={`text-xl sm:text-2xl font-bold bg-gradient-to-r ${gradient} bg-clip-text text-transparent`}
             >
               {value}
             </div>
@@ -615,7 +639,7 @@ function AnalyticsView({ articles, stats }) {
         ))}
       </div>
 
-      <div className="grid md:grid-cols-2 gap-5">
+      <div className="grid sm:grid-cols-2 gap-4 sm:gap-5">
         {[
           {
             title: "Top by Views",
@@ -632,7 +656,7 @@ function AnalyticsView({ articles, stats }) {
             color: "text-purple-400",
           },
         ].map(({ title, data, key, gradient, color }) => (
-          <div key={title} className="glass rounded-2xl p-5">
+          <div key={title} className="glass rounded-2xl p-4 sm:p-5">
             <div className="flex items-center gap-2 mb-5">
               <TrendingUp className="w-4 h-4 text-white/30" />
               <h3 className="text-white/70 text-sm font-semibold">{title}</h3>
@@ -671,7 +695,7 @@ function AnalyticsView({ articles, stats }) {
           </div>
         ))}
 
-        <div className="glass rounded-2xl p-5 md:col-span-2">
+        <div className="glass rounded-2xl p-4 sm:p-5 sm:col-span-2">
           <div className="flex items-center gap-2 mb-5">
             <Activity className="w-4 h-4 text-white/30" />
             <h3 className="text-white/70 text-sm font-semibold">
@@ -715,6 +739,14 @@ export default function DashboardClient({ user, initialStats }) {
   const [notification, setNotification] = useState(null);
   const [cmdPaletteOpen, setCmdPaletteOpen] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
 
   const {
     articles,
@@ -823,6 +855,14 @@ export default function DashboardClient({ user, initialStats }) {
 
       {/* Layout */}
       <div className="relative z-10 min-h-screen">
+        {/* Mobile backdrop */}
+        {mobileSidebarOpen && (
+          <div
+            className="fixed inset-0 z-20 bg-black/60 md:hidden"
+            onClick={() => setMobileSidebarOpen(false)}
+          />
+        )}
+
         {/* Sidebar */}
         <Sidebar
           activeTab={activeTab}
@@ -831,22 +871,30 @@ export default function DashboardClient({ user, initialStats }) {
           setCollapsed={setCollapsed}
           user={user}
           onLogout={handleLogout}
+          mobileOpen={mobileSidebarOpen}
+          onMobileClose={() => setMobileSidebarOpen(false)}
+          isMobile={isMobile}
         />
 
         {/* Content area */}
         <div
           className="flex flex-col min-h-screen transition-all duration-300"
-          style={{ marginLeft: collapsed ? "72px" : "240px" }}
+          style={{ marginLeft: isMobile ? 0 : collapsed ? "72px" : "240px" }}
         >
           <TopBar
             activeTab={activeTab}
             onCommandPalette={() => setCmdPaletteOpen(true)}
             stats={stats}
             collapsed={collapsed}
+            onMobileMenu={() => {
+              setMobileSidebarOpen(true);
+              setCollapsed(false);
+            }}
+            isMobile={isMobile}
           />
 
           <main className="flex-1 pt-16">
-            <div className="px-6 py-8 max-w-6xl mx-auto">
+            <div className="px-4 sm:px-6 py-6 sm:py-8 max-w-6xl mx-auto">
               {/* Page header */}
               <div className="flex items-center justify-between mb-8 animate-slide-in-up">
                 <div>
