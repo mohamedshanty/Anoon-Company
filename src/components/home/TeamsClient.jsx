@@ -21,23 +21,18 @@ export default function TeamsClient({ members, tRoles }) {
   const [swiperKey, setSwiperKey] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isMounted, setIsMounted] = useState(false);
-  const prevRef = useRef(null);
-  const nextRef = useRef(null);
   const swiperRef = useRef(null);
 
-  // Force re-key on direction change
   useEffect(() => {
     setSwiperKey((prev) => prev + 1);
   }, [dir]);
 
-  // After mount, update swiper so coverflow renders correctly
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
   useEffect(() => {
     if (!isMounted) return;
-    // Give DOM time to paint, then force swiper to recalculate
     const timer = setTimeout(() => {
       if (swiperRef.current) {
         swiperRef.current.update();
@@ -50,7 +45,6 @@ export default function TeamsClient({ members, tRoles }) {
 
   const getTranslatedRole = (role) => tRoles[role] || role;
 
-  // Don't render until client-side to avoid SSR mismatch
   if (!isMounted) {
     return (
       <div className="slider-container" style={{ minHeight: 520 }}>
@@ -103,13 +97,54 @@ export default function TeamsClient({ members, tRoles }) {
     <div className={`slider-container ${isRTL ? "rtl-slider" : ""}`}>
       <div className="glow-backdrop" aria-hidden="true" />
 
+      {/*
+        ✅ السبب: لما كانت الأزرار بعد <Swiper>، كان Swiper يتهيأ وهي لسا مش موجودة في الـ DOM
+        ✅ الحل: نحط الأزرار قبل <Swiper> + نستخدم CSS class selectors بدل refs
+        بكذا Swiper يلاقيها موجودة دايماً حتى بعد الـ refresh
+      */}
+      <button className="nav-btn nav-btn-prev" aria-label="Previous slide">
+        <svg
+          width="20"
+          height="20"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          style={{ transform: isRTL ? "rotate(180deg)" : "none" }}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+      </button>
+
+      <button className="nav-btn nav-btn-next" aria-label="Next slide">
+        <svg
+          width="20"
+          height="20"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          style={{ transform: isRTL ? "rotate(180deg)" : "none" }}
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 5l7 7-7 7"
+          />
+        </svg>
+      </button>
+
       <Swiper
         key={swiperKey}
         modules={[Navigation, EffectCoverflow, Keyboard, Pagination]}
         centeredSlides={true}
         loop={true}
         speed={700}
-        effect={"coverflow"}
+        effect="coverflow"
         grabCursor={true}
         dir={dir}
         coverflowEffect={{
@@ -120,15 +155,11 @@ export default function TeamsClient({ members, tRoles }) {
           slideShadows: true,
         }}
         navigation={{
-          prevEl: prevRef.current,
-          nextEl: nextRef.current,
+          prevEl: ".nav-btn-prev",
+          nextEl: ".nav-btn-next",
         }}
         onSwiper={(swiper) => {
           swiperRef.current = swiper;
-          swiper.params.navigation.prevEl = prevRef.current;
-          swiper.params.navigation.nextEl = nextRef.current;
-          swiper.navigation.init();
-          swiper.navigation.update();
         }}
         onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
         keyboard={{ enabled: true, onlyInViewport: true }}
@@ -184,43 +215,6 @@ export default function TeamsClient({ members, tRoles }) {
         </div>
       )}
 
-      <div className={`navigation-wrapper ${isRTL ? "rtl-navigation" : ""}`}>
-        <button ref={prevRef} className="nav-btn" aria-label="Previous slide">
-          <svg
-            width="20"
-            height="20"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            style={{ transform: isRTL ? "rotate(180deg)" : "none" }}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
-        </button>
-        <button ref={nextRef} className="nav-btn" aria-label="Next slide">
-          <svg
-            width="20"
-            height="20"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            style={{ transform: isRTL ? "rotate(180deg)" : "none" }}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 5l7 7-7 7"
-            />
-          </svg>
-        </button>
-      </div>
-
       <div className="swiper-pagination" />
 
       <style jsx>{`
@@ -249,6 +243,49 @@ export default function TeamsClient({ members, tRoles }) {
           pointer-events: none;
           z-index: 0;
         }
+
+        /* الأزرار بـ position:absolute عشان مكانها ثابت بغض النظر عن ترتيب الـ DOM */
+        .nav-btn {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          z-index: 20;
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+          background: rgba(255, 255, 255, 0.08);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          color: #fff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition:
+            background 0.2s ease,
+            border-color 0.2s ease,
+            transform 0.2s ease;
+        }
+        .nav-btn-prev {
+          left: 8px;
+        }
+        .nav-btn-next {
+          right: 8px;
+        }
+        .nav-btn:hover {
+          background: rgba(0, 191, 255, 0.2);
+          border-color: rgba(0, 191, 255, 0.5);
+          transform: translateY(-50%) scale(1.08);
+        }
+        .nav-btn:active {
+          transform: translateY(-50%) scale(0.95);
+        }
+        :global(.nav-btn.swiper-button-disabled) {
+          opacity: 0.3;
+          pointer-events: none;
+        }
+
         :global(.teams-swiper) {
           overflow: visible !important;
           padding: 50px 0 70px;
@@ -355,7 +392,6 @@ export default function TeamsClient({ members, tRoles }) {
           pointer-events: none;
         }
         :global(.swiper-slide-active) .active-ring {
-          border-color: rgba(0, 191, 255, 0.5);
           animation: ring-pulse 2.5s ease-in-out infinite;
         }
         @keyframes ring-pulse {
@@ -422,45 +458,6 @@ export default function TeamsClient({ members, tRoles }) {
           font-weight: 500;
           text-transform: uppercase;
           letter-spacing: 0.08em;
-        }
-        .navigation-wrapper {
-          position: absolute;
-          top: 50%;
-          left: 0;
-          right: 0;
-          transform: translateY(-50%);
-          display: flex;
-          justify-content: space-between;
-          pointer-events: none;
-          z-index: 20;
-          padding: 0 8px;
-        }
-        .nav-btn {
-          width: 48px;
-          height: 48px;
-          border-radius: 50%;
-          background: rgba(255, 255, 255, 0.08);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-          border: 1px solid rgba(255, 255, 255, 0.15);
-          color: #fff;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          pointer-events: auto;
-          cursor: pointer;
-          transition:
-            background 0.2s ease,
-            border-color 0.2s ease,
-            transform 0.2s ease;
-        }
-        .nav-btn:hover {
-          background: rgba(0, 191, 255, 0.2);
-          border-color: rgba(0, 191, 255, 0.5);
-          transform: scale(1.08);
-        }
-        .nav-btn:active {
-          transform: scale(0.95);
         }
         :global(.swiper-pagination) {
           bottom: 0 !important;
