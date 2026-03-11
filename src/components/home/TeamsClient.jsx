@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
-// ✅ FIX #5: Added Keyboard to imports
 import {
   Navigation,
   EffectCoverflow,
@@ -21,29 +20,92 @@ export default function TeamsClient({ members, tRoles }) {
   const { isRTL, dir, rotate } = useRTL();
   const [swiperKey, setSwiperKey] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
-  // ✅ FIX #4: Use refs to bind nav buttons reliably after re-mount
+  const [isMounted, setIsMounted] = useState(false);
   const prevRef = useRef(null);
   const nextRef = useRef(null);
+  const swiperRef = useRef(null);
 
+  // Force re-key on direction change
   useEffect(() => {
     setSwiperKey((prev) => prev + 1);
   }, [dir]);
 
-  const getTranslatedRole = (role) => {
-    // ✅ FIX #1: tRoles is empty — this is fine as a passthrough, but now clearly documented
-    return tRoles[role] || role;
-  };
+  // After mount, update swiper so coverflow renders correctly
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isMounted) return;
+    // Give DOM time to paint, then force swiper to recalculate
+    const timer = setTimeout(() => {
+      if (swiperRef.current) {
+        swiperRef.current.update();
+        swiperRef.current.navigation.init();
+        swiperRef.current.navigation.update();
+      }
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [isMounted, swiperKey]);
+
+  const getTranslatedRole = (role) => tRoles[role] || role;
+
+  // Don't render until client-side to avoid SSR mismatch
+  if (!isMounted) {
+    return (
+      <div className="slider-container" style={{ minHeight: 520 }}>
+        <div className="flex items-center justify-center gap-6 py-16 overflow-hidden">
+          {members.slice(0, 5).map((member, i) => (
+            <div
+              key={i}
+              className="shrink-0"
+              style={{
+                width: i === 2 ? 260 : i === 1 || i === 3 ? 220 : 180,
+                opacity: i === 2 ? 1 : i === 1 || i === 3 ? 0.75 : 0.4,
+                transform: `scale(${i === 2 ? 1.12 : i === 1 || i === 3 ? 0.93 : 0.82})`,
+              }}
+            >
+              <div
+                style={{
+                  width: "100%",
+                  height: i === 2 ? 360 : i === 1 || i === 3 ? 320 : 280,
+                  borderRadius: 20,
+                  overflow: "hidden",
+                  boxShadow: "0 20px 60px rgba(0,0,0,0.5)",
+                }}
+              >
+                <Image
+                  src={member.image}
+                  alt={member.name}
+                  width={260}
+                  height={360}
+                  className="w-full h-full object-cover"
+                  priority={i === 2}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+        {members[0] && (
+          <div className="active-label" style={{ display: "flex" }}>
+            <span className="active-label-name">{members[0].name}</span>
+            <span className="active-label-dot">·</span>
+            <span className="active-label-role">
+              {getTranslatedRole(members[0].role)}
+            </span>
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className={`slider-container ${isRTL ? "rtl-slider" : ""}`}>
-      {/* Modern ambient glow backdrop */}
       <div className="glow-backdrop" aria-hidden="true" />
 
       <Swiper
         key={swiperKey}
-        // ✅ FIX #5: Keyboard module added
         modules={[Navigation, EffectCoverflow, Keyboard, Pagination]}
-        // ✅ FIX #2: Remove top-level slidesPerView="auto" — let breakpoints fully control it
         centeredSlides={true}
         loop={true}
         speed={700}
@@ -57,13 +119,12 @@ export default function TeamsClient({ members, tRoles }) {
           modifier: 2.2,
           slideShadows: true,
         }}
-        // ✅ FIX #4: Use onSwiper callback + refs for reliable nav binding
         navigation={{
           prevEl: prevRef.current,
           nextEl: nextRef.current,
         }}
         onSwiper={(swiper) => {
-          // Rebind after mount
+          swiperRef.current = swiper;
           swiper.params.navigation.prevEl = prevRef.current;
           swiper.params.navigation.nextEl = nextRef.current;
           swiper.navigation.init();
@@ -72,7 +133,6 @@ export default function TeamsClient({ members, tRoles }) {
         onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
         keyboard={{ enabled: true, onlyInViewport: true }}
         pagination={{ el: ".swiper-pagination", clickable: true }}
-        // ✅ FIX #2: Clean breakpoints without top-level override
         breakpoints={{
           320: { slidesPerView: 1, spaceBetween: 20 },
           640: { slidesPerView: 2, spaceBetween: 30 },
@@ -84,7 +144,6 @@ export default function TeamsClient({ members, tRoles }) {
         {members.map((member, index) => (
           <SwiperSlide key={`${member.name}-${index}`}>
             <div className="team-card group">
-              {/* Card image */}
               <div className="card-image-wrapper">
                 <Image
                   src={member.image}
@@ -92,9 +151,8 @@ export default function TeamsClient({ members, tRoles }) {
                   width={300}
                   height={400}
                   className="card-image"
-                  loading="lazy"
+                  priority={index === 0}
                 />
-                {/* ✅ FIX #3: bg-gradient-to-t (was bg-linear-to-t) */}
                 <div className="card-overlay">
                   <div className="card-overlay-text">
                     <h4 className="card-name">{member.name}</h4>
@@ -103,11 +161,8 @@ export default function TeamsClient({ members, tRoles }) {
                     </p>
                   </div>
                 </div>
-                {/* Active indicator ring */}
                 <div className="active-ring" />
               </div>
-
-              {/* Mobile name/role (shown below card on small screens) */}
               <div className="card-mobile-info">
                 <h4 className="card-name-mobile">{member.name}</h4>
                 <p className="card-role-mobile">
@@ -119,7 +174,6 @@ export default function TeamsClient({ members, tRoles }) {
         ))}
       </Swiper>
 
-      {/* Active member name display */}
       {members[activeIndex] && (
         <div className="active-label" aria-live="polite">
           <span className="active-label-name">{members[activeIndex].name}</span>
@@ -130,7 +184,6 @@ export default function TeamsClient({ members, tRoles }) {
         </div>
       )}
 
-      {/* Navigation — refs ensure Swiper finds them post-mount */}
       <div className={`navigation-wrapper ${isRTL ? "rtl-navigation" : ""}`}>
         <button ref={prevRef} className="nav-btn" aria-label="Previous slide">
           <svg
@@ -171,7 +224,6 @@ export default function TeamsClient({ members, tRoles }) {
       <div className="swiper-pagination" />
 
       <style jsx>{`
-        /* Layout */
         .slider-container {
           position: relative;
           width: 100%;
@@ -182,8 +234,6 @@ export default function TeamsClient({ members, tRoles }) {
         .rtl-slider {
           direction: rtl;
         }
-
-        /* Ambient glow */
         .glow-backdrop {
           position: absolute;
           top: 30%;
@@ -199,8 +249,6 @@ export default function TeamsClient({ members, tRoles }) {
           pointer-events: none;
           z-index: 0;
         }
-
-        /* Swiper overrides */
         :global(.teams-swiper) {
           overflow: visible !important;
           padding: 50px 0 70px;
@@ -232,8 +280,6 @@ export default function TeamsClient({ members, tRoles }) {
           filter: blur(0.5px) brightness(0.85);
           transform: scale(0.93);
         }
-
-        /* Card */
         .team-card {
           width: 260px;
           cursor: pointer;
@@ -249,11 +295,6 @@ export default function TeamsClient({ members, tRoles }) {
           overflow: hidden;
           box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
         }
-        // :global(.swiper-slide-active) .card-image-wrapper {
-        //   box-shadow:
-        //     0 30px 80px rgba(0, 191, 255, 0.35),
-        //     0 0 0 1.5px rgba(0, 191, 255, 0.3);
-        // }
         :global(.card-image) {
           width: 100% !important;
           height: 100% !important;
@@ -263,8 +304,6 @@ export default function TeamsClient({ members, tRoles }) {
         .team-card:hover :global(.card-image) {
           transform: scale(1.07);
         }
-
-        /* Overlay — ✅ uses bg-gradient not bg-linear */
         .card-overlay {
           position: absolute;
           inset: 0;
@@ -309,8 +348,6 @@ export default function TeamsClient({ members, tRoles }) {
           text-transform: uppercase;
           letter-spacing: 0.08em;
         }
-
-        /* Active ring pulse */
         .active-ring {
           position: absolute;
           inset: 0;
@@ -330,8 +367,6 @@ export default function TeamsClient({ members, tRoles }) {
             box-shadow: 0 0 0 8px rgba(0, 191, 255, 0);
           }
         }
-
-        /* Mobile info */
         .card-mobile-info {
           margin-top: 16px;
           text-align: center;
@@ -356,8 +391,6 @@ export default function TeamsClient({ members, tRoles }) {
           text-transform: uppercase;
           letter-spacing: 0.1em;
         }
-
-        /* Active label */
         .active-label {
           text-align: center;
           margin-top: -20px;
@@ -390,8 +423,6 @@ export default function TeamsClient({ members, tRoles }) {
           text-transform: uppercase;
           letter-spacing: 0.08em;
         }
-
-        /* Navigation */
         .navigation-wrapper {
           position: absolute;
           top: 50%;
@@ -431,8 +462,6 @@ export default function TeamsClient({ members, tRoles }) {
         .nav-btn:active {
           transform: scale(0.95);
         }
-
-        /* Pagination */
         :global(.swiper-pagination) {
           bottom: 0 !important;
         }
