@@ -43,6 +43,7 @@ export default function MainInfoServer({ t, isRTL }) {
           color="text-brand-orange"
           ctaText={t.feature1_cta || "Know More"}
           href="/techAgency"
+          isRTL={isRTL}
         />
 
         <InfoSection.Feature
@@ -53,6 +54,7 @@ export default function MainInfoServer({ t, isRTL }) {
           className={isRTL ? "" : "lg:-mr-12 xl:-mr-16"}
           ctaText={t.feature2_cta || "Know More"}
           href="/tamkeen"
+          isRTL={isRTL}
         />
       </InfoSection.Features>
     </InfoSection>

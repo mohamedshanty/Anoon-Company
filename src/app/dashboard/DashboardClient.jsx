@@ -230,6 +230,199 @@ function CommandPalette({ isOpen, onClose, onNavigate }) {
   );
 }
 
+// ─── Settings View ─────────────────────────────────────────────────────────────
+function SettingsView({ user, onLogout }) {
+  return (
+    <div className="space-y-6 animate-slide-in-up max-w-2xl">
+      <div className="glass rounded-2xl p-6 border border-white/8">
+        <p className="text-white/30 text-[10px] uppercase tracking-widest mb-4">
+          Account
+        </p>
+        <div className="flex items-center gap-4">
+          <div
+            className="w-12 h-12 rounded-2xl flex items-center justify-center text-white font-bold text-lg shrink-0"
+            style={{ background: "linear-gradient(135deg, #0EA5E9, #9333EA)" }}
+          >
+            {user?.email?.[0]?.toUpperCase() || "A"}
+          </div>
+          <div>
+            <p className="text-white font-medium text-sm">{user?.email}</p>
+            <p className="text-white/40 text-xs mt-0.5">Administrator</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="glass rounded-2xl p-6 border border-white/8">
+        <p className="text-white/30 text-[10px] uppercase tracking-widest mb-4">
+          Preferences
+        </p>
+        <div className="space-y-4">
+          {[
+            {
+              label: "Dark Mode",
+              desc: "Always enabled for CMS",
+              enabled: true,
+              locked: true,
+            },
+            {
+              label: "Compact Sidebar",
+              desc: "Collapse sidebar by default",
+              enabled: false,
+              locked: false,
+            },
+          ].map((pref) => (
+            <div
+              key={pref.label}
+              className="flex items-center justify-between py-2"
+            >
+              <div>
+                <p className="text-white/70 text-sm">{pref.label}</p>
+                <p className="text-white/30 text-xs mt-0.5">{pref.desc}</p>
+              </div>
+              <div
+                className={`w-10 h-5 rounded-full relative transition-colors ${pref.enabled ? "bg-sky-500" : "bg-white/10"} ${pref.locked ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+              >
+                <div
+                  className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform ${pref.enabled ? "translate-x-5" : "translate-x-0.5"}`}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="glass rounded-2xl p-6 border border-red-500/20">
+        <p className="text-red-400/60 text-[10px] uppercase tracking-widest mb-4">
+          Danger Zone
+        </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-white/70 text-sm">Sign out</p>
+            <p className="text-white/30 text-xs mt-0.5">
+              End your admin session
+            </p>
+          </div>
+          <button
+            onClick={onLogout}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-red-400 text-sm transition-all"
+          >
+            <LogOut className="w-4 h-4" />
+            Sign Out
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Help Modal ───────────────────────────────────────────────────────────────
+function HelpModal({ onClose }) {
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center px-4 animate-fade-in"
+      style={{ background: "rgba(3,7,18,0.85)", backdropFilter: "blur(8px)" }}
+      onClick={onClose}
+    >
+      <div
+        className="glass-heavy rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden animate-slide-in-up"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between px-6 py-4 border-b border-white/8">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-sky-500/10">
+              <HelpCircle className="w-4 h-4 text-sky-400" />
+            </div>
+            <div>
+              <h2 className="text-white font-semibold text-sm">
+                Help & Shortcuts
+              </h2>
+              <p className="text-white/30 text-xs">Anoon CMS quick reference</p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-lg text-white/30 hover:text-white/60 hover:bg-white/5 transition-all"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+        <div className="p-6 space-y-5">
+          <div>
+            <p className="text-white/30 text-[10px] uppercase tracking-widest mb-3">
+              Keyboard Shortcuts
+            </p>
+            <div className="space-y-2">
+              {[
+                { keys: "⌘K / Ctrl+K", desc: "Open Command Palette" },
+                { keys: "Escape", desc: "Close modals & overlays" },
+              ].map((s) => (
+                <div
+                  key={s.keys}
+                  className="flex items-center justify-between py-2 px-3 bg-white/3 rounded-xl"
+                >
+                  <span className="text-white/60 text-sm">{s.desc}</span>
+                  <kbd className="text-white/40 text-xs border border-white/10 px-2 py-0.5 rounded-md font-mono">
+                    {s.keys}
+                  </kbd>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div>
+            <p className="text-white/30 text-[10px] uppercase tracking-widest mb-3">
+              Sections
+            </p>
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                {
+                  icon: LayoutDashboard,
+                  label: "Overview",
+                  desc: "Stats & activity summary",
+                },
+                {
+                  icon: FileText,
+                  label: "Articles",
+                  desc: "Create & manage blog posts",
+                },
+                {
+                  icon: BookOpen,
+                  label: "Training",
+                  desc: "Training programs",
+                },
+                {
+                  icon: BarChart2,
+                  label: "Analytics",
+                  desc: "Performance metrics",
+                },
+              ].map(({ icon: Icon, label, desc }) => (
+                <div
+                  key={label}
+                  className="flex items-start gap-3 p-3 bg-white/3 rounded-xl"
+                >
+                  <Icon className="w-4 h-4 text-sky-400 mt-0.5 shrink-0" />
+                  <div>
+                    <p className="text-white/70 text-xs font-medium">{label}</p>
+                    <p className="text-white/30 text-[10px]">{desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="px-6 py-4 border-t border-white/8 flex items-center justify-between">
+          <p className="text-white/25 text-xs">Anoon CMS v1.0</p>
+          <button
+            onClick={onClose}
+            className="px-4 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-white/50 hover:text-white/70 text-xs transition-all"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── Sidebar ──────────────────────────────────────────────────────────────────
 function Sidebar({
   activeTab,
@@ -241,6 +434,7 @@ function Sidebar({
   mobileOpen,
   onMobileClose,
   isMobile,
+  onHelp,
 }) {
   const ec = !isMobile && collapsed; // effectiveCollapsed
   const navItems = [
@@ -262,11 +456,14 @@ function Sidebar({
     >
       {/* Logo */}
       <div className="h-16 flex items-center px-4 border-b border-white/6 shrink-0">
-        <div
-          className="w-9 h-9 rounded-xl shrink-0 flex items-center justify-center"
-          style={{ background: "linear-gradient(135deg, #0EA5E9, #9333EA)" }}
-        >
-          <Sparkles className="w-4 h-4 text-white" />
+        <div className="w-9 h-9 rounded-xl shrink-0 flex items-center justify-center overflow-hidden">
+          <Image
+            src="/images/logo1.png"
+            alt="Anoon Logo"
+            width={36}
+            height={36}
+            className="object-contain"
+          />
         </div>
         {!ec && (
           <div className="ml-3 overflow-hidden animate-fade-in">
@@ -334,9 +531,23 @@ function Sidebar({
             <button
               key={id}
               title={ec ? label : undefined}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white/25 hover:text-white/55 hover:bg-white/5 transition-all"
+              onClick={() => {
+                if (id === "help") {
+                  onHelp?.();
+                } else {
+                  setActiveTab(id);
+                }
+                if (isMobile) onMobileClose();
+              }}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                activeTab === id && id !== "help"
+                  ? "sidebar-item-active text-white"
+                  : "text-white/25 hover:text-white/55 hover:bg-white/5"
+              }`}
             >
-              <Icon className="w-4 h-4 shrink-0" />
+              <Icon
+                className={`w-4 h-4 shrink-0 ${activeTab === id && id !== "help" ? "sidebar-icon" : ""}`}
+              />
               {!ec && <span className="truncate">{label}</span>}
             </button>
           ))}
@@ -391,10 +602,24 @@ function TopBar({
   activeTab,
   onCommandPalette,
   stats,
+  articles = [],
   collapsed,
   onMobileMenu,
   isMobile,
 }) {
+  const [notifOpen, setNotifOpen] = useState(false);
+  const notifRef = useRef(null);
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (notifRef.current && !notifRef.current.contains(e.target)) {
+        setNotifOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
   const now = new Date();
   const hour = now.getHours();
   const greeting =
@@ -410,6 +635,7 @@ function TopBar({
     articles: "Articles",
     training: "Training Programs",
     analytics: "Analytics",
+    settings: "Settings",
   };
 
   return (
@@ -453,15 +679,66 @@ function TopBar({
         </button>
 
         {/* Notifications */}
-        <button className="relative p-2 rounded-xl text-white/30 hover:text-white/60 hover:bg-white/5 transition-all">
-          <Bell className="w-4 h-4" />
-          <span
-            className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-sky-400"
-            style={{
-              boxShadow: "0 0 0 2px rgba(3,7,18,1)",
-            }}
-          />
-        </button>
+        <div ref={notifRef} className="relative">
+          <button
+            onClick={() => setNotifOpen(!notifOpen)}
+            className="relative p-2 rounded-xl text-white/30 hover:text-white/60 hover:bg-white/5 transition-all"
+          >
+            <Bell className="w-4 h-4" />
+            {articles.length > 0 && (
+              <span
+                className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-sky-400"
+                style={{ boxShadow: "0 0 0 2px rgba(3,7,18,1)" }}
+              />
+            )}
+          </button>
+          {notifOpen && (
+            <div className="absolute top-10 right-0 w-72 glass-heavy rounded-2xl shadow-2xl border border-white/10 overflow-hidden z-50 animate-slide-in-up">
+              <div className="px-4 py-3 border-b border-white/8 flex items-center justify-between">
+                <span className="text-white text-sm font-semibold">
+                  Recent Activity
+                </span>
+                <button
+                  onClick={() => setNotifOpen(false)}
+                  className="p-1 rounded-lg text-white/30 hover:text-white/60 transition-colors"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+              <div className="py-2 max-h-72 overflow-y-auto">
+                {articles.length === 0 ? (
+                  <p className="text-white/25 text-sm text-center py-6">
+                    No recent activity
+                  </p>
+                ) : (
+                  articles.slice(0, 6).map((a) => (
+                    <div
+                      key={a.id}
+                      className="px-4 py-2.5 hover:bg-white/5 transition-colors"
+                    >
+                      <p className="text-white/70 text-xs font-medium truncate">
+                        {a.title}
+                      </p>
+                      <div className="flex items-center gap-1.5 mt-0.5">
+                        <span
+                          className={`w-1.5 h-1.5 rounded-full ${a.status === "published" ? "bg-green-400" : "bg-yellow-400"}`}
+                        />
+                        <span className="text-white/30 text-[10px] capitalize">
+                          {a.status}
+                        </span>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+              <div className="px-4 py-2.5 border-t border-white/8">
+                <p className="text-white/20 text-[10px] text-center">
+                  {articles.length} articles total
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* Status pill */}
         <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl glass text-xs">
@@ -740,6 +1017,7 @@ export default function DashboardClient({ user, initialStats }) {
   const [cmdPaletteOpen, setCmdPaletteOpen] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -765,7 +1043,10 @@ export default function DashboardClient({ user, initialStats }) {
         e.preventDefault();
         setCmdPaletteOpen(true);
       }
-      if (e.key === "Escape") setCmdPaletteOpen(false);
+      if (e.key === "Escape") {
+        setCmdPaletteOpen(false);
+        setHelpOpen(false);
+      }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
@@ -874,6 +1155,7 @@ export default function DashboardClient({ user, initialStats }) {
           mobileOpen={mobileSidebarOpen}
           onMobileClose={() => setMobileSidebarOpen(false)}
           isMobile={isMobile}
+          onHelp={() => setHelpOpen(true)}
         />
 
         {/* Content area */}
@@ -885,6 +1167,7 @@ export default function DashboardClient({ user, initialStats }) {
             activeTab={activeTab}
             onCommandPalette={() => setCmdPaletteOpen(true)}
             stats={stats}
+            articles={articles}
             collapsed={collapsed}
             onMobileMenu={() => {
               setMobileSidebarOpen(true);
@@ -918,6 +1201,7 @@ export default function DashboardClient({ user, initialStats }) {
                     {activeTab === "articles" && `${stats.total || 0} Articles`}
                     {activeTab === "training" && "Training Programs"}
                     {activeTab === "analytics" && "Performance Analytics"}
+                    {activeTab === "settings" && "Settings"}
                   </h2>
                 </div>
 
@@ -985,11 +1269,16 @@ export default function DashboardClient({ user, initialStats }) {
                 {activeTab === "analytics" && (
                   <AnalyticsView articles={articles} stats={stats} />
                 )}
+                {activeTab === "settings" && (
+                  <SettingsView user={user} onLogout={handleLogout} />
+                )}
               </div>
             </div>
           </main>
         </div>
       </div>
+
+      {helpOpen && <HelpModal onClose={() => setHelpOpen(false)} />}
 
       {/* Overlays */}
       <Toast

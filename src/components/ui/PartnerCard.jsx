@@ -33,7 +33,9 @@ export default function PartnerCard({
       <div className="p-4 bg-gradient-to-r from-brand-sky/20 to-brand-orange/20 rounded-xl border border-white/10">
         <div className="flex items-start gap-3">
           <HandHeart className="w-6 h-6 text-brand-orange shrink-0 mt-1" />
-          <p className="text-white/90 text-sm leading-relaxed text-left">
+          <p
+            className={`text-white/90 text-sm leading-relaxed ${isRTL ? "text-right" : "text-left"}`}
+          >
             {supportMessage ||
               t(
                 "partner.supports_anoon",

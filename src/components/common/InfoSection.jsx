@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, ChevronLeft } from "lucide-react";
 import Button from "../ui/Button";
 import PatternBackground from "../ui/PatternBackground";
 import Reveal from "../ui/Reveal";
@@ -143,6 +143,7 @@ InfoSection.Feature = ({
   onCtaClick,
   className = "",
   href,
+  isRTL = false,
 }) => (
   <div
     className={`flex items-start gap-3 md:gap-4 lg:gap-5 xl:gap-8 ${className}`}
@@ -169,7 +170,12 @@ InfoSection.Feature = ({
         href={href || "#"}
         className={`font-bold text-xs md:text-sm flex items-center gap-1 hover:gap-2 transition-all cursor-pointer ${color}`}
       >
-        {ctaText} <ChevronRight className="w-3 h-3 md:w-4 md:h-4" />
+        {ctaText}{" "}
+        {isRTL ? (
+          <ChevronLeft className="w-3 h-3 md:w-4 md:h-4" />
+        ) : (
+          <ChevronRight className="w-3 h-3 md:w-4 md:h-4" />
+        )}
       </Link>
     </div>
   </div>

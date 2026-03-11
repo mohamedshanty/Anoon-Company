@@ -77,10 +77,10 @@ export default function DashboardStats({ stats, articles, isLoading }) {
       <div className="grid lg:grid-cols-3 gap-4 sm:gap-6">
         <div className="lg:col-span-2 bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-white font-semibold flex items-center gap-2">
+            <h4 className="text-white font-semibold flex items-center gap-2">
               <TrendingUp className="w-4 h-4 text-sky-400" />
               Recent Articles
-            </h2>
+            </h4>
           </div>
           <div className="space-y-3">
             {isLoading
@@ -146,7 +146,7 @@ export default function DashboardStats({ stats, articles, isLoading }) {
 
         <div className="space-y-4">
           <div className="bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-6">
-            <h2 className="text-white font-semibold mb-4">Content Health</h2>
+            <h5 className="text-white font-semibold mb-4">Content Health</h5>
             <div className="space-y-4">
               <div>
                 <div className="flex justify-between text-sm mb-1.5">
