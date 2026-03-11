@@ -46,37 +46,36 @@ export default function TechAgencyHero() {
 
   return (
     <HeroSection>
-      <HeroTitle className="gap-6 mb-8 text-center">
-        <span className="text-sm tracking-wider text-brand-white bg-brand-white/8 py-3 px-4 sm:px-8 md:px-20 rounded-full w-max mx-auto font-light border border-white/10 mb-6">
+      <HeroTitle className="gap-1 md:gap-4 mb-4 md:mb-8 text-center">
+        {/* Badge */}
+        <span className="text-xs md:text-sm tracking-wider text-brand-white bg-brand-white/8 py-2 px-4 md:px-8 rounded-full w-max mx-auto font-light border border-white/10 mb-2 md:mb-4">
           {t("tech_agency.hero.badge", "The New Area Of Technology")}
         </span>
 
-        <span className="-mt-5 font-semibold block">
+        <span className="font-semibold block">
           {t("tech_agency.hero.title_part1", "Creating")}
         </span>
 
         <span className="font-semibold text-brand-sky block">
           {t("tech_agency.hero.title_part2", "Next Generation Solution")}
         </span>
-      </HeroTitle>
 
-      <HeroSubtitle>
-        <h2 className="font-semibold text-white">
+        {/* Merged "With Tech Solutions" into the title so it flows naturally */}
+        <span className="font-semibold block">
           {t("tech_agency.hero.title_part3_prefix", "With")}{" "}
           <span className="text-brand-orange">
             {t("tech_agency.hero.title_highlight", "Tech Solutions")}
           </span>
-        </h2>
-      </HeroSubtitle>
+        </span>
+      </HeroTitle>
 
-      <HeroButtons className="mt-10 w-full flex flex-col items-center gap-5">
-        {/* Input bar */}
+      <HeroButtons className="mt-4 md:mt-10 w-full flex flex-col items-center gap-4 md:gap-5">
         <form
           onSubmit={handleSubmit}
-          className="relative w-full max-w-lg flex flex-col gap-7"
+          className="relative w-full max-w-lg flex flex-col gap-4 md:gap-7"
         >
           <div
-            className="relative flex items-center group  rounded-full overflow-hidden"
+            className="relative flex items-center group rounded-full overflow-hidden"
             style={{
               background: "rgba(255,255,255,0.06)",
               border: "1px solid rgba(255,255,255,0.11)",
@@ -91,9 +90,9 @@ export default function TechAgencyHero() {
               }}
             />
 
-            {/* Bot icon divider */}
-            <div className="flex-shrink-0 flex items-center gap-2 pl-4 pr-3 border-r border-white/10 py-3">
-              <Bot size={16} className="text-brand-sky" />
+            {/* Bot icon */}
+            <div className="flex-shrink-0 flex items-center gap-2 pl-3 pr-2 md:pl-4 md:pr-3 border-r border-white/10 py-3">
+              <Bot size={15} className="text-brand-sky" />
               <span className="text-[11px] font-medium text-white/40 hidden sm:block tracking-widest uppercase">
                 AI
               </span>
@@ -107,14 +106,14 @@ export default function TechAgencyHero() {
               onKeyDown={handleKeyDown}
               placeholder={
                 isRTL
-                  ? "اسأل عن أي شيء حول خدماتنا…"
+                  ? "اسأل عن خدماتنا…"
                   : t(
                       "tech_agency.hero.input_placeholder",
-                      "Ask anything about our services…",
+                      "Ask about our services…",
                     )
               }
               dir={/^[\u0600-\u06FF]/.test(inputValue) ? "rtl" : "ltr"}
-              className="flex-1 bg-transparent text-white text-sm py-3.5 px-4 outline-none border-none focus:ring-0 placeholder-white/25 font-alexandria"
+              className="flex-1 min-w-0 bg-transparent text-white text-xs md:text-sm py-3 px-2 md:px-4 outline-none border-none focus:ring-0 placeholder-white/25 font-alexandria"
             />
 
             {/* Ask button */}
@@ -122,7 +121,7 @@ export default function TechAgencyHero() {
               type="submit"
               disabled={!inputValue.trim()}
               aria-label="Send message"
-              className="flex-shrink-0 flex items-center gap-1.5 m-1.5 px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 disabled:opacity-20 disabled:cursor-not-allowed"
+              className="flex-shrink-0 flex items-center gap-1.5 m-1.5 px-3 md:px-4 py-2 rounded-full text-xs font-semibold transition-all duration-200 disabled:opacity-20 disabled:cursor-not-allowed"
               style={{
                 background: "rgba(0,191,255,0.15)",
                 border: "1px solid rgba(0,191,255,0.28)",
@@ -136,6 +135,7 @@ export default function TechAgencyHero() {
               />
             </button>
           </div>
+
           {/* Suggestion chips */}
           <div className="flex flex-wrap gap-2 justify-center">
             {suggestions.map((suggestion, i) => (
@@ -143,7 +143,7 @@ export default function TechAgencyHero() {
                 key={i}
                 type="button"
                 onClick={() => openChatWithMessage(suggestion)}
-                className="text-[11px] text-white/40 hover:text-white/70 px-3.5 py-1.5 rounded-full transition-all duration-200"
+                className="text-[11px] text-white/40 hover:text-white/70 px-3 py-1.5 rounded-full transition-all duration-200"
                 style={{
                   background: "rgba(255,255,255,0.04)",
                   border: "1px solid rgba(255,255,255,0.09)",

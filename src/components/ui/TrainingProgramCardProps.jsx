@@ -33,7 +33,7 @@ const TrainingProgramCard = ({
     if (titleLines && titleLines.length > 0) {
       return (
         <h4
-          className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 ${rtl ? "text-right" : ""}`}
+          className={`text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 ${rtl ? "text-right" : ""}`}
         >
           {titleLines.map((line, index) => (
             <React.Fragment key={index}>
@@ -46,7 +46,9 @@ const TrainingProgramCard = ({
     }
 
     return (
-      <h4 className={` font-bold mb-4 sm:mb-6 ${rtl ? "text-right" : ""}`}>
+      <h4
+        className={`text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 ${rtl ? "text-right" : ""}`}
+      >
         {title}
       </h4>
     );
@@ -54,47 +56,47 @@ const TrainingProgramCard = ({
 
   return (
     <div
-      className="max-w-5xl mx-auto px-4 sm:px-6 animate-fade-in"
+      className="max-w-5xl mx-auto px-3 sm:px-6 animate-fade-in"
       dir={rtl ? "rtl" : "ltr"}
     >
       <div className="shadow-[0_0_6px_rgba(255,255,255,0.6)] rounded-xl overflow-hidden">
         <div
-          className={`flex flex-col md:flex-row items-start gap-6 sm:gap-8 p-6 sm:p-8 lg:p-10 ${
+          className={`flex flex-col md:flex-row items-start gap-4 sm:gap-6 p-4 sm:p-6 lg:p-10 ${
             rtl ? "md:flex-row-reverse" : ""
           }`}
         >
-          {/* Image - Responsive sizing */}
+          {/* Image — constrained height on mobile */}
           <div className="flex justify-center w-full md:w-1/2">
-            <div className="relative w-full max-w-[350px] sm:max-w-[400px] md:max-w-full">
+            <div className="relative w-full max-w-[300px] sm:max-w-[360px] md:max-w-full">
               <Image
                 src={imageSrc}
                 alt={imageAlt}
                 width={imageWidth}
                 height={imageHeight}
-                className="rounded-xl object-cover w-full h-auto"
+                className="rounded-xl object-cover w-full h-auto max-h-[200px] sm:max-h-[260px] md:max-h-none"
                 sizes="(max-width: 640px) 100vw, (max-width: 768px) 80vw, (max-width: 1024px) 50vw, 400px"
               />
             </div>
           </div>
 
-          {/* Content - مع عرض أصغر للوصف */}
+          {/* Content */}
           <div
-            className={`w-full md:w-1/2 text-white h-full flex flex-col justify-between ${
+            className={`w-full md:w-1/2 text-white flex flex-col justify-between ${
               rtl ? "text-right" : ""
             }`}
           >
             <div>
               {renderTitle()}
               <p
-                className={`text-gray-300 text-sm sm:text-base leading-6 sm:leading-7 max-w-md ${
-                  rtl ? "text-right mr-0" : "text-left ml-0"
+                className={`text-gray-300 text-sm leading-6 sm:leading-7 max-w-md ${
+                  rtl ? "text-right" : "text-left"
                 }`}
               >
                 {description}
               </p>
             </div>
 
-            <div className="mt-6 md:mt-8">
+            <div className="mt-4 md:mt-8">
               {isSpaceNoonTraining ? (
                 <Link
                   href="https://maps.app.goo.gl/G4uycW6GEBeUjnMv7"
@@ -104,7 +106,7 @@ const TrainingProgramCard = ({
                   <Button
                     variant="outline"
                     color={buttonColor}
-                    className="px-6 md:px-8 py-2 md:py-3 text-sm md:text-base"
+                    className="px-5 md:px-8 py-2 md:py-3 text-sm md:text-base"
                   >
                     {buttonText}
                   </Button>
@@ -114,7 +116,7 @@ const TrainingProgramCard = ({
                   <Button
                     variant="outline"
                     color={buttonColor}
-                    className="px-6 md:px-8 py-2 md:py-3 text-sm md:text-base"
+                    className="px-5 md:px-8 py-2 md:py-3 text-sm md:text-base"
                   >
                     {buttonText}
                   </Button>
@@ -124,7 +126,7 @@ const TrainingProgramCard = ({
                   variant="outline"
                   color={buttonColor}
                   onClick={onButtonClick}
-                  className="px-6 md:px-8 py-2 md:py-3 text-sm md:text-base"
+                  className="px-5 md:px-8 py-2 md:py-3 text-sm md:text-base"
                 >
                   {buttonText}
                 </Button>

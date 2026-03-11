@@ -12,12 +12,12 @@ export default function SpaceNoonHero() {
 
   return (
     <Hero>
-      <Hero.Title className="gap-y-2 md:gap-y-6 md:-mt-7">
+      <Hero.Title className="gap-y-1 md:gap-y-6 md:-mt-7">
         <span>{t("space_noon.hero.title_part1", "Enabling")}</span>
         <span className="text-brand-orange">
           {t("space_noon.hero.title_highlight", "The Future Generation")}
         </span>
-        <span className="flex items-center gap-4 flex-wrap justify-center">
+        <span className="flex items-center gap-2 md:gap-4 flex-wrap justify-center">
           <span>{t("space_noon.hero.title_part2", "With")}</span>
           <span className="font-thin">
             <span className="text-brand-orange">
@@ -27,8 +27,8 @@ export default function SpaceNoonHero() {
         </span>
       </Hero.Title>
 
-      <Hero.Subtitle className="tracking-[0.15px] md:my-10 md:mb-10">
-        <p className={`text-subtitle text-white/80`}>
+      <Hero.Subtitle className="tracking-[0.15px] my-4 md:my-10 md:mb-10">
+        <p className="text-sm md:text-base text-white/80 text-center leading-relaxed px-2 md:px-0">
           {t(
             "space_noon.hero.subtitle",
             "Empowering students and professionals with the tools and the platform by providing a co-working space that they can work in safe, quiet space with the ability to network",

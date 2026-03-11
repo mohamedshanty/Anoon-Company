@@ -19,12 +19,12 @@ export default function SpaceNoonTrainingHero() {
 
   return (
     <Hero>
-      <Hero.Title className={`${isRTL ? "gap-y-2 md:gap-y-8" : "gap-y-3"}`}>
+      <Hero.Title className="gap-y-1 md:gap-y-6">
         <span>{t("tech_training.hero.title_part1", "Enabling")}</span>
         <span className="text-brand-orange">
           {t("tech_training.hero.title_highlight", "The Future Generation")}
         </span>
-        <span className="flex items-center gap-4 flex-wrap justify-center">
+        <span className="flex items-center gap-2 md:gap-4 flex-wrap justify-center">
           <span>{t("tech_training.hero.title_part2", "With")}</span>
           <span className="font-thin">
             <span className="text-brand-orange">
@@ -34,21 +34,21 @@ export default function SpaceNoonTrainingHero() {
         </span>
       </Hero.Title>
 
-      <Hero.Subtitle className={`tracking-[0.5px] ${isRTL ? "my-10" : ""}`}>
-        <p className={`text-subtitle text-white/80`}>
+      <Hero.Subtitle className="tracking-[0.5px] my-4 md:my-10 md:mb-10">
+        <p className="text-sm md:text-base text-white/80 text-center leading-relaxed px-2 md:px-0">
           {t(
             "tech_training.hero.subtitle",
-            "Empowering students and professionals with cutting-edge skills to shape the digital future inside Palestine & Gaza . ",
+            "Empowering students and professionals with cutting-edge skills to shape the digital future inside Palestine & Gaza.",
           )}
         </p>
       </Hero.Subtitle>
 
       <Hero.Buttons>
-        <a href="/spaceNoonTraining#tech" onClick={scrollToSection}>
+        <Link href="/spaceNoonTraining#tech" onClick={scrollToSection}>
           <Button variant="outline" color="orange">
             {t("tech_training.hero.button1", "Explore Our Services")}
           </Button>
-        </a>
+        </Link>
         <Link
           href="https://maps.app.goo.gl/G4uycW6GEBeUjnMv7"
           target="_blank"

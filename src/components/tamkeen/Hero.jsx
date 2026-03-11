@@ -13,14 +13,14 @@ export default function TamkeenHero() {
 
   return (
     <Hero className="animate-fade-in">
-      <Hero.Title className="gap-y-2 md:gap-y-6">
+      <Hero.Title className="gap-y-1 md:gap-y-6">
         <span>{t("tamkeen.hero.title_part1", "Enabling")}</span>
         <span className="text-brand-orange">
           {t("tamkeen.hero.title_highlight", "The Future Generation")}
         </span>
         <span className="flex items-center gap-2 md:gap-4 flex-wrap justify-center">
           <span>{t("tamkeen.hero.title_part2", "With")}</span>
-          <div className="relative w-32 h-12 md:w-48 md:h-20">
+          <div className="relative w-24 h-10 md:w-48 md:h-20">
             <Image
               src="/images/tamkeen-image.png"
               alt={t("tamkeen.hero.logo_alt", "Tamkeen")}
@@ -32,8 +32,8 @@ export default function TamkeenHero() {
         </span>
       </Hero.Title>
 
-      <Hero.Subtitle className="tracking-[0.15px] md:my-10 md:mb-10">
-        <p className={`text-subtitle text-white/80 text-center`}>
+      <Hero.Subtitle className="tracking-[0.15px] my-4 md:my-10 md:mb-10">
+        <p className="text-sm md:text-base text-white/80 text-center leading-relaxed px-2 md:px-0">
           {t(
             "tamkeen.hero.subtitle",
             "Buildings can be broken, but the human Spirit remain Ignited. We didn't wait, We just did it because while aid sustains the body, knowledge reclaims the future. The war took Everything, but couldn't take our skills. We are building the minds that will rebuild this land.",

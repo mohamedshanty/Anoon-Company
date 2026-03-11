@@ -415,7 +415,9 @@
     "hero": {
       "title_part1": "Learn More",
       "title_part2": "Everyday About",
-      "title_highlight": "Artificial Intelligence"
+      "title_highlight": "Artificial Intelligence",
+      "badge": "Tech Blog",
+      "subtitle": "Stay ahead with expert insights, deep dives, and the latest breakthroughs in AI and technology."
     },
     "tabs": {
       "section": "Section",

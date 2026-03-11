@@ -13,7 +13,7 @@ export default function NoonHero() {
 
   return (
     <Hero>
-      <Hero.Title className="gap-y-2 md:gap-y-6">
+      <Hero.Title className="gap-y-1 md:gap-y-6">
         <span className="font-semibold">
           {t("noon_hub.hero.title_part1", "Providing")}
         </span>
@@ -28,9 +28,9 @@ export default function NoonHero() {
           </span>
         </span>
 
-        <div className="font-semibold flex items-center gap-4 flex-wrap justify-center">
-          <span>{t("noon_hub.hero.title_part3", "With")} </span>
-          <div className="relative w-32 h-12 md:w-48 md:h-20">
+        <div className="font-semibold flex items-center gap-2 md:gap-4 flex-wrap justify-center">
+          <span>{t("noon_hub.hero.title_part3", "With")}</span>
+          <div className="relative w-24 h-10 md:w-48 md:h-20">
             <Image
               src="/images/spaceNoonLogo1.webp"
               alt={t("space_noon.hero.logo_alt", "Space Noon Logo")}
@@ -42,8 +42,8 @@ export default function NoonHero() {
         </div>
       </Hero.Title>
 
-      <Hero.Subtitle className="tracking-[0.15px] md:my-10 md:mb-10">
-        <p className={`text-subtitle text-white/80`}>
+      <Hero.Subtitle className="tracking-[0.15px] my-4 md:my-10 md:mb-10">
+        <p className="text-sm md:text-base text-white/80 text-center leading-relaxed px-2 md:px-0">
           {t(
             "noon_hub.hero.subtitle",
             "Noon Hub is a place Designed for your needs, the friends you know the people you admire, Every body focusing on get things done, Learn more, network more and Focus With Us",
@@ -51,13 +51,17 @@ export default function NoonHero() {
         </p>
       </Hero.Subtitle>
 
-      <Hero.Buttons>
+      <div className="flex justify-center mt-2">
         <Link href="/noonSpace">
-          <Button variant="outline" color="orange">
+          <Button
+            variant="outline"
+            color="orange"
+            className="text-sm md:text-base px-6 md:px-8 py-2.5 md:py-3 whitespace-nowrap"
+          >
             {t("noon_hub.hero.button", "Explore Our Services")}
           </Button>
         </Link>
-      </Hero.Buttons>
+      </div>
     </Hero>
   );
 }
