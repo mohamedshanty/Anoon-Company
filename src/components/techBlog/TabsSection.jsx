@@ -2,13 +2,51 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, MessageCircle, Eye } from "lucide-react";
+import { Heart, MessageCircle, Eye, Share2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useRTL } from "@/hooks/useRTL";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+
+const tabContentVariants = {
+  initial: { opacity: 0, y: 14 },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.34,
+      ease: [0.22, 1, 0.36, 1],
+      when: "beforeChildren",
+      staggerChildren: 0.04,
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: -10,
+    transition: {
+      duration: 0.22,
+      ease: [0.4, 0, 1, 1],
+    },
+  },
+};
+
+const itemVariants = {
+  initial: { opacity: 0, y: 10 },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.28, ease: [0.22, 1, 0.36, 1] },
+  },
+  exit: {
+    opacity: 0,
+    y: -8,
+    transition: { duration: 0.18, ease: [0.4, 0, 1, 1] },
+  },
+};
 
 export default function TabsSection() {
   const { t, i18n } = useTranslation();
   const { isRTL, dir } = useRTL();
+  const prefersReducedMotion = useReducedMotion();
 
   const currentLang = i18n.language.startsWith("ar") ? "ar" : "en";
 
@@ -19,6 +57,68 @@ export default function TabsSection() {
   const [error, setError] = useState(null);
   const [localLikes, setLocalLikes] = useState({}); // لتخزين الإعجابات المحلية
   const [localViews, setLocalViews] = useState({}); // لتخزين المشاهدات المحلية
+  const [localShares, setLocalShares] = useState({});
+  const [sharingById, setSharingById] = useState({});
+
+  const handleShare = async (item) => {
+    const identifier = item.documentId || item.id;
+    if (!identifier || sharingById[identifier]) return;
+
+    const articleUrl = `${window.location.origin}/techBlog/${item.slug}`;
+    const title = item[`title_${currentLang}`] || item.title || "Anoon Blog";
+    const previousShares = localShares[identifier] ?? item.shares ?? 0;
+
+    setSharingById((prev) => ({ ...prev, [identifier]: true }));
+    setLocalShares((prev) => ({
+      ...prev,
+      [identifier]: previousShares + 1,
+    }));
+
+    try {
+      const res = await fetch(`/api/articles/${identifier}/shares`, {
+        method: "POST",
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && typeof data.shares === "number") {
+          setLocalShares((prev) => ({
+            ...prev,
+            [identifier]: data.shares,
+          }));
+        }
+      } else {
+        setLocalShares((prev) => ({
+          ...prev,
+          [identifier]: previousShares,
+        }));
+      }
+    } catch (error) {
+      setLocalShares((prev) => ({
+        ...prev,
+        [identifier]: previousShares,
+      }));
+      console.error("Error sharing article:", error);
+      setSharingById((prev) => ({ ...prev, [identifier]: false }));
+      return;
+    }
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title,
+          url: articleUrl,
+        });
+      } else if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(articleUrl);
+      }
+    } catch (error) {
+      // Ignore share-sheet cancellation/errors; count is already persisted.
+      console.warn("Share action was cancelled or unavailable:", error);
+    } finally {
+      setSharingById((prev) => ({ ...prev, [identifier]: false }));
+    }
+  };
 
   // دالة لاستخراج النص من blocks
   const extractTextFromBlocks = (blocks) => {
@@ -128,12 +228,18 @@ export default function TabsSection() {
         <div className="main-container relative z-10">
           <div className="flex flex-wrap gap-3 mb-12 justify-center">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="w-24 h-10 rounded-full bg-white/5 animate-pulse" />
+              <div
+                key={i}
+                className="w-24 h-10 rounded-full bg-white/5 animate-pulse"
+              />
             ))}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden">
+              <div
+                key={i}
+                className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden"
+              >
                 <div className="h-48 bg-white/10 animate-pulse" />
                 <div className="p-5 space-y-4">
                   <div className="h-6 bg-white/10 rounded-md animate-pulse w-3/4" />
@@ -178,180 +284,222 @@ export default function TabsSection() {
       <div className="main-container relative z-10">
         <div className="flex flex-wrap gap-3 mb-12 justify-center">
           {tabs.map((tab) => (
-            <button
+            <motion.button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`px-6 py-2.5 rounded-full border transition-all duration-300 cursor-pointer text-sm md:text-base ${
+              whileTap={prefersReducedMotion ? undefined : { scale: 0.98 }}
+              className={`relative px-6 py-2.5 rounded-full border cursor-pointer text-sm md:text-base overflow-hidden ${
                 activeTab === tab.id
-                  ? "bg-brand-sky border-brand-sky text-white shadow-lg shadow-brand-sky/20"
+                  ? "border-brand-sky text-white shadow-lg shadow-brand-sky/20"
                   : "border-white/20 text-white/70 hover:bg-white/10 hover:border-white/30"
               }`}
             >
-              {tab.title}
-            </button>
+              {activeTab === tab.id && (
+                <motion.span
+                  layoutId="activeTechBlogTab"
+                  className="absolute inset-0 rounded-full bg-brand-sky"
+                  transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                />
+              )}
+              <span className="relative z-10">{tab.title}</span>
+            </motion.button>
           ))}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {articlesByTab[activeTab]?.length > 0 ? (
-            articlesByTab[activeTab].map((item) => {
-              const title =
-                item[`title_${currentLang}`] || item.title || "بدون عنوان";
+        <div className="min-h-105 md:min-h-130">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={activeTab}
+              variants={prefersReducedMotion ? undefined : tabContentVariants}
+              initial={prefersReducedMotion ? false : "initial"}
+              animate={prefersReducedMotion ? undefined : "animate"}
+              exit={prefersReducedMotion ? undefined : "exit"}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
+              {articlesByTab[activeTab]?.length > 0 ? (
+                articlesByTab[activeTab].map((item) => {
+                  const title =
+                    item[`title_${currentLang}`] || item.title || "بدون عنوان";
 
-              const excerptBlocks =
-                item[`excerpt_${currentLang}`] || item.excerpt;
-              const excerpt = excerptBlocks
-                ? extractTextFromBlocks(excerptBlocks)
-                : "";
+                  const excerptBlocks =
+                    item[`excerpt_${currentLang}`] || item.excerpt;
+                  const excerpt = excerptBlocks
+                    ? extractTextFromBlocks(excerptBlocks)
+                    : "";
 
-              let imageUrl = "/images/blogImage.png";
+                  let imageUrl = "/images/blogImage.png";
 
-              if (
-                item.image &&
-                Array.isArray(item.image) &&
-                item.image.length > 0
-              ) {
-                const imageData = item.image[0];
-                let rawUrl =
-                  imageData.formats?.medium?.url ||
-                  imageData.formats?.small?.url ||
-                  imageData.url;
-                if (rawUrl) {
-                  imageUrl = rawUrl.startsWith("http")
-                    ? rawUrl
-                    : `${process.env.NEXT_PUBLIC_STRAPI_URL}${rawUrl}`;
-                }
-              }
+                  if (
+                    item.image &&
+                    Array.isArray(item.image) &&
+                    item.image.length > 0
+                  ) {
+                    const imageData = item.image[0];
+                    let rawUrl =
+                      imageData.formats?.medium?.url ||
+                      imageData.formats?.small?.url ||
+                      imageData.url;
+                    if (rawUrl) {
+                      imageUrl = rawUrl.startsWith("http")
+                        ? rawUrl
+                        : `${process.env.NEXT_PUBLIC_STRAPI_URL}${rawUrl}`;
+                    }
+                  }
 
-              const categoryName = item.category
-                ? item.category[`name_${currentLang}`] || item.category.name
-                : currentLang === "ar"
-                  ? "غير مصنف"
-                  : "Uncategorized";
+                  const categoryName = item.category
+                    ? item.category[`name_${currentLang}`] || item.category.name
+                    : currentLang === "ar"
+                      ? "غير مصنف"
+                      : "Uncategorized";
 
-              const author =
-                item[`author_${currentLang}`] || item.author || "غير معروف";
+                  const author =
+                    item[`author_${currentLang}`] || item.author || "غير معروف";
 
-              const dateFormatted = item.publishedAt
-                ? new Date(item.publishedAt).toLocaleDateString(
-                    currentLang === "ar" ? "ar-EG" : "en-US",
-                    {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    },
-                  )
-                : t("common.unknown_date", "غير محدد");
+                  const dateFormatted = item.publishedAt
+                    ? new Date(item.publishedAt).toLocaleDateString(
+                        currentLang === "ar" ? "ar-EG" : "en-US",
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        },
+                      )
+                    : t("common.unknown_date", "غير محدد");
 
-              // التحقق مما إذا كان المستخدم معجب بهذه المقالة
-              const isLiked = localLikes[item.id] || false;
+                  // التحقق مما إذا كان المستخدم معجب بهذه المقالة
+                  const isLiked = localLikes[item.id] || false;
 
-              // التحقق مما إذا كانت المشاهدة مسجلة محلياً
-              const isViewed = localViews[item.id] || false;
+                  // التحقق مما إذا كانت المشاهدة مسجلة محلياً
+                  const isViewed = localViews[item.id] || false;
+                  const shareCount = localShares[item.id] ?? item.shares ?? 0;
 
-              return (
-                <div
-                  key={item.id}
-                  className="group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-500 hover:shadow-xl hover:shadow-brand-sky/5"
-                >
-                  <Link
-                    href={`/techBlog/${item.slug}`}
-                    className="block relative h-48 overflow-hidden"
-                  >
-                    <Image
-                      src={imageUrl}
-                      alt={title}
-                      fill
-                      unoptimized
-                      className="object-cover group-hover:scale-110 transition-transform duration-700"
-                      onError={(e) => {
-                        e.currentTarget.src = "/images/blogImage.png";
-                      }}
-                    />
-                  </Link>
-
-                  <div className="p-5 space-y-4">
-                    <Link href={`/techBlog/${item.slug}`}>
-                      <h3
-                        className={`text-xl font-semibold text-white group-hover:text-brand-sky transition-colors line-clamp-2 ${
-                          isRTL ? "text-right" : "text-left"
-                        }`}
-                      >
-                        {title}
-                      </h3>
-                    </Link>
-
-                    {excerpt && (
-                      <p
-                        className={`text-white/70 text-sm leading-relaxed line-clamp-3 ${
-                          isRTL ? "text-right" : "text-left"
-                        }`}
-                      >
-                        {excerpt}
-                      </p>
-                    )}
-
-                    <div
-                      className={`flex flex-wrap items-center gap-2 text-xs text-white/50 ${
-                        isRTL ? "flex-row-reverse" : ""
-                      }`}
+                  return (
+                    <motion.div
+                      key={item.id}
+                      variants={prefersReducedMotion ? undefined : itemVariants}
+                      initial={prefersReducedMotion ? false : "initial"}
+                      animate={prefersReducedMotion ? undefined : "animate"}
+                      exit={prefersReducedMotion ? undefined : "exit"}
+                      layout
+                      className="group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-500 hover:shadow-xl hover:shadow-brand-sky/5"
                     >
-                      <span className="px-2 py-1 bg-white/10 rounded-full">
-                        {categoryName}
-                      </span>
-                      <span>•</span>
-                      <span>{dateFormatted}</span>
-                      <span>•</span>
-                      <span>{author}</span>
-                    </div>
-
-                    <div
-                      className={`flex items-center gap-4 text-sm ${
-                        isRTL ? "flex-row-reverse" : ""
-                      }`}
-                    >
-                      <div className="flex items-center gap-1 text-white/60">
-                        <Heart
-                          className={`w-4 h-4 transition-all duration-300 ${
-                            isLiked
-                              ? "fill-red-400 text-red-400"
-                              : "text-red-400"
-                          }`}
+                      <Link
+                        href={`/techBlog/${item.slug}`}
+                        className="block relative h-48 overflow-hidden"
+                      >
+                        <Image
+                          src={imageUrl}
+                          alt={title}
+                          fill
+                          unoptimized
+                          className="object-cover group-hover:scale-110 transition-transform duration-700"
+                          onError={(e) => {
+                            e.currentTarget.src = "/images/blogImage.png";
+                          }}
                         />
-                        <span>{(item.likes || 0) + (isLiked ? 1 : 0)}</span>
-                      </div>
+                      </Link>
 
-                      <div className="flex items-center gap-1 text-white/60">
-                        <Eye className="w-4 h-4 text-brand-sky" />
-                        <span>{(item.views || 0) + (isViewed ? 1 : 0)}</span>
-                      </div>
+                      <div className="p-5 space-y-4">
+                        <Link href={`/techBlog/${item.slug}`}>
+                          <h3
+                            className={`text-xl font-semibold text-white group-hover:text-brand-sky transition-colors line-clamp-2 ${
+                              isRTL ? "text-right" : "text-left"
+                            }`}
+                          >
+                            {title}
+                          </h3>
+                        </Link>
 
-                      <div className="flex items-center gap-1 text-white/60">
-                        <MessageCircle className="w-4 h-4 text-brand-sky" />
-                        <span>{item.comments_count || 0}</span>
-                      </div>
-                    </div>
+                        {excerpt && (
+                          <p
+                            className={`text-white/70 text-sm leading-relaxed line-clamp-3 ${
+                              isRTL ? "text-right" : "text-left"
+                            }`}
+                          >
+                            {excerpt}
+                          </p>
+                        )}
 
-                    <Link
-                      href={`/techBlog/${item.slug}`}
-                      className="block w-full py-2.5 px-4 rounded-xl border border-brand-sky/30 text-brand-sky hover:bg-brand-sky hover:text-white transition-all duration-300 font-medium text-center"
-                    >
-                      {t("blog.article.read_more", "اقرأ المزيد")}
-                    </Link>
-                  </div>
-                </div>
-              );
-            })
-          ) : (
-            <div className="col-span-full text-center py-20">
-              <p className="text-white/50 text-lg">
-                {t(
-                  "blog.tabs.no_articles",
-                  "لا توجد مقالات متاحة في هذا القسم حاليًا",
-                )}
-              </p>
-            </div>
-          )}
+                        <div
+                          className={`flex flex-wrap items-center gap-2 text-xs text-white/50 ${
+                            isRTL ? "flex-row-reverse" : ""
+                          }`}
+                        >
+                          <span className="px-2 py-1 bg-white/10 rounded-full">
+                            {categoryName}
+                          </span>
+                          <span>•</span>
+                          <span>{dateFormatted}</span>
+                          <span>•</span>
+                          <span>{author}</span>
+                        </div>
+
+                        <div
+                          className={`flex items-center gap-4 text-sm ${
+                            isRTL ? "flex-row-reverse" : ""
+                          }`}
+                        >
+                          <div className="flex items-center gap-1 text-white/60">
+                            <Heart
+                              className={`w-4 h-4 transition-all duration-300 ${
+                                isLiked
+                                  ? "fill-red-400 text-red-400"
+                                  : "text-red-400"
+                              }`}
+                            />
+                            <span>{(item.likes || 0) + (isLiked ? 1 : 0)}</span>
+                          </div>
+
+                          <div className="flex items-center gap-1 text-white/60">
+                            <Eye className="w-4 h-4 text-brand-sky" />
+                            <span>{(item.views || 0) + (isViewed ? 1 : 0)}</span>
+                          </div>
+
+                          <div className="flex items-center gap-1 text-white/60">
+                            <MessageCircle className="w-4 h-4 text-brand-sky" />
+                            <span>{item.comments_count || 0}</span>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => handleShare(item)}
+                            disabled={sharingById[item.id]}
+                            className="flex items-center gap-1 text-white/60 hover:text-white transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                            aria-label="Share article"
+                          >
+                            <Share2 className="w-4 h-4 text-brand-sky" />
+                            <span>{shareCount}</span>
+                          </button>
+                        </div>
+
+                        <Link
+                          href={`/techBlog/${item.slug}`}
+                          className="block w-full py-2.5 px-4 rounded-xl border border-brand-sky/30 text-brand-sky hover:bg-brand-sky hover:text-white transition-all duration-300 font-medium text-center"
+                        >
+                          {t("blog.article.read_more", "اقرأ المزيد")}
+                        </Link>
+                      </div>
+                    </motion.div>
+                  );
+                })
+              ) : (
+                <motion.div
+                  variants={prefersReducedMotion ? undefined : itemVariants}
+                  initial={prefersReducedMotion ? false : "initial"}
+                  animate={prefersReducedMotion ? undefined : "animate"}
+                  exit={prefersReducedMotion ? undefined : "exit"}
+                  className="col-span-full text-center py-20"
+                >
+                  <p className="text-white/50 text-lg">
+                    {t(
+                      "blog.tabs.no_articles",
+                      "لا توجد مقالات متاحة في هذا القسم حاليًا",
+                    )}
+                  </p>
+                </motion.div>
+              )}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </section>

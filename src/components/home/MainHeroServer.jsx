@@ -21,21 +21,21 @@ export default function MainHeroServer({ t }) {
       </HeroTitle>
 
       <HeroSubtitle className={`mb-10`}>
-        <p className="text-subtitle font-light text-white/90 text-[12px] sm:text-base md:text-lg lg:text-xl xl:text-2xl">
+        <p className="text-subtitle font-light text-white/90 text-[10px] sm:text-base md:text-lg lg:text-xl xl:text-2xl">
           {t.subtitle_spirit}{" "}
-          <span className="text-brand-orange text-[12px] sm:text-base md:text-lg lg:text-xl xl:text-2xl">
+          <span className="text-brand-orange text-[10px] sm:text-base md:text-lg lg:text-xl xl:text-2xl">
             {t.subtitle_spirit_highlight}
           </span>
         </p>
-        <p className="text-subtitle font-light text-white/90 text-[12px] sm:text-base md:text-lg lg:text-xl xl:text-2xl">
+        <p className="text-subtitle font-light text-white/90 text-[10px] sm:text-base md:text-lg lg:text-xl xl:text-2xl">
           {t.subtitle_ours}{" "}
-          <span className="text-brand-orange text-[12px] sm:text-base md:text-lg lg:text-xl xl:text-2xl">
+          <span className="text-brand-orange text-[10px] sm:text-base md:text-lg lg:text-xl xl:text-2xl">
             {t.subtitle_ours_highlight}
           </span>
         </p>
-        <p className="text-subtitle font-light text-white/90 text-[12px] sm:text-base md:text-lg lg:text-xl xl:text-2xl">
+        <p className="text-subtitle font-light text-white/90 text-[10px] sm:text-base md:text-lg lg:text-xl xl:text-2xl">
           {t.subtitle_rise}{" "}
-          <span className="text-brand-orange text-[12px] sm:text-base md:text-lg lg:text-xl xl:text-2xl">
+          <span className="text-brand-orange text-[10px] sm:text-base md:text-lg lg:text-xl xl:text-2xl">
             {t.subtitle_rise_highlight}
           </span>
         </p>

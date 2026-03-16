@@ -55,6 +55,7 @@ export async function createArticle(input) {
       slug,
       views: 0,
       likes: 0,
+      shares: 0,
       created_at: now,
       updated_at: now,
       published_at:

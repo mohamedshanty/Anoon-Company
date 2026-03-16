@@ -7,6 +7,7 @@ import {
   EyeOff,
   Eye,
   Heart,
+  Share2,
   Search,
   FileText,
 } from "lucide-react";
@@ -85,12 +86,24 @@ export default function ArticlesTable({
           <table className="w-full">
             <thead>
               <tr className="border-b border-white/5">
-                <th className="text-left px-6 py-4 text-white/30 text-xs uppercase tracking-widest font-medium">Article</th>
-                <th className="text-left px-4 py-4 text-white/30 text-xs uppercase tracking-widest font-medium hidden md:table-cell">Category</th>
-                <th className="text-left px-4 py-4 text-white/30 text-xs uppercase tracking-widest font-medium hidden lg:table-cell">Stats</th>
-                <th className="text-left px-4 py-4 text-white/30 text-xs uppercase tracking-widest font-medium hidden md:table-cell">Status</th>
-                <th className="text-left px-4 py-4 text-white/30 text-xs uppercase tracking-widest font-medium hidden lg:table-cell">Date</th>
-                <th className="text-right px-6 py-4 text-white/30 text-xs uppercase tracking-widest font-medium">Actions</th>
+                <th className="text-left px-6 py-4 text-white/30 text-xs uppercase tracking-widest font-medium">
+                  Article
+                </th>
+                <th className="text-left px-4 py-4 text-white/30 text-xs uppercase tracking-widest font-medium hidden md:table-cell">
+                  Category
+                </th>
+                <th className="text-left px-4 py-4 text-white/30 text-xs uppercase tracking-widest font-medium hidden lg:table-cell">
+                  Stats
+                </th>
+                <th className="text-left px-4 py-4 text-white/30 text-xs uppercase tracking-widest font-medium hidden md:table-cell">
+                  Status
+                </th>
+                <th className="text-left px-4 py-4 text-white/30 text-xs uppercase tracking-widest font-medium hidden lg:table-cell">
+                  Date
+                </th>
+                <th className="text-right px-6 py-4 text-white/30 text-xs uppercase tracking-widest font-medium">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -103,58 +116,102 @@ export default function ArticlesTable({
                 </tr>
               ) : (
                 filtered.map((article) => (
-                  <tr key={article.id} className="border-b border-white/5 hover:bg-white/3 transition-colors last:border-0">
+                  <tr
+                    key={article.id}
+                    className="border-b border-white/5 hover:bg-white/3 transition-colors last:border-0"
+                  >
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         {article.cover_image ? (
-                          <img src={article.cover_image} alt={article.title} className="w-10 h-10 rounded-lg object-cover flex-shrink-0" />
+                          <img
+                            src={article.cover_image}
+                            alt={article.title}
+                            className="w-10 h-10 rounded-lg object-cover flex-shrink-0"
+                          />
                         ) : (
                           <div className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0">
                             <FileText className="w-4 h-4 text-white/20" />
                           </div>
                         )}
                         <div>
-                          <p className="text-white/80 font-medium text-sm line-clamp-1 max-w-[200px]">{article.title}</p>
-                          <p className="text-white/30 text-xs mt-0.5 font-mono">/{article.slug}</p>
+                          <p className="text-white/80 font-medium text-sm line-clamp-1 max-w-[200px]">
+                            {article.title}
+                          </p>
+                          <p className="text-white/30 text-xs mt-0.5 font-mono">
+                            /{article.slug}
+                          </p>
                         </div>
                       </div>
                     </td>
                     <td className="px-4 py-4 hidden md:table-cell">
                       {article.category ? (
-                        <span className="px-2.5 py-1 bg-sky-500/10 text-sky-400 rounded-full text-xs">{article.category}</span>
+                        <span className="px-2.5 py-1 bg-sky-500/10 text-sky-400 rounded-full text-xs">
+                          {article.category}
+                        </span>
                       ) : (
                         <span className="text-white/20 text-xs">—</span>
                       )}
                     </td>
                     <td className="px-4 py-4 hidden lg:table-cell">
                       <div className="flex items-center gap-3 text-xs text-white/40">
-                        <span className="flex items-center gap-1"><Eye className="w-3 h-3" /> {article.views || 0}</span>
-                        <span className="flex items-center gap-1"><Heart className="w-3 h-3" /> {article.likes || 0}</span>
+                        <span className="flex items-center gap-1">
+                          <Eye className="w-3 h-3" /> {article.views || 0}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Heart className="w-3 h-3" /> {article.likes || 0}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Share2 className="w-3 h-3" /> {article.shares || 0}
+                        </span>
                       </div>
                     </td>
                     <td className="px-4 py-4 hidden md:table-cell">
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${article.status === "published" ? "bg-green-500/10 text-green-400" : "bg-yellow-500/10 text-yellow-400"}`}>
+                      <span
+                        className={`px-2.5 py-1 rounded-full text-xs font-medium ${article.status === "published" ? "bg-green-500/10 text-green-400" : "bg-yellow-500/10 text-yellow-400"}`}
+                      >
                         {article.status}
                       </span>
                     </td>
                     <td className="px-4 py-4 hidden lg:table-cell">
                       <span className="text-white/30 text-xs">
-                        {new Date(article.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                        {new Date(article.created_at).toLocaleDateString(
+                          "en-US",
+                          { month: "short", day: "numeric", year: "numeric" },
+                        )}
                       </span>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center justify-end gap-2">
                         <button
-                          onClick={() => onTogglePublish(article.id, article.status !== "published")}
-                          title={article.status === "published" ? "Unpublish" : "Publish"}
+                          onClick={() =>
+                            onTogglePublish(
+                              article.id,
+                              article.status !== "published",
+                            )
+                          }
+                          title={
+                            article.status === "published"
+                              ? "Unpublish"
+                              : "Publish"
+                          }
                           className={`p-2 rounded-lg transition-all ${article.status === "published" ? "text-green-400 hover:bg-green-500/10" : "text-white/30 hover:bg-white/10 hover:text-white/70"}`}
                         >
-                          {article.status === "published" ? <Globe className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                          {article.status === "published" ? (
+                            <Globe className="w-4 h-4" />
+                          ) : (
+                            <EyeOff className="w-4 h-4" />
+                          )}
                         </button>
-                        <button onClick={() => onEdit(article)} className="p-2 rounded-lg text-white/30 hover:bg-sky-500/10 hover:text-sky-400 transition-all">
+                        <button
+                          onClick={() => onEdit(article)}
+                          className="p-2 rounded-lg text-white/30 hover:bg-sky-500/10 hover:text-sky-400 transition-all"
+                        >
                           <Edit2 className="w-4 h-4" />
                         </button>
-                        <button onClick={() => onDelete(article.id)} className="p-2 rounded-lg text-white/30 hover:bg-red-500/10 hover:text-red-400 transition-all">
+                        <button
+                          onClick={() => onDelete(article.id)}
+                          className="p-2 rounded-lg text-white/30 hover:bg-red-500/10 hover:text-red-400 transition-all"
+                        >
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>

@@ -2,28 +2,20 @@
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
 import { BlocksRenderer } from "@strapi/blocks-react-renderer";
-import {
-  Heart,
-  MessageCircle,
-  Calendar,
-  User,
-  Tag,
-  Eye,
-  Share2,
-  Clock,
-  ChevronDown,
-} from "lucide-react";
+import { Heart, Calendar, Eye, Share2, Clock } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import CommentSection from "./comments/CommentSection";
 
 export default function FullBlog({ article, similarArticles }) {
   const [likes, setLikes] = useState(article?.likes || 0);
   const [views, setViews] = useState(article?.views || 0);
+  const [shares, setShares] = useState(article?.shares || 0);
   const [commentsCount, setCommentsCount] = useState(
     article?.comments_count || 0,
   );
   const [isLiked, setIsLiked] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
   const [hasViewed, setHasViewed] = useState(false);
   const [tableOfContents, setTableOfContents] = useState([]);
 
@@ -133,12 +125,71 @@ export default function FullBlog({ article, similarArticles }) {
     }
   };
 
+  const handleShare = async () => {
+    const identifier = article.documentId || article.id;
+    const articleUrl = `${window.location.origin}/techBlog/${article.slug}`;
+    const shareTitle =
+      article[`title_${lang}`] || article.title || "Anoon Blog";
+
+    if (!identifier || isSharing) return;
+
+    setIsSharing(true);
+    const previousShares = shares;
+    setShares((prev) => prev + 1);
+
+    try {
+      const res = await fetch(`/api/articles/${identifier}/shares`, {
+        method: "POST",
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && typeof data.shares === "number") {
+          setShares(data.shares);
+        }
+      } else {
+        setShares(previousShares);
+      }
+    } catch (error) {
+      setShares(previousShares);
+      console.error("Error sharing article:", error);
+      return;
+    }
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: shareTitle,
+          url: articleUrl,
+        });
+      } else if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(articleUrl);
+      }
+    } catch (error) {
+      // Ignore share-sheet cancellation/errors; count is already persisted.
+      console.warn("Share action was cancelled or unavailable:", error);
+    } finally {
+      setIsSharing(false);
+    }
+  };
+
+  const content = article?.[`content_${lang}`] || article?.content || "";
+
+  // Reading Time (rough estimate)
+  const readingTime = useMemo(() => {
+    const text =
+      typeof content === "string" ? content : JSON.stringify(content);
+    const wordsPerMinute = 200;
+    const noOfWords = text.split(/\s/g).length;
+    const minutes = Math.ceil(noOfWords / wordsPerMinute);
+    return `${minutes} ${lang === "ar" ? "دقائق" : "Min"}`;
+  }, [content, lang]);
+
   if (!article) return null;
 
   const title = article[`title_${lang}`] || article.title || "بدون عنوان";
   const introduction =
     lang === "ar" ? article.introduction_ar || "" : article.introduction || "";
-  const content = article[`content_${lang}`] || article.content || "";
   const author = article[`author_${lang}`] || article.author || "غير معروف";
   const categoryName =
     article?.category?.[`name_${lang}`] ||
@@ -174,16 +225,6 @@ export default function FullBlog({ article, similarArticles }) {
         },
       )
     : "غير محدد";
-
-  // Reading Time (rough estimate)
-  const readingTime = useMemo(() => {
-    const text =
-      typeof content === "string" ? content : JSON.stringify(content);
-    const wordsPerMinute = 200;
-    const noOfWords = text.split(/\s/g).length;
-    const minutes = Math.ceil(noOfWords / wordsPerMinute);
-    return `${minutes} ${lang === "ar" ? "دقائق" : "Min"}`;
-  }, [content, lang]);
 
   return (
     <main className="min-h-screen pb-20">
@@ -304,9 +345,13 @@ export default function FullBlog({ article, similarArticles }) {
                 {views.toLocaleString()}
               </span>
             </div>
-            <button className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-white/70 hover:bg-white/5 transition-all">
+            <button
+              onClick={handleShare}
+              disabled={isSharing}
+              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-white/70 hover:bg-white/5 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+            >
               <Share2 className="w-5 h-5" />
-              <span className="font-semibold">206</span>
+              <span className="font-semibold">{shares.toLocaleString()}</span>
             </button>
           </div>
 

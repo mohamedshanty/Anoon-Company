@@ -24,6 +24,7 @@ import {
   Zap,
   Eye,
   Heart,
+  Share2,
   TrendingUp,
   Command,
   Sparkles,
@@ -851,6 +852,9 @@ function AnalyticsView({ articles, stats }) {
   const topByLikes = [...articles]
     .sort((a, b) => (b.likes || 0) - (a.likes || 0))
     .slice(0, 5);
+  const topByShares = [...articles]
+    .sort((a, b) => (b.shares || 0) - (a.shares || 0))
+    .slice(0, 5);
   const categoryCount = {};
   articles.forEach((a) => {
     const cat = a.category || "Uncategorized";
@@ -873,6 +877,13 @@ function AnalyticsView({ articles, stats }) {
       glow: "rgba(147,51,234,0.25)",
     },
     {
+      label: "Total Shares",
+      value: stats.totalShares?.toLocaleString() ?? "0",
+      icon: Share2,
+      gradient: "from-blue-500 to-indigo-400",
+      glow: "rgba(59,130,246,0.25)",
+    },
+    {
       label: "Published",
       value: stats.published ?? "0",
       icon: CheckCircle2,
@@ -890,7 +901,7 @@ function AnalyticsView({ articles, stats }) {
 
   return (
     <div className="space-y-6 animate-slide-in-up">
-      <div className="grid grid-cols-2 xl:grid-cols-4 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 xl:grid-cols-5 gap-3 sm:gap-4">
         {metricCards.map(({ label, value, icon: Icon, gradient, glow }, i) => (
           <div
             key={label}
@@ -931,6 +942,13 @@ function AnalyticsView({ articles, stats }) {
             key: "likes",
             gradient: "from-purple-500 to-pink-500",
             color: "text-purple-400",
+          },
+          {
+            title: "Top by Shares",
+            data: topByShares,
+            key: "shares",
+            gradient: "from-blue-500 to-indigo-400",
+            color: "text-blue-400",
           },
         ].map(({ title, data, key, gradient, color }) => (
           <div key={title} className="glass rounded-2xl p-4 sm:p-5">
@@ -1126,6 +1144,7 @@ export default function DashboardClient({ user, initialStats }) {
           drafts: articles.filter((a) => a.status === "draft").length,
           totalViews: articles.reduce((s, a) => s + (a.views || 0), 0),
           totalLikes: articles.reduce((s, a) => s + (a.likes || 0), 0),
+          totalShares: articles.reduce((s, a) => s + (a.shares || 0), 0),
         }
       : initialStats;
 

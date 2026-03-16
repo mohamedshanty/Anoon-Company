@@ -77,19 +77,31 @@ export async function getArticleById(id) {
 // ─── Server-Side Stats ─────────────────────────────────────────────────────
 
 export async function getArticleStats() {
-  const { data, error } = await supabaseAdmin
+  let data;
+  const { data: withShares, error: withSharesError } = await supabaseAdmin
     .from("articles")
-    .select("status, views, likes");
+    .select("status, views, likes, shares");
 
-  if (error) throw error;
+  if (withSharesError?.code === "42703") {
+    const { data: withoutShares, error: fallbackError } = await supabaseAdmin
+      .from("articles")
+      .select("status, views, likes");
+    if (fallbackError) throw fallbackError;
+    data = withoutShares;
+  } else if (withSharesError) {
+    throw withSharesError;
+  } else {
+    data = withShares;
+  }
 
   const total = data?.length ?? 0;
   const published = data?.filter((a) => a.status === "published").length ?? 0;
   const drafts = data?.filter((a) => a.status === "draft").length ?? 0;
   const totalViews = data?.reduce((s, a) => s + (a.views ?? 0), 0) ?? 0;
   const totalLikes = data?.reduce((s, a) => s + (a.likes ?? 0), 0) ?? 0;
+  const totalShares = data?.reduce((s, a) => s + (a.shares ?? 0), 0) ?? 0;
 
-  return { total, published, drafts, totalViews, totalLikes };
+  return { total, published, drafts, totalViews, totalLikes, totalShares };
 }
 
 // ─── Create ───────────────────────────────────────────────────────────────────
@@ -108,6 +120,7 @@ export async function createArticle(input) {
         slug,
         views: 0,
         likes: 0,
+        shares: 0,
         created_at: now,
         updated_at: now,
         published_at: input.status === "published" ? now : null,
@@ -198,6 +211,14 @@ export async function updateLikes(id, increment) {
   const { data, error } = await supabaseAdmin.rpc("update_likes", {
     article_id: id,
     inc: increment ? 1 : -1,
+  });
+  if (error) throw error;
+  return data;
+}
+
+export async function incrementShares(id) {
+  const { data, error } = await supabaseAdmin.rpc("increment_shares", {
+    article_id: id,
   });
   if (error) throw error;
   return data;

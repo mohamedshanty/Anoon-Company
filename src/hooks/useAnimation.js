@@ -3,7 +3,7 @@ import { gsap } from "@/lib/gsap-setup";
 
 /**
  * Custom hook for GSAP animations with ScrollTrigger support
- * 
+ *
  * @param {Object} options - Animation configuration
  * @param {React.RefObject} options.ref - Reference to the target element
  * @param {string} options.type - Animation preset ('fade', 'slide-up', 'slide-down', 'slide-left', 'slide-right', 'scale', 'scale-up')
@@ -28,16 +28,17 @@ export const useAnimation = ({
   scrub = false,
   markers = false,
   disabled = false,
-  once = true,
+  once = false,
 } = {}) => {
   useGSAP(
     () => {
       if (disabled || !ref.current) return;
 
       // Determine the target: either the element itself or its children if staggering is requested
-      const target = (stagger > 0 && ref.current.children.length > 0) 
-        ? ref.current.children 
-        : ref.current;
+      const target =
+        stagger > 0 && ref.current.children.length > 0
+          ? ref.current.children
+          : ref.current;
 
       if (!target) return;
 
@@ -53,7 +54,9 @@ export const useAnimation = ({
           end,
           scrub,
           markers,
-          toggleActions: once ? "play none none none" : "play reverse play reverse",
+          toggleActions: once
+            ? "play none none none"
+            : "restart reset restart reset",
         },
       };
 
@@ -85,10 +88,20 @@ export const useAnimation = ({
 
       gsap.from(target, vars);
     },
-    { 
-      scope: ref, 
-      dependencies: [disabled, type, delay, duration, stagger, start, end, scrub, once] 
-    }
+    {
+      scope: ref,
+      dependencies: [
+        disabled,
+        type,
+        delay,
+        duration,
+        stagger,
+        start,
+        end,
+        scrub,
+        once,
+      ],
+    },
   );
 };
 

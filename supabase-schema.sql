@@ -28,10 +28,14 @@ CREATE TABLE IF NOT EXISTS public.articles (
   status          TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft', 'published')),
   views           INTEGER NOT NULL DEFAULT 0,
   likes           INTEGER NOT NULL DEFAULT 0,
+  shares          INTEGER NOT NULL DEFAULT 0,
   created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   published_at    TIMESTAMPTZ
 );
+
+ALTER TABLE public.articles
+ADD COLUMN IF NOT EXISTS shares INTEGER NOT NULL DEFAULT 0;
 
 -- ─── Comments Table ───────────────────────────────────────────────────────────
 CREATE TABLE IF NOT EXISTS public.comments (
@@ -88,6 +92,20 @@ BEGIN
   WHERE id = article_id
   RETURNING likes INTO new_likes;
   RETURN new_likes;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- ─── RPC: Increment Shares ───────────────────────────────────────────────────
+CREATE OR REPLACE FUNCTION public.increment_shares(article_id UUID)
+RETURNS INTEGER AS $$
+DECLARE
+  new_shares INTEGER;
+BEGIN
+  UPDATE public.articles
+  SET shares = shares + 1
+  WHERE id = article_id
+  RETURNING shares INTO new_shares;
+  RETURN new_shares;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 

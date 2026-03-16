@@ -3,6 +3,7 @@ import {
   FileText,
   Eye,
   Heart,
+  Share2,
   TrendingUp,
   BookOpen,
   Edit3,
@@ -45,11 +46,18 @@ export default function DashboardStats({ stats, articles, isLoading }) {
       color: "from-pink-500 to-rose-500",
       bg: "bg-pink-500/10",
     },
+    {
+      label: "Total Shares",
+      value: stats.totalShares?.toLocaleString(),
+      icon: Share2,
+      color: "from-blue-500 to-indigo-500",
+      bg: "bg-blue-500/10",
+    },
   ];
 
   return (
     <div className="space-y-6 sm:space-y-8">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
         {statCards.map(({ label, value, icon: Icon, color, bg }) => (
           <div
             key={label}
