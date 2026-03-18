@@ -71,13 +71,14 @@ export default function BlogArticleCard({
   const excerptRaw = item[`excerpt_${currentLang}`] || item.excerpt;
   const excerpt = extractTextFromBlocks(excerptRaw);
   const identifier = item.documentId || item.id;
-  const cardHref = href || (identifier ? `/techBlog/${identifier}` : "/techBlog");
+  const cardHref =
+    href || (identifier ? `/techBlog/${identifier}` : "/techBlog");
 
   const categoryName = item.category
     ? item.category[`name_${currentLang}`] || item.category.name
     : currentLang === "ar"
-    ? "غير مصنف"
-    : "Uncategorized";
+      ? "غير مصنف"
+      : "Uncategorized";
 
   const author = item[`author_${currentLang}`] || item.author || "غير معروف";
   const authorInitial = author.trim().charAt(0).toUpperCase();
@@ -86,11 +87,11 @@ export default function BlogArticleCard({
   const dateFormatted = publishedDate
     ? new Date(publishedDate).toLocaleDateString(
         currentLang === "ar" ? "ar-EG" : "en-US",
-        { year: "numeric", month: "short", day: "numeric" }
+        { year: "numeric", month: "short", day: "numeric" },
       )
     : currentLang === "ar"
-    ? "غير محدد"
-    : "Unknown";
+      ? "غير محدد"
+      : "Unknown";
 
   const imageUrl = resolveImageUrl(item, mediaBaseUrl);
   const likes = item.likes || 0;
@@ -107,7 +108,7 @@ export default function BlogArticleCard({
 
   return (
     <article
-      className="group flex flex-col h-full rounded-2xl overflow-hidden border border-white/10 bg-noon-card transition-all duration-500 hover:border-brand-sky/40 hover:-translate-y-1"
+      className="group flex flex-col h-full rounded-2xl overflow-hidden border border-white/10 transition-all duration-500 hover:border-brand-sky/40"
       style={{
         boxShadow: "0 4px 24px rgba(0,0,0,0.3)",
       }}
@@ -147,7 +148,6 @@ export default function BlogArticleCard({
           }}
         />
 
-
         {/* Reading time */}
         <span
           className="absolute bottom-3 right-3 flex items-center gap-1 text-white/80"
@@ -166,7 +166,6 @@ export default function BlogArticleCard({
 
       {/* ── Body ───────────────────────────────────────────── */}
       <div className="flex flex-col flex-1 p-5" style={{ gap: "12px" }}>
-
         {/* Title — override global h3 with inline styles */}
         <Link href={cardHref} scroll={scrollOnNavigate} onClick={goTop}>
           <p
@@ -278,14 +277,26 @@ export default function BlogArticleCard({
                 className="flex items-center"
                 style={{ gap: 4, color: "rgba(255,255,255,0.4)", fontSize: 12 }}
               >
-                <Eye style={{ width: 13, height: 13, color: "rgba(77,171,255,0.7)" }} />
+                <Eye
+                  style={{
+                    width: 13,
+                    height: 13,
+                    color: "rgba(77,171,255,0.7)",
+                  }}
+                />
                 {views + (isViewed ? 1 : 0)}
               </span>
               <span
                 className="flex items-center"
                 style={{ gap: 4, color: "rgba(255,255,255,0.4)", fontSize: 12 }}
               >
-                <MessageCircle style={{ width: 13, height: 13, color: "rgba(77,171,255,0.7)" }} />
+                <MessageCircle
+                  style={{
+                    width: 13,
+                    height: 13,
+                    color: "rgba(77,171,255,0.7)",
+                  }}
+                />
                 {comments}
               </span>
               {typeof onShare === "function" && (
@@ -294,10 +305,20 @@ export default function BlogArticleCard({
                   onClick={() => onShare(item)}
                   disabled={isSharing}
                   className="flex items-center hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  style={{ gap: 4, color: "rgba(255,255,255,0.4)", fontSize: 12 }}
+                  style={{
+                    gap: 4,
+                    color: "rgba(255,255,255,0.4)",
+                    fontSize: 12,
+                  }}
                   aria-label="Share"
                 >
-                  <Share2 style={{ width: 13, height: 13, color: "rgba(77,171,255,0.7)" }} />
+                  <Share2
+                    style={{
+                      width: 13,
+                      height: 13,
+                      color: "rgba(77,171,255,0.7)",
+                    }}
+                  />
                   {shares}
                 </button>
               )}
