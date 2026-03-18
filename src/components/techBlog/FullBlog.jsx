@@ -1,10 +1,146 @@
 "use client";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
-import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 import { Heart, Calendar, Eye, Share2, Clock } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import CommentSection from "./comments/CommentSection";
+import BlogArticleCard from "./BlogArticleCard";
+
+const mediaBaseUrl = process.env.NEXT_PUBLIC_MEDIA_BASE_URL || "";
+
+function resolveMediaUrl(url) {
+  if (!url) return "/images/blogImage.png";
+  return url.startsWith("http") ? url : `${mediaBaseUrl}${url}`;
+}
+
+function renderInlineNodes(nodes, keyPrefix = "node") {
+  if (!Array.isArray(nodes)) return null;
+
+  return nodes.map((node, index) => {
+    const key = `${keyPrefix}-${index}`;
+    const text = node?.text || "";
+
+    if (!text) return null;
+    if (node.bold) return <strong key={key}>{text}</strong>;
+    if (node.italic) return <em key={key}>{text}</em>;
+    if (node.underline) return <u key={key}>{text}</u>;
+    if (node.strikethrough) return <s key={key}>{text}</s>;
+    if (node.code) return <code key={key}>{text}</code>;
+
+    return <span key={key}>{text}</span>;
+  });
+}
+
+function renderRichContent(content) {
+  if (!Array.isArray(content)) return null;
+
+  return content.map((block, index) => {
+    const key = `${block?.type || "block"}-${index}`;
+
+    if (block?.type === "paragraph") {
+      return (
+        <p key={key} className="text-white/80 leading-relaxed text-lg mb-5">
+          {renderInlineNodes(block.children, key)}
+        </p>
+      );
+    }
+
+    if (block?.type === "heading") {
+      const level = block.level || 2;
+      if (level === 1) {
+        return (
+          <h1
+            key={key}
+            className="text-4xl md:text-5xl font-bold text-white mt-10 mb-4"
+          >
+            {renderInlineNodes(block.children, key)}
+          </h1>
+        );
+      }
+      if (level === 2) {
+        return (
+          <h2 key={key} className="text-3xl font-bold text-white mt-10 mb-4">
+            {renderInlineNodes(block.children, key)}
+          </h2>
+        );
+      }
+
+      return (
+        <h3 key={key} className="text-2xl font-bold text-white mt-8 mb-3">
+          {renderInlineNodes(block.children, key)}
+        </h3>
+      );
+    }
+
+    if (block?.type === "list") {
+      const ListTag = block.format === "ordered" ? "ol" : "ul";
+      return (
+        <ListTag
+          key={key}
+          className="list-inside mb-6 space-y-2 text-white/80 text-lg"
+        >
+          {(block.children || []).map((item, itemIndex) => (
+            <li key={`${key}-item-${itemIndex}`}>
+              {renderInlineNodes(item.children, `${key}-item-${itemIndex}`)}
+            </li>
+          ))}
+        </ListTag>
+      );
+    }
+
+    if (block?.type === "quote") {
+      return (
+        <blockquote
+          key={key}
+          className="border-s-4 border-brand-sky/60 ps-4 italic text-white/70 my-8"
+        >
+          {renderInlineNodes(block.children, key)}
+        </blockquote>
+      );
+    }
+
+    if (block?.type === "code") {
+      return (
+        <pre
+          key={key}
+          className="my-8 p-5 rounded-2xl bg-black/30 border border-white/10 overflow-x-auto"
+        >
+          <code>{block.children?.[0]?.text || ""}</code>
+        </pre>
+      );
+    }
+
+    if (block?.type === "image") {
+      const src = block.image?.url || block.url || block.src;
+      const alt =
+        block.image?.alternativeText || block.alternativeText || "صورة المقال";
+      const width = block.image?.width || block.width || 1200;
+      const height = block.image?.height || block.height || 700;
+
+      if (!src) return null;
+
+      return (
+        <div key={key} className="my-12">
+          <Image
+            src={resolveMediaUrl(src)}
+            alt={alt}
+            width={width}
+            height={height}
+            unoptimized
+            className="rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] mx-auto object-cover border border-white/5"
+          />
+          {alt && (
+            <p className="text-center text-sm text-white/40 mt-4 italic">
+              {alt}
+            </p>
+          )}
+        </div>
+      );
+    }
+
+    return null;
+  });
+}
 
 export default function FullBlog({ article, similarArticles }) {
   const [likes, setLikes] = useState(article?.likes || 0);
@@ -127,7 +263,7 @@ export default function FullBlog({ article, similarArticles }) {
 
   const handleShare = async () => {
     const identifier = article.documentId || article.id;
-    const articleUrl = `${window.location.origin}/techBlog/${article.slug}`;
+    const articleUrl = `${window.location.origin}/techBlog/${identifier}`;
     const shareTitle =
       article[`title_${lang}`] || article.title || "Anoon Blog";
 
@@ -209,9 +345,7 @@ export default function FullBlog({ article, similarArticles }) {
       imageData.formats?.medium?.url ||
       imageData.url;
     if (rawUrl) {
-      heroImageUrl = rawUrl.startsWith("http")
-        ? rawUrl
-        : `${process.env.NEXT_PUBLIC_STRAPI_URL}${rawUrl}`;
+      heroImageUrl = resolveMediaUrl(rawUrl);
     }
   }
 
@@ -225,6 +359,27 @@ export default function FullBlog({ article, similarArticles }) {
         },
       )
     : "غير محدد";
+
+  const relatedArticles = (similarArticles || [])
+    .filter((item) => {
+      if (!item) return false;
+      if ((item.documentId || item.id) === (article.documentId || article.id)) {
+        return false;
+      }
+
+      const itemCategory =
+        item.category?.id || item.category?.name || item.category || null;
+      const currentCategory =
+        article.category?.id ||
+        article.category?.name ||
+        article.category ||
+        null;
+
+      return (
+        itemCategory && currentCategory && itemCategory === currentCategory
+      );
+    })
+    .slice(0, 3);
 
   return (
     <main className="min-h-screen pb-20">
@@ -286,32 +441,7 @@ export default function FullBlog({ article, similarArticles }) {
                 dangerouslySetInnerHTML={{ __html: content }}
               />
             ) : (
-              <BlocksRenderer
-                content={content}
-                blocks={{
-                  image: ({ src, alt, width, height }) => (
-                    <div className="my-12">
-                      <Image
-                        src={
-                          src.startsWith("http")
-                            ? src
-                            : `${process.env.NEXT_PUBLIC_STRAPI_URL}${src}`
-                        }
-                        alt={alt || "صورة المقال"}
-                        width={width || 1200}
-                        height={height || 700}
-                        unoptimized
-                        className="rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] mx-auto object-cover border border-white/5"
-                      />
-                      {alt && (
-                        <p className="text-center text-sm text-white/40 mt-4 italic">
-                          {alt}
-                        </p>
-                      )}
-                    </div>
-                  ),
-                }}
-              />
+              renderRichContent(content)
             )}
           </div>
 
@@ -420,7 +550,7 @@ export default function FullBlog({ article, similarArticles }) {
         </aside>
       </div>
 
-      {similarArticles?.length > 0 && (
+      {relatedArticles.length > 0 && (
         <section className="max-w-7xl mx-auto px-6 mt-32">
           <div className="flex items-center gap-4 mb-12">
             <h2 className="text-3xl md:text-5xl font-bold text-white">
@@ -428,8 +558,25 @@ export default function FullBlog({ article, similarArticles }) {
             </h2>
             <div className="h-0.5 flex-1 bg-linear-to-r from-brand-sky/30 to-transparent" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Similar articles list could go here */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+            {relatedArticles.map((item) => {
+              const identifier = item.documentId || item.id;
+
+              return (
+                <div key={identifier} className="rounded-2xl overflow-hidden h-full">
+                  <BlogArticleCard
+                    item={item}
+                    currentLang={lang}
+                    isRTL={lang === "ar"}
+                    href={`/techBlog/${identifier}`}
+                    scrollOnNavigate={true}
+                    mediaBaseUrl={mediaBaseUrl}
+                    readMoreLabel={lang === "ar" ? "اقرأ المزيد" : "Read More"}
+                    showActions={false}
+                  />
+                </div>
+              );
+            })}
           </div>
         </section>
       )}

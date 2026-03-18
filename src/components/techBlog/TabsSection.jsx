@@ -1,11 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { Heart, MessageCircle, Eye, Share2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useRTL } from "@/hooks/useRTL";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import BlogArticleCard from "./BlogArticleCard";
 
 const tabContentVariants = {
   initial: { opacity: 0, y: 14 },
@@ -59,12 +57,19 @@ export default function TabsSection() {
   const [localViews, setLocalViews] = useState({}); // لتخزين المشاهدات المحلية
   const [localShares, setLocalShares] = useState({});
   const [sharingById, setSharingById] = useState({});
+  const mediaBaseUrl = process.env.NEXT_PUBLIC_MEDIA_BASE_URL || "";
+
+  const getArticleIdentifier = (item) => item?.documentId || item?.id;
+  const getArticleHref = (item) => {
+    const identifier = getArticleIdentifier(item);
+    return identifier ? `/techBlog/${identifier}` : "/techBlog";
+  };
 
   const handleShare = async (item) => {
-    const identifier = item.documentId || item.id;
+    const identifier = getArticleIdentifier(item);
     if (!identifier || sharingById[identifier]) return;
 
-    const articleUrl = `${window.location.origin}/techBlog/${item.slug}`;
+    const articleUrl = `${window.location.origin}${getArticleHref(item)}`;
     const title = item[`title_${currentLang}`] || item.title || "Anoon Blog";
     const previousShares = localShares[identifier] ?? item.shares ?? 0;
 
@@ -118,20 +123,6 @@ export default function TabsSection() {
     } finally {
       setSharingById((prev) => ({ ...prev, [identifier]: false }));
     }
-  };
-
-  // دالة لاستخراج النص من blocks
-  const extractTextFromBlocks = (blocks) => {
-    if (!blocks || !Array.isArray(blocks)) return "";
-    let text = "";
-    blocks.forEach((block) => {
-      if (block.children) {
-        block.children.forEach((child) => {
-          if (child.text) text += child.text + " ";
-        });
-      }
-    });
-    return text.trim();
   };
 
   // تحميل حالات الإعجاب من localStorage
@@ -211,8 +202,8 @@ export default function TabsSection() {
         console.error("Error loading data:", err);
         setError(
           currentLang === "ar"
-            ? "غير قادر على الاتصال بالسيرفر. تأكد من تشغيل خادم Strapi."
-            : "Unable to connect to the server. Please ensure Strapi is running.",
+            ? "غير قادر على الاتصال بالسيرفر."
+            : "Unable to connect to the server.",
         );
       } finally {
         setIsLoading(false);
@@ -314,171 +305,43 @@ export default function TabsSection() {
               initial={prefersReducedMotion ? false : "initial"}
               animate={prefersReducedMotion ? undefined : "animate"}
               exit={prefersReducedMotion ? undefined : "exit"}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch"
             >
               {articlesByTab[activeTab]?.length > 0 ? (
                 articlesByTab[activeTab].map((item) => {
-                  const title =
-                    item[`title_${currentLang}`] || item.title || "بدون عنوان";
-
-                  const excerptBlocks =
-                    item[`excerpt_${currentLang}`] || item.excerpt;
-                  const excerpt = excerptBlocks
-                    ? extractTextFromBlocks(excerptBlocks)
-                    : "";
-
-                  let imageUrl = "/images/blogImage.png";
-
-                  if (
-                    item.image &&
-                    Array.isArray(item.image) &&
-                    item.image.length > 0
-                  ) {
-                    const imageData = item.image[0];
-                    let rawUrl =
-                      imageData.formats?.medium?.url ||
-                      imageData.formats?.small?.url ||
-                      imageData.url;
-                    if (rawUrl) {
-                      imageUrl = rawUrl.startsWith("http")
-                        ? rawUrl
-                        : `${process.env.NEXT_PUBLIC_STRAPI_URL}${rawUrl}`;
-                    }
-                  }
-
-                  const categoryName = item.category
-                    ? item.category[`name_${currentLang}`] || item.category.name
-                    : currentLang === "ar"
-                      ? "غير مصنف"
-                      : "Uncategorized";
-
-                  const author =
-                    item[`author_${currentLang}`] || item.author || "غير معروف";
-
-                  const dateFormatted = item.publishedAt
-                    ? new Date(item.publishedAt).toLocaleDateString(
-                        currentLang === "ar" ? "ar-EG" : "en-US",
-                        {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        },
-                      )
-                    : t("common.unknown_date", "غير محدد");
-
-                  // التحقق مما إذا كان المستخدم معجب بهذه المقالة
-                  const isLiked = localLikes[item.id] || false;
-
-                  // التحقق مما إذا كانت المشاهدة مسجلة محلياً
-                  const isViewed = localViews[item.id] || false;
-                  const shareCount = localShares[item.id] ?? item.shares ?? 0;
+                  const identifier = getArticleIdentifier(item);
+                  if (!identifier) return null;
+                  const isLiked = localLikes[identifier] || false;
+                  const isViewed = localViews[identifier] || false;
+                  const shareCount =
+                    localShares[identifier] ?? item.shares ?? 0;
 
                   return (
                     <motion.div
-                      key={item.id}
+                      key={identifier}
                       variants={prefersReducedMotion ? undefined : itemVariants}
                       initial={prefersReducedMotion ? false : "initial"}
                       animate={prefersReducedMotion ? undefined : "animate"}
                       exit={prefersReducedMotion ? undefined : "exit"}
                       layout
-                      className="group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-500 hover:shadow-xl hover:shadow-brand-sky/5"
+                      className="h-full"
                     >
-                      <Link
-                        href={`/techBlog/${item.slug}`}
-                        className="block relative h-48 overflow-hidden"
-                      >
-                        <Image
-                          src={imageUrl}
-                          alt={title}
-                          fill
-                          unoptimized
-                          className="object-cover group-hover:scale-110 transition-transform duration-700"
-                          onError={(e) => {
-                            e.currentTarget.src = "/images/blogImage.png";
-                          }}
-                        />
-                      </Link>
-
-                      <div className="p-5 space-y-4">
-                        <Link href={`/techBlog/${item.slug}`}>
-                          <h3
-                            className={`text-xl font-semibold text-white group-hover:text-brand-sky transition-colors line-clamp-2 ${
-                              isRTL ? "text-right" : "text-left"
-                            }`}
-                          >
-                            {title}
-                          </h3>
-                        </Link>
-
-                        {excerpt && (
-                          <p
-                            className={`text-white/70 text-sm leading-relaxed line-clamp-3 ${
-                              isRTL ? "text-right" : "text-left"
-                            }`}
-                          >
-                            {excerpt}
-                          </p>
+                      <BlogArticleCard
+                        item={item}
+                        currentLang={currentLang}
+                        isRTL={isRTL}
+                        href={getArticleHref(item)}
+                        mediaBaseUrl={mediaBaseUrl}
+                        readMoreLabel={t(
+                          "blog.article.read_more",
+                          "اقرأ المزيد",
                         )}
-
-                        <div
-                          className={`flex flex-wrap items-center gap-2 text-xs text-white/50 ${
-                            isRTL ? "flex-row-reverse" : ""
-                          }`}
-                        >
-                          <span className="px-2 py-1 bg-white/10 rounded-full">
-                            {categoryName}
-                          </span>
-                          <span>•</span>
-                          <span>{dateFormatted}</span>
-                          <span>•</span>
-                          <span>{author}</span>
-                        </div>
-
-                        <div
-                          className={`flex items-center gap-4 text-sm ${
-                            isRTL ? "flex-row-reverse" : ""
-                          }`}
-                        >
-                          <div className="flex items-center gap-1 text-white/60">
-                            <Heart
-                              className={`w-4 h-4 transition-all duration-300 ${
-                                isLiked
-                                  ? "fill-red-400 text-red-400"
-                                  : "text-red-400"
-                              }`}
-                            />
-                            <span>{(item.likes || 0) + (isLiked ? 1 : 0)}</span>
-                          </div>
-
-                          <div className="flex items-center gap-1 text-white/60">
-                            <Eye className="w-4 h-4 text-brand-sky" />
-                            <span>{(item.views || 0) + (isViewed ? 1 : 0)}</span>
-                          </div>
-
-                          <div className="flex items-center gap-1 text-white/60">
-                            <MessageCircle className="w-4 h-4 text-brand-sky" />
-                            <span>{item.comments_count || 0}</span>
-                          </div>
-
-                          <button
-                            type="button"
-                            onClick={() => handleShare(item)}
-                            disabled={sharingById[item.id]}
-                            className="flex items-center gap-1 text-white/60 hover:text-white transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-                            aria-label="Share article"
-                          >
-                            <Share2 className="w-4 h-4 text-brand-sky" />
-                            <span>{shareCount}</span>
-                          </button>
-                        </div>
-
-                        <Link
-                          href={`/techBlog/${item.slug}`}
-                          className="block w-full py-2.5 px-4 rounded-xl border border-brand-sky/30 text-brand-sky hover:bg-brand-sky hover:text-white transition-all duration-300 font-medium text-center"
-                        >
-                          {t("blog.article.read_more", "اقرأ المزيد")}
-                        </Link>
-                      </div>
+                        isLiked={isLiked}
+                        isViewed={isViewed}
+                        shareCount={shareCount}
+                        onShare={handleShare}
+                        isSharing={sharingById[identifier]}
+                      />
                     </motion.div>
                   );
                 })

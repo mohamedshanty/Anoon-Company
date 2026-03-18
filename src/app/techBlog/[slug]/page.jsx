@@ -3,9 +3,23 @@ import Link from "next/link";
 import { getArticleBySlug } from "@/lib/articlesApi.server";
 import { getPublishedArticles } from "@/lib/articlesApi.client";
 
+async function getArticleByIdentifier(identifier) {
+  const articles = await getPublishedArticles();
+  if (!Array.isArray(articles) || articles.length === 0) return null;
+
+  return (
+    articles.find(
+      (article) =>
+        article.id === identifier || article.documentId === identifier,
+    ) ||
+    articles.find((article) => article.slug === identifier) ||
+    null
+  );
+}
+
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const article = await getArticleBySlug(slug);
+  const article = await getArticleByIdentifier(slug);
 
   if (!article) {
     return { title: "Article Not Found | Anoon Blog" };
@@ -27,7 +41,9 @@ export async function generateMetadata({ params }) {
 export async function generateStaticParams() {
   try {
     const articles = await getPublishedArticles();
-    return articles.map((a) => ({ slug: a.slug }));
+    return articles
+      .map((a) => ({ slug: a.documentId || a.id }))
+      .filter((item) => !!item.slug);
   } catch {
     return [];
   }
@@ -35,11 +51,12 @@ export async function generateStaticParams() {
 
 export default async function ArticlePage({ params }) {
   const { slug } = await params;
-  const article = await getArticleBySlug(slug);
+  const article =
+    (await getArticleByIdentifier(slug)) || (await getArticleBySlug(slug));
 
   if (!article) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-black">
+      <div className="min-h-screen flex items-center justify-center bg-linear-to-b from-gray-900 to-black">
         <div className="text-center">
           <h1 className="text-5xl font-bold text-white mb-4">
             المقال غير موجود

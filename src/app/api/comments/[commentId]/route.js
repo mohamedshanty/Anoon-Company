@@ -1,50 +1,77 @@
 import { NextResponse } from "next/server";
+import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL;
-const API_TOKEN = process.env.STRAPI_API_TOKEN;
-
-// --- تعديل تعليق ---
-export async function PUT(request, { params }) {
+export async function PATCH(request, { params }) {
   try {
     const { commentId } = await params;
     const body = await request.json();
-    
-    const res = await fetch(`${STRAPI_URL}/api/comments/${commentId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${API_TOKEN}`,
-      },
-      body: JSON.stringify({
-        data: { content: body.content }
-      }),
-    });
+    const content = body?.content?.trim();
 
-    if (!res.ok) throw new Error("Failed to update comment");
-    
-    const data = await res.json();
-    return NextResponse.json({ success: true, data: data.data });
+    if (!commentId) {
+      return NextResponse.json(
+        { success: false, error: "Missing comment id" },
+        { status: 400 },
+      );
+    }
+
+    if (!content) {
+      return NextResponse.json(
+        { success: false, error: "Content is required" },
+        { status: 400 },
+      );
+    }
+
+    const { data, error } = await supabaseAdmin
+      .from("comments")
+      .update({ content })
+      .eq("id", commentId)
+      .select("id, article_id, author_name, author_email, content, created_at")
+      .single();
+
+    if (error) {
+      return NextResponse.json(
+        { success: false, error: error.message },
+        { status: 500 },
+      );
+    }
+
+    return NextResponse.json({ success: true, data });
   } catch (error) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: error.message || "Unexpected server error" },
+      { status: 500 },
+    );
   }
 }
 
-// --- حذف تعليق ---
-export async function DELETE(request, { params }) {
+export async function DELETE(_request, { params }) {
   try {
     const { commentId } = await params;
-    
-    const res = await fetch(`${STRAPI_URL}/api/comments/${commentId}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${API_TOKEN}`,
-      },
-    });
 
-    if (!res.ok) throw new Error("Failed to delete comment");
+    if (!commentId) {
+      return NextResponse.json(
+        { success: false, error: "Missing comment id" },
+        { status: 400 },
+      );
+    }
 
-    return NextResponse.json({ success: true });
+    const { error } = await supabaseAdmin
+      .from("comments")
+      .delete()
+      .eq("id", commentId);
+
+    if (error) {
+      return NextResponse.json(
+        { success: false, error: error.message },
+        { status: 500 },
+      );
+    }
+
+    return NextResponse.json({ success: true, data: { id: commentId } });
   } catch (error) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: error.message || "Unexpected server error" },
+      { status: 500 },
+    );
   }
 }
