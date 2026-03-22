@@ -299,30 +299,26 @@ export default function TeamsClient({ members, tRoles }) {
         }
         :global(.teams-swiper .swiper-wrapper) {
           align-items: center;
+          will-change: transform;
         }
         :global(.teams-swiper .swiper-slide) {
           transition:
             transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-            opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
-            filter 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
           display: flex;
           justify-content: center;
           align-items: center;
-          opacity: 0.5;
-          filter: blur(1.5px) brightness(0.7);
+          opacity: 0.6;
           transform: scale(0.82);
-          will-change: transform;
         }
         :global(.teams-swiper .swiper-slide-active) {
           opacity: 1;
-          filter: blur(0) brightness(1);
           transform: scale(1.12);
           z-index: 10;
         }
         :global(.teams-swiper .swiper-slide-prev),
         :global(.teams-swiper .swiper-slide-next) {
           opacity: 0.75;
-          filter: blur(0.5px) brightness(0.85);
           transform: scale(0.93);
         }
         .team-card {

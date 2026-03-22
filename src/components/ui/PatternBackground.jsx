@@ -6,7 +6,7 @@ export default function PatternBackground({
   opacity = "opacity-70",
   className = "",
   translateY = "-translate-y-30",
-  priority = false,
+  priority = true,
 }) {
   const directionClass = direction === "diagonal" ? "rotate-[160deg]" : "";
 
@@ -17,10 +17,10 @@ export default function PatternBackground({
       <div className={`relative w-full h-full ${directionClass}`}>
         <Image
           src="/images/pattern.webp"
-          alt="Background Pattern"
+          alt=""
           fill
           className={`object-cover ${translateY}`}
-          priority={priority}
+          priority={true}
           quality={60}
           sizes="(max-width: 640px) 390px, 750px"
         />

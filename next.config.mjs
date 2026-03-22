@@ -14,6 +14,14 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
   },
+  compiler: {
+    targets: {
+      chrome: "109",
+      firefox: "109",
+      safari: "15.6",
+      edge: "109",
+    },
+  },
   turbopack: {
     root: __dirname,
   },

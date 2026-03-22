@@ -20,7 +20,7 @@ export default function AIAgentServer({ t }) {
       </div>
 
       {/* Background Pattern */}
-      <PatternBackground direction="default" translateY="-translate-y-30" />
+      <PatternBackground priority direction="default" translateY="-translate-y-30" />
 
       <div className="main-container">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-8 md:gap-10 lg:gap-12">
