@@ -22,6 +22,9 @@ export default function TeamsClient({ members, tRoles }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isMounted, setIsMounted] = useState(false);
   const swiperRef = useRef(null);
+  const navigationSelectors = isRTL
+    ? { prevEl: ".nav-btn-next", nextEl: ".nav-btn-prev" }
+    : { prevEl: ".nav-btn-prev", nextEl: ".nav-btn-next" };
 
   useEffect(() => {
     setSwiperKey((prev) => prev + 1);
@@ -102,14 +105,16 @@ export default function TeamsClient({ members, tRoles }) {
         ✅ الحل: نحط الأزرار قبل <Swiper> + نستخدم CSS class selectors بدل refs
         بكذا Swiper يلاقيها موجودة دايماً حتى بعد الـ refresh
       */}
-      <button className="nav-btn nav-btn-prev" aria-label="Previous slide">
+      <button
+        className="nav-btn nav-btn-prev"
+        aria-label={isRTL ? "الشريحة السابقة" : "Previous slide"}
+      >
         <svg
           width="20"
           height="20"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
-          style={{ transform: isRTL ? "rotate(180deg)" : "none" }}
         >
           <path
             strokeLinecap="round"
@@ -120,14 +125,16 @@ export default function TeamsClient({ members, tRoles }) {
         </svg>
       </button>
 
-      <button className="nav-btn nav-btn-next" aria-label="Next slide">
+      <button
+        className="nav-btn nav-btn-next"
+        aria-label={isRTL ? "الشريحة التالية" : "Next slide"}
+      >
         <svg
           width="20"
           height="20"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
-          style={{ transform: isRTL ? "rotate(180deg)" : "none" }}
         >
           <path
             strokeLinecap="round"
@@ -154,10 +161,7 @@ export default function TeamsClient({ members, tRoles }) {
           modifier: 2.2,
           slideShadows: true,
         }}
-        navigation={{
-          prevEl: ".nav-btn-prev",
-          nextEl: ".nav-btn-next",
-        }}
+        navigation={navigationSelectors}
         onSwiper={(swiper) => {
           swiperRef.current = swiper;
         }}
@@ -297,13 +301,17 @@ export default function TeamsClient({ members, tRoles }) {
           align-items: center;
         }
         :global(.teams-swiper .swiper-slide) {
-          transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+          transition:
+            transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+            opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+            filter 0.5s cubic-bezier(0.4, 0, 0.2, 1);
           display: flex;
           justify-content: center;
           align-items: center;
           opacity: 0.5;
           filter: blur(1.5px) brightness(0.7);
           transform: scale(0.82);
+          will-change: transform;
         }
         :global(.teams-swiper .swiper-slide-active) {
           opacity: 1;
@@ -390,17 +398,29 @@ export default function TeamsClient({ members, tRoles }) {
           inset: 0;
           border-radius: 20px;
           pointer-events: none;
+          overflow: hidden;
         }
-        :global(.swiper-slide-active) .active-ring {
+        .active-ring::after {
+          content: "";
+          position: absolute;
+          inset: -4px;
+          border-radius: 24px;
+          border: 2px solid rgba(0, 191, 255, 0.6);
+          transform: scale(0.94);
+          opacity: 0;
+        }
+        :global(.swiper-slide-active) .active-ring::after {
           animation: ring-pulse 2.5s ease-in-out infinite;
         }
         @keyframes ring-pulse {
           0%,
           100% {
-            box-shadow: 0 0 0 0 rgba(0, 191, 255, 0.3);
+            transform: scale(1);
+            opacity: 0.6;
           }
           50% {
-            box-shadow: 0 0 0 8px rgba(0, 191, 255, 0);
+            transform: scale(1.04);
+            opacity: 0;
           }
         }
         .card-mobile-info {

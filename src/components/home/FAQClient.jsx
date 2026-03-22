@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { ChevronRight, ChevronLeft } from "lucide-react";
-import Reveal from "@/components/ui/Reveal";
 import { AnimatePresence, motion } from "framer-motion";
 
 export default function FAQClient({ faqs, isRTL }) {
@@ -10,22 +9,12 @@ export default function FAQClient({ faqs, isRTL }) {
   const ArrowIcon = isRTL ? ChevronLeft : ChevronRight;
   const rotate = (angle) => (isRTL ? -angle : angle);
 
-  const getRevealType = (index, total) => {
-    // Alternate entry direction for a modern rhythm.
-    // First/last from left-to-right, second from right-to-left.
-    if (index === 0 || index === total - 1) return "slide-right";
-    return index % 2 === 1 ? "slide-left" : "slide-right";
-  };
-
   return (
     <div className="space-y-4 md:space-y-5 lg:space-y-6">
       {faqs.map((faq, index) => (
-        <Reveal
+        <div
           key={index}
-          type={getRevealType(index, faqs.length)}
-          duration={0.42}
-          delay={index * 0.06}
-          className={`relative overflow-hidden rounded-2xl md:rounded-3xl border border-brand-sky/15 bg-linear-to-br from-white via-white to-sky-50/50 text-brand-sky flex flex-col shadow-[0_12px_30px_rgba(0,0,0,0.08)] hover:shadow-[0_16px_36px_rgba(14,165,233,0.18)] transition-all duration-300 ${
+          className={`relative overflow-hidden rounded-2xl md:rounded-3xl border border-brand-sky/15 bg-linear-to-br from-white via-white to-sky-50/50 text-brand-sky flex flex-col shadow-[0_12px_30px_rgba(0,0,0,0.08)] ${
             openIndex === index
               ? "ring-2 ring-brand-sky/40 border-brand-sky/30"
               : ""
@@ -84,7 +73,7 @@ export default function FAQClient({ faqs, isRTL }) {
               </motion.div>
             )}
           </AnimatePresence>
-        </Reveal>
+        </div>
       ))}
     </div>
   );

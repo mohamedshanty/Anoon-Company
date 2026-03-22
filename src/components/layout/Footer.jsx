@@ -69,9 +69,9 @@ export default function Footer() {
 
           {/* Get in Touch */}
           <div>
-            <h4 className="text-white font-bold text-lg mb-8">
+            <h3 className="text-white font-bold text-lg mb-8">
               {t("footer.get_in_touch", "Get in Touch")}
-            </h4>
+            </h3>
             <ul className="space-y-6">
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" />
@@ -116,9 +116,9 @@ export default function Footer() {
 
           {/* Newsletter */}
           <div>
-            <h4 className="text-white font-bold text-lg mb-8">
+            <h3 className="text-white font-bold text-lg mb-8">
               {t("footer.newsletter.title", "Join our Newsletter")}
-            </h4>
+            </h3>
             <div className="space-y-4">
               <p className="text-white text-sm">
                 {t("footer.newsletter.label", "Email Address")}
@@ -136,7 +136,7 @@ export default function Footer() {
                   <Button
                     variant="filled"
                     color="orange"
-                    className="w-full sm:w-auto"
+                    className="w-full sm:w-auto bg-[#e68900]! text-white!"
                   >
                     {t("footer.newsletter.button", "Subscribe")}
                   </Button>

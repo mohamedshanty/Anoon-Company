@@ -1,11 +1,19 @@
 import path from "path";
 import { fileURLToPath } from "url";
+import bundleAnalyzer from "@next/bundle-analyzer";
+
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+});
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    optimizeCss: true,
+  },
   turbopack: {
     root: __dirname,
   },
@@ -83,12 +91,12 @@ const nextConfig = {
         ],
       },
       {
-        // HTML pages — allow bfcache
-        source: "/:path((?!api|_next).*)",
+        // HTML pages — bfcache-compatible
+        source: "/(.*)",
         headers: [
           {
             key: "Cache-Control",
-            value: "no-cache, must-revalidate",
+            value: "public, max-age=0, must-revalidate",
           },
         ],
       },
@@ -96,4 +104,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);

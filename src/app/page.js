@@ -4,20 +4,20 @@ import MainHero from "@/components/home/MainHeroServer";
 import MainInfoSection from "@/components/home/MainInfoServer";
 import ProgramsServer from "@/components/home/ProgramsServer";
 import { getTranslations } from "@/lib/i18n-server";
+// Swiper-heavy — client wrapper performs ssr:false dynamic internally
+import TeamsClientLoader from "@/components/home/TeamsClientLoader";
+// GetInTouch has GSAP + reCAPTCHA — client wrapper performs ssr:false dynamic internally
+import GetInTouchLoader from "@/components/common/GetInTouchLoader";
 
-// Below-fold: lazy-loaded to reduce initial JS
+// Below-fold server components: lazy-loaded to reduce initial JS bundle
 const AIAgentServer = dynamic(() => import("@/components/home/AIAgentServer"));
 const ImpactSectionServer = dynamic(
   () => import("@/components/home/ImpactServer"),
 );
-const TeamsServer = dynamic(() => import("@/components/home/TeamsServer"));
 const PartnersServer = dynamic(
   () => import("@/components/common/PartnersServer"),
 );
 const FAQServer = dynamic(() => import("@/components/home/FAQServer"));
-const GetInTouch = dynamic(() => import("@/components/common/GetInTouch"), {
-  ssr: true,
-});
 
 export default async function Home() {
   const cookieStore = await cookies();
@@ -37,10 +37,10 @@ export default async function Home() {
           statsTrans={trans.stats}
           isRTL={isRTL}
         />
-        <TeamsServer t={trans.teams} locale={lang} isRTL={isRTL} />
+        <TeamsClientLoader t={trans.teams} locale={lang} isRTL={isRTL} />
         <PartnersServer t={trans.partners} isRTL={isRTL} />
         <FAQServer t={trans.faq} isRTL={isRTL} />
-        <GetInTouch />
+        <GetInTouchLoader />
       </div>
     </div>
   );

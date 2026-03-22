@@ -21,6 +21,8 @@ export default function PatternBackground({
           fill
           className={`object-cover ${translateY}`}
           priority={priority}
+          quality={60}
+          sizes="(max-width: 640px) 390px, 750px"
         />
       </div>
     </div>

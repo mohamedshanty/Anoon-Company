@@ -1,6 +1,5 @@
 import SectionHeader from "../ui/SectionHeader";
 import TeamsClient from "./TeamsClient";
-import Reveal from "../ui/Reveal";
 
 const members = [
   {
@@ -65,58 +64,54 @@ export default function TeamsServer({ t, locale }) {
   return (
     <section id="teams" className="py-24 relative overflow-hidden">
       <div className="main-container relative z-10">
-        <Reveal type="slide-up">
-          <SectionHeader
-            title={t.title || (currentLocale === "ar" ? "فريقنا" : "Our Teams")}
-            subtitle={{
-              highlightedWords: [
-                {
-                  text:
-                    t.subtitle_word1 ||
-                    (currentLocale === "ar" ? "عندما" : "When"),
-                  color: "text-brand-sky",
-                },
-                {
-                  text:
-                    t.subtitle_word2 ||
-                    (currentLocale === "ar" ? "سقط" : "Everything"),
-                  color: "text-brand-orange",
-                },
-                {
-                  text:
-                    t.subtitle_word3 ||
-                    (currentLocale === "ar" ? "كل شيء،" : "Fell,"),
-                  color: "text-brand-sky",
-                },
-                {
-                  text:
-                    t.subtitle_word4 || (currentLocale === "ar" ? "نحن" : "We"),
-                  color: "text-brand-orange",
-                },
-                {
-                  text:
-                    t.subtitle_word5 ||
-                    (currentLocale === "ar" ? "نهضنا" : "Stood"),
-                  color: "text-brand-sky",
-                },
-                {
-                  text:
-                    t.subtitle_word6 ||
-                    (currentLocale === "ar" ? "من جديد." : "Up."),
-                  color: "text-brand-orange",
-                },
-              ],
-            }}
-            maxWidth="4xl"
-            align="center"
-            starsCount={0}
-            subtitleClassName="mt-4"
-          />
-        </Reveal>
+        <SectionHeader
+          title={t.title || (currentLocale === "ar" ? "فريقنا" : "Our Teams")}
+          subtitle={{
+            highlightedWords: [
+              {
+                text:
+                  t.subtitle_word1 ||
+                  (currentLocale === "ar" ? "عندما" : "When"),
+                color: "text-brand-sky",
+              },
+              {
+                text:
+                  t.subtitle_word2 ||
+                  (currentLocale === "ar" ? "سقط" : "Everything"),
+                color: "text-brand-orange",
+              },
+              {
+                text:
+                  t.subtitle_word3 ||
+                  (currentLocale === "ar" ? "كل شيء،" : "Fell,"),
+                color: "text-brand-sky",
+              },
+              {
+                text:
+                  t.subtitle_word4 || (currentLocale === "ar" ? "نحن" : "We"),
+                color: "text-brand-orange",
+              },
+              {
+                text:
+                  t.subtitle_word5 ||
+                  (currentLocale === "ar" ? "نهضنا" : "Stood"),
+                color: "text-brand-sky",
+              },
+              {
+                text:
+                  t.subtitle_word6 ||
+                  (currentLocale === "ar" ? "من جديد." : "Up."),
+                color: "text-brand-orange",
+              },
+            ],
+          }}
+          maxWidth="4xl"
+          align="center"
+          starsCount={0}
+          subtitleClassName="mt-4"
+        />
 
-        <Reveal type="fade" delay={0.4}>
-          <TeamsClient members={localizedMembers} tRoles={{}} />
-        </Reveal>
+        <TeamsClient members={localizedMembers} tRoles={{}} />
       </div>
     </section>
   );
