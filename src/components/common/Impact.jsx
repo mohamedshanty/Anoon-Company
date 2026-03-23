@@ -179,12 +179,148 @@ Impact.Description = function ImpactDescription({ children, className = "" }) {
   );
 };
 
+const parseStatValue = (value) => {
+  const raw = String(value ?? "");
+  const match = raw.match(/-?\d[\d,.]*/);
+
+  if (!match) {
+    return null;
+  }
+
+  const numericText = match[0];
+  const normalized = numericText.replace(/,/g, "");
+  const target = Number(normalized);
+
+  if (!Number.isFinite(target)) {
+    return null;
+  }
+
+  const decimalPart = normalized.split(".")[1];
+  const decimals = decimalPart ? decimalPart.length : 0;
+
+  return {
+    raw,
+    prefix: raw.slice(0, match.index),
+    suffix: raw.slice((match.index || 0) + numericText.length),
+    target,
+    decimals,
+  };
+};
+
+const formatAnimatedStatValue = (parsed, currentValue, language) => {
+  if (!parsed) {
+    return String(currentValue ?? "");
+  }
+
+  const roundedValue =
+    parsed.decimals > 0
+      ? Number(currentValue.toFixed(parsed.decimals))
+      : Math.round(currentValue);
+
+  const formattedNumber = new Intl.NumberFormat(language || "en", {
+    minimumFractionDigits: parsed.decimals,
+    maximumFractionDigits: parsed.decimals,
+  }).format(roundedValue);
+
+  return `${parsed.prefix}${formattedNumber}${parsed.suffix}`;
+};
+
 Impact.Stats = function ImpactStats({ stats, className = "" }) {
+  const { i18n } = useTranslation();
+  const statsRef = useRef(null);
+  const rafRef = useRef(null);
+  const hasAnimatedRef = useRef(false);
+  const [displayValues, setDisplayValues] = useState(() =>
+    (stats || []).map((stat) => String(stat?.value ?? "")),
+  );
+
+  useEffect(() => {
+    setDisplayValues((stats || []).map((stat) => String(stat?.value ?? "")));
+    hasAnimatedRef.current = false;
+  }, [stats]);
+
+  useEffect(() => {
+    const parsedStats = (stats || []).map((stat) =>
+      parseStatValue(stat?.value),
+    );
+
+    const hasNumericStats = parsedStats.some(Boolean);
+    if (!hasNumericStats || !statsRef.current) {
+      return;
+    }
+
+    const durationMs = 1400;
+
+    const animateCount = () => {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
+
+      const startTime = performance.now();
+
+      const step = (now) => {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / durationMs, 1);
+        const easedProgress = 1 - Math.pow(1 - progress, 3);
+
+        const nextValues = (stats || []).map((stat, index) => {
+          const parsed = parsedStats[index];
+
+          if (!parsed) {
+            return String(stat?.value ?? "");
+          }
+
+          const current = parsed.target * easedProgress;
+          return formatAnimatedStatValue(parsed, current, i18n?.language);
+        });
+
+        setDisplayValues(nextValues);
+
+        if (progress < 1) {
+          rafRef.current = requestAnimationFrame(step);
+          return;
+        }
+
+        setDisplayValues(
+          (stats || []).map((stat) => String(stat?.value ?? "")),
+        );
+      };
+
+      rafRef.current = requestAnimationFrame(step);
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (!entry?.isIntersecting || hasAnimatedRef.current) {
+          return;
+        }
+
+        hasAnimatedRef.current = true;
+        animateCount();
+        observer.disconnect();
+      },
+      {
+        threshold: 0.35,
+      },
+    );
+
+    observer.observe(statsRef.current);
+
+    return () => {
+      observer.disconnect();
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
+    };
+  }, [stats, i18n?.language]);
+
   return (
     <section
+      ref={statsRef}
       className={`grid grid-cols-2 gap-4 md:gap-6 lg:gap-8 p-4 md:p-5 pb-16 md:pb-20 lg:pb-24 pt-8 md:pt-10 lg:pt-12 relative overflow-hidden ${className}`}
     >
-      {stats?.map((stat) => (
+      {stats?.map((stat, index) => (
         <div key={stat.id} className="flex items-center gap-3 md:gap-4">
           <div className="text-brand-orange shrink-0">
             {React.cloneElement(stat.icon, {
@@ -194,7 +330,7 @@ Impact.Stats = function ImpactStats({ stats, className = "" }) {
           </div>
           <div>
             <div className="text-3xl md:text-4xl font-bold text-brand-orange">
-              {stat.value}
+              {displayValues[index] ?? stat.value}
             </div>
             <div className="text-lg font-light text-brand-sky">
               {stat.label}

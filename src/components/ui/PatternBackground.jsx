@@ -16,12 +16,13 @@ export default function PatternBackground({
     >
       <div className={`relative w-full h-full ${directionClass}`}>
         <Image
-          src="/images/pattern.webp"
+          src="/images/pattern-v2.webp"
           alt=""
           fill
           className={`object-cover ${translateY}`}
           priority={true}
-          quality={60}
+          fetchPriority="high"
+          quality={50}
           sizes="(max-width: 640px) 390px, 750px"
         />
       </div>

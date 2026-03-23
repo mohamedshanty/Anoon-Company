@@ -22,9 +22,6 @@ const nextConfig = {
       edge: "109",
     },
   },
-  turbopack: {
-    root: __dirname,
-  },
   images: {
     remotePatterns: [
       {

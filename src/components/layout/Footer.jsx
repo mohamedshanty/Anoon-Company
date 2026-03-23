@@ -137,7 +137,7 @@ export default function Footer() {
                     variant="filled"
                     color="orange"
                     aria-label="Subscribe"
-                    className="w-full sm:w-auto bg-[#b85c00]! text-white! hover:bg-[#9a4d00]!"
+                    className="w-full sm:w-auto text-white!"
                   >
                     {t("footer.newsletter.button", "Subscribe")}
                   </Button>

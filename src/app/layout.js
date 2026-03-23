@@ -55,6 +55,14 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en" dir="ltr" className={alexandria.variable}>
+      <head>
+        <link
+          rel="preload"
+          as="image"
+          href="/_next/image?url=%2Fimages%2Fpattern-v2.webp&w=750&q=50"
+          fetchPriority="high"
+        />
+      </head>
       <body
         className={`${alexandria.className} antialiased overflow-x-hidden`}
         style={backgroundStyle}

@@ -1,0 +1,3137 @@
+commit 4ca22b66d58754089e3f97653edb19c8b8753c80
+Author: Mohamed Salem <mohamed151salem@gmial.com>
+Date:   Sun Mar 22 12:38:32 2026 +0200
+
+    feat: add compiler targets for improved browser compatibility; update PatternBackground and TeamsClient styles; enhance Footer button accessibility; add vercel.json for caching headers
+
+diff --git a/next.config.mjs b/next.config.mjs
+index 8f7f559..975c99c 100644
+--- a/next.config.mjs
++++ b/next.config.mjs
+@@ -14,6 +14,14 @@ const nextConfig = {
+   experimental: {
+     optimizeCss: true,
+   },
++  compiler: {
++    targets: {
++      chrome: "109",
++      firefox: "109",
++      safari: "15.6",
++      edge: "109",
++    },
++  },
+   turbopack: {
+     root: __dirname,
+   },
+diff --git a/src/components/home/AIAgentServer.jsx b/src/components/home/AIAgentServer.jsx
+index f027327..081d1fe 100644
+--- a/src/components/home/AIAgentServer.jsx
++++ b/src/components/home/AIAgentServer.jsx
+@@ -20,7 +20,7 @@ export default function AIAgentServer({ t }) {
+       </div>
+ 
+       {/* Background Pattern */}
+-      <PatternBackground direction="default" translateY="-translate-y-30" />
++      <PatternBackground priority direction="default" translateY="-translate-y-30" />
+ 
+       <div className="main-container">
+         <div className="flex flex-col lg:flex-row items-center justify-between gap-8 md:gap-10 lg:gap-12">
+diff --git a/src/components/home/TeamsClient.jsx b/src/components/home/TeamsClient.jsx
+index dc0a1d1..7a0e47f 100644
+--- a/src/components/home/TeamsClient.jsx
++++ b/src/components/home/TeamsClient.jsx
+@@ -299,30 +299,26 @@ export default function TeamsClient({ members, tRoles }) {
+         }
+         :global(.teams-swiper .swiper-wrapper) {
+           align-items: center;
++          will-change: transform;
+         }
+         :global(.teams-swiper .swiper-slide) {
+           transition:
+             transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+-            opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+-            filter 0.5s cubic-bezier(0.4, 0, 0.2, 1);
++            opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+           display: flex;
+           justify-content: center;
+           align-items: center;
+-          opacity: 0.5;
+-          filter: blur(1.5px) brightness(0.7);
++          opacity: 0.6;
+           transform: scale(0.82);
+-          will-change: transform;
+         }
+         :global(.teams-swiper .swiper-slide-active) {
+           opacity: 1;
+-          filter: blur(0) brightness(1);
+           transform: scale(1.12);
+           z-index: 10;
+         }
+         :global(.teams-swiper .swiper-slide-prev),
+         :global(.teams-swiper .swiper-slide-next) {
+           opacity: 0.75;
+-          filter: blur(0.5px) brightness(0.85);
+           transform: scale(0.93);
+         }
+         .team-card {
+diff --git a/src/components/layout/Footer.jsx b/src/components/layout/Footer.jsx
+index 238919f..97b72c9 100644
+--- a/src/components/layout/Footer.jsx
++++ b/src/components/layout/Footer.jsx
+@@ -136,7 +136,8 @@ export default function Footer() {
+                   <Button
+                     variant="filled"
+                     color="orange"
+-                    className="w-full sm:w-auto bg-[#e68900]! text-white!"
++                    aria-label="Subscribe"
++                    className="w-full sm:w-auto bg-[#b85c00]! text-white! hover:bg-[#9a4d00]!"
+                   >
+                     {t("footer.newsletter.button", "Subscribe")}
+                   </Button>
+diff --git a/src/components/ui/PatternBackground.jsx b/src/components/ui/PatternBackground.jsx
+index 512b1d4..f54af41 100644
+--- a/src/components/ui/PatternBackground.jsx
++++ b/src/components/ui/PatternBackground.jsx
+@@ -6,7 +6,7 @@ export default function PatternBackground({
+   opacity = "opacity-70",
+   className = "",
+   translateY = "-translate-y-30",
+-  priority = false,
++  priority = true,
+ }) {
+   const directionClass = direction === "diagonal" ? "rotate-[160deg]" : "";
+ 
+@@ -17,10 +17,10 @@ export default function PatternBackground({
+       <div className={`relative w-full h-full ${directionClass}`}>
+         <Image
+           src="/images/pattern.webp"
+-          alt="Background Pattern"
++          alt=""
+           fill
+           className={`object-cover ${translateY}`}
+-          priority={priority}
++          priority={true}
+           quality={60}
+           sizes="(max-width: 640px) 390px, 750px"
+         />
+diff --git a/vercel.json b/vercel.json
+new file mode 100644
+index 0000000..a82e8db
+--- /dev/null
++++ b/vercel.json
+@@ -0,0 +1,13 @@
++{
++  "headers": [
++    {
++      "source": "/(.*)",
++      "headers": [
++        {
++          "key": "Cache-Control",
++          "value": "public, max-age=0, must-revalidate"
++        }
++      ]
++    }
++  ]
++}
+
+commit b505852401e9b88783fc7e3b4b330188d3433a6a
+Author: Mohamed Salem <mohamed151salem@gmial.com>
+Date:   Sun Mar 22 12:11:11 2026 +0200
+
+    Refactor components for improved client-side rendering and performance
+    
+    - Replaced server components with client-side loaders for Teams and GetInTouch to optimize SSR and reduce initial JS bundle size.
+    - Removed Reveal component from FAQClient and TeamsServer for cleaner rendering.
+    - Updated navigation buttons in TeamsClient to support RTL and improved accessibility.
+    - Enhanced styling and animations in TeamsClient and FAQClient for better user experience.
+    - Added quality and sizes attributes to PatternBackground for optimized image loading.
+    - Changed footer headings from h4 to h3 for semantic consistency.
+
+diff --git a/.browserslistrc b/.browserslistrc
+deleted file mode 100644
+index a3f5fc8..0000000
+--- a/.browserslistrc
++++ /dev/null
+@@ -1,5 +0,0 @@
+-last 2 versions
+-> 0.5%
+-not dead
+-not ie 11
+-not op_mini all
+diff --git a/next.config.mjs b/next.config.mjs
+index bd61bb9..8f7f559 100644
+--- a/next.config.mjs
++++ b/next.config.mjs
+@@ -1,11 +1,19 @@
+ import path from "path";
+ import { fileURLToPath } from "url";
++import bundleAnalyzer from "@next/bundle-analyzer";
++
++const withBundleAnalyzer = bundleAnalyzer({
++  enabled: process.env.ANALYZE === "true",
++});
+ 
+ const __filename = fileURLToPath(import.meta.url);
+ const __dirname = path.dirname(__filename);
+ 
+ /** @type {import('next').NextConfig} */
+ const nextConfig = {
++  experimental: {
++    optimizeCss: true,
++  },
+   turbopack: {
+     root: __dirname,
+   },
+@@ -83,12 +91,12 @@ const nextConfig = {
+         ],
+       },
+       {
+-        // HTML pages — allow bfcache
+-        source: "/:path((?!api|_next).*)",
++        // HTML pages — bfcache-compatible
++        source: "/(.*)",
+         headers: [
+           {
+             key: "Cache-Control",
+-            value: "no-cache, must-revalidate",
++            value: "public, max-age=0, must-revalidate",
+           },
+         ],
+       },
+@@ -96,4 +104,4 @@ const nextConfig = {
+   },
+ };
+ 
+-export default nextConfig;
++export default withBundleAnalyzer(nextConfig);
+diff --git a/package.json b/package.json
+index 4cdceaa..272facb 100644
+--- a/package.json
++++ b/package.json
+@@ -6,8 +6,16 @@
+     "dev": "next dev",
+     "build": "next build",
+     "start": "next start",
+-    "lint": "eslint"
++    "lint": "eslint",
++    "analyze": "cross-env ANALYZE=true next build --webpack"
+   },
++  "browserslist": [
++    "last 2 Chrome versions",
++    "last 2 Firefox versions",
++    "last 2 Safari versions",
++    "last 2 Edge versions",
++    "not dead"
++  ],
+   "dependencies": {
+     "@gsap/react": "^2.1.2",
+     "@supabase/ssr": "^0.9.0",
+@@ -49,8 +57,11 @@
+     "tailwind-merge": "^3.4.1"
+   },
+   "devDependencies": {
++    "@next/bundle-analyzer": "^16.2.1",
+     "@tailwindcss/postcss": "^4",
+     "@types/react": "19.2.14",
++    "critters": "^0.0.25",
++    "cross-env": "^10.1.0",
+     "eslint": "^9",
+     "eslint-config-next": "16.1.6",
+     "postcss": "^8.5.6",
+diff --git a/pnpm-lock.yaml b/pnpm-lock.yaml
+index 2a4c708..9a9c6a0 100644
+--- a/pnpm-lock.yaml
++++ b/pnpm-lock.yaml
+@@ -123,12 +123,21 @@ importers:
+         specifier: ^3.4.1
+         version: 3.5.0
+     devDependencies:
++      '@next/bundle-analyzer':
++        specifier: ^16.2.1
++        version: 16.2.1
+       '@tailwindcss/postcss':
+         specifier: ^4
+         version: 4.2.1
+       '@types/react':
+         specifier: 19.2.14
+         version: 19.2.14
++      critters:
++        specifier: ^0.0.25
++        version: 0.0.25
++      cross-env:
++        specifier: ^10.1.0
++        version: 10.1.0
+       eslint:
+         specifier: ^9
+         version: 9.39.4(jiti@2.6.1)
+@@ -294,6 +303,10 @@ packages:
+     resolution: {integrity: sha512-LwdZHpScM4Qz8Xw2iKSzS+cfglZzJGvofQICy7W7v4caru4EaAmyUuO6BGrbyQ2mYV11W0U8j5mBhd14dd3B0A==}
+     engines: {node: '>=6.9.0'}
+ 
++  '@discoveryjs/json-ext@0.5.7':
++    resolution: {integrity: sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==}
++    engines: {node: '>=10.0.0'}
++
+   '@dotenvx/dotenvx@1.54.1':
+     resolution: {integrity: sha512-41gU3q7v05GM92QPuPUf4CmUw+mmF8p4wLUh6MCRlxpCkJ9ByLcY9jUf6MwrMNmiKyG/rIckNxj9SCfmNCmCqw==}
+     hasBin: true
+@@ -313,6 +326,9 @@ packages:
+   '@emnapi/wasi-threads@1.1.0':
+     resolution: {integrity: sha512-WI0DdZ8xFSbgMjR1sFsKABJ/C5OnRrjT06JXbZKexJGrDuPTzZdDYfFlsgcCXCyf+suG5QU2e/y1Wo2V/OapLQ==}
+ 
++  '@epic-web/invariant@1.0.0':
++    resolution: {integrity: sha512-lrTPqgvfFQtR/eY/qkIzp98OGdNJu0m5ji3q/nJI8v3SXkRKEnWiOxMmbvcSoAIzv/cGiuvRy57k4suKQSAdwA==}
++
+   '@eslint-community/eslint-utils@4.9.1':
+     resolution: {integrity: sha512-phrYmNiYppR7znFEdqgfWHXR6NCkZEK7hwWDHZUjit/2/U0r6XvkDl0SYnoM51Hq7FhCGdLDT6zxCCOY1hexsQ==}
+     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
+@@ -612,6 +628,9 @@ packages:
+   '@napi-rs/wasm-runtime@0.2.12':
+     resolution: {integrity: sha512-ZVWUcfwY4E/yPitQJl481FjFo3K22D6qF0DuFH6Y/nbnE11GY5uguDxZMGXPQ8WQ0128MXQD7TnfHyK4oWoIJQ==}
+ 
++  '@next/bundle-analyzer@16.2.1':
++    resolution: {integrity: sha512-fbj2WE6dnCyG8CvQnrBfpHyxdOIyZ4aEHJY0bSqAmamRiIXDqunFQPDvuSOPo24mJE9zQHw7TY6d+sGrXO98TQ==}
++
+   '@next/env@16.1.6':
+     resolution: {integrity: sha512-N1ySLuZjnAtN3kFnwhAwPvZah8RJxKasD7x1f8shFqhncnWZn4JMfg37diLNuoHsLAlrDfM3g4mawVdtAG8XLQ==}
+ 
+@@ -707,6 +726,9 @@ packages:
+   '@open-draft/until@2.1.0':
+     resolution: {integrity: sha512-U69T3ItWHvLwGg5eJ0n3I62nWuE6ilHlmz7zM0npLBRvPRd7e6NYmg54vvRtP5mZG7kZqZCFVdsTWo7BPtBujg==}
+ 
++  '@polka/url@1.0.0-next.29':
++    resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
++
+   '@remirror/core-constants@3.0.0':
+     resolution: {integrity: sha512-42aWfPrimMfDKDi4YegyS7x+/0tlzaqwPQCULLanv3DMIlu96KTJR0fM5isWX2UViOqlGnX6YFgqWepcX+XMNg==}
+ 
+@@ -1276,6 +1298,10 @@ packages:
+     peerDependencies:
+       acorn: ^6.0.0 || ^7.0.0 || ^8.0.0
+ 
++  acorn-walk@8.3.5:
++    resolution: {integrity: sha512-HEHNfbars9v4pgpW6SO1KSPkfoS0xVOM/9UzkJltjlsHZmJasxg8aXkuZa7SMf8vKGIBhpUsPluQSqhJFCqebw==}
++    engines: {node: '>=0.4.0'}
++
+   acorn@8.16.0:
+     resolution: {integrity: sha512-UVJyE9MttOsBQIDKw1skb9nAwQuR5wuGD3+82K6JgJlm/Y+KI92oNsMNGZCYdDsVtRHSak0pcV5Dno5+4jh9sw==}
+     engines: {node: '>=0.4.0'}
+@@ -1400,6 +1426,9 @@ packages:
+     resolution: {integrity: sha512-oP5VkATKlNwcgvxi0vM0p/D3n2C3EReYVX+DNYs5TjZFn/oQt2j+4sVJtSMr18pdRr8wjTcBl6LoV+FUwzPmNA==}
+     engines: {node: '>=18'}
+ 
++  boolbase@1.0.0:
++    resolution: {integrity: sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==}
++
+   brace-expansion@1.1.12:
+     resolution: {integrity: sha512-9T9UjW3r0UW5c1Q7GTwllptXwhvYmEzFhzMfZ9H7FQWt+uZePjZPjBP/W1ZEyZ1twGWom5/56TF4lPcqjnDHcg==}
+ 
+@@ -1504,6 +1533,10 @@ packages:
+     resolution: {integrity: sha512-H+y0Jo/T1RZ9qPP4Eh1pkcQcLRglraJaSLoyOtHxu6AapkjWVCy2Sit1QQ4x3Dng8qDlSsZEet7g5Pq06MvTgw==}
+     engines: {node: '>=20'}
+ 
++  commander@7.2.0:
++    resolution: {integrity: sha512-QrWXB+ZQSVPmIWIhtEO9H+gwHaMGYiF5ChvoJ+K9ZGHG/sVsa6yiesAD1GC/x46sET00Xlwo1u49RVVVzvcSkw==}
++    engines: {node: '>= 10'}
++
+   concat-map@0.0.1:
+     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
+ 
+@@ -1546,10 +1579,26 @@ packages:
+   crelt@1.0.6:
+     resolution: {integrity: sha512-VQ2MBenTq1fWZUH9DJNGti7kKv6EeAuYr3cLwxUWhIu1baTaXh4Ib5W2CqHVqib4/MqbYGJqiL3Zb8GJZr3l4g==}
+ 
++  critters@0.0.25:
++    resolution: {integrity: sha512-ROF/tjJyyRdM8/6W0VqoN5Ql05xAGnkf5b7f3sTEl1bI5jTQQf8O918RD/V9tEb9pRY/TKcvJekDbJtniHyPtQ==}
++    deprecated: Ownership of Critters has moved to the Nuxt team, who will be maintaining the project going forward. If you'd like to keep using Critters, please switch to the actively-maintained fork at https://github.com/danielroe/beasties
++
++  cross-env@10.1.0:
++    resolution: {integrity: sha512-GsYosgnACZTADcmEyJctkJIoqAhHjttw7RsFrVoJNXbsWWqaq6Ym+7kZjq6mS45O0jij6vtiReppKQEtqWy6Dw==}
++    engines: {node: '>=20'}
++    hasBin: true
++
+   cross-spawn@7.0.6:
+     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
+     engines: {node: '>= 8'}
+ 
++  css-select@5.2.2:
++    resolution: {integrity: sha512-TizTzUddG/xYLA3NXodFM0fSbNizXjOKhqiQQwvhlspadZokn1KDy0NZFS0wuEubIYAV5/c1/lAr0TaaFXEXzw==}
++
++  css-what@6.2.2:
++    resolution: {integrity: sha512-u/O3vwbptzhMs3L1fQE82ZSLHQQfto5gyZzwteVIEyeaY5Fc7R4dapF/BvRoSYFeqfBk4m0V1Vafq5Pjv25wvA==}
++    engines: {node: '>= 6'}
++
+   cssesc@3.0.0:
+     resolution: {integrity: sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==}
+     engines: {node: '>=4'}
+@@ -1577,6 +1626,9 @@ packages:
+     resolution: {integrity: sha512-BS8PfmtDGnrgYdOonGZQdLZslWIeCGFP9tpan0hi1Co2Zr2NKADsvGYA8XxuG/4UWgJ6Cjtv+YJnB6MM69QGlQ==}
+     engines: {node: '>= 0.4'}
+ 
++  debounce@1.2.1:
++    resolution: {integrity: sha512-XRRe6Glud4rd/ZGQfiV1ruXSfbvfJedlV9Y6zOlP+2K04vBYiJEte6stfFkCP03aMnY5tsipamumUjL14fofug==}
++
+   debug@3.2.7:
+     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
+     peerDependencies:
+@@ -1649,6 +1701,19 @@ packages:
+     resolution: {integrity: sha512-35mSku4ZXK0vfCuHEDAwt55dg2jNajHZ1odvF+8SSr82EsZY4QmXfuWso8oEd8zRhVObSN18aM0CjSdoBX7zIw==}
+     engines: {node: '>=0.10.0'}
+ 
++  dom-serializer@2.0.0:
++    resolution: {integrity: sha512-wIkAryiqt/nV5EQKqQpo3SToSOV9J0DnbJqwK7Wv/Trc92zIAYZ4FlMu+JPFW1DfGFt81ZTCGgDEabffXeLyJg==}
++
++  domelementtype@2.3.0:
++    resolution: {integrity: sha512-OLETBj6w0OsagBwdXnPdN0cnMfF9opN69co+7ZrbfPGrdpPVNBUj02spi6B1N7wChLQiPn4CSH/zJvXw56gmHw==}
++
++  domhandler@5.0.3:
++    resolution: {integrity: sha512-cgwlv/1iFQiFnU96XXgROh8xTeetsnJiDsTc7TYCLFd9+/WNkIqPTxiM/8pSd8VIrhXGTf1Ny1q1hquVqDJB5w==}
++    engines: {node: '>= 4'}
++
++  domutils@3.2.2:
++    resolution: {integrity: sha512-6kZKyUajlDuqlHKVX1w7gyslj9MPIXzIFiz/rGu35uC1wMi+kMhQwGhl4lt9unC9Vb9INnY9Z3/ZA3+FhASLaw==}
++
+   dotenv@17.3.1:
+     resolution: {integrity: sha512-IO8C/dzEb6O3F9/twg6ZLXz164a2fhTnEWb95H23Dm4OuN+92NmEAlTrupP9VW6Jm3sO26tQlqyvyi4CsnY9GA==}
+     engines: {node: '>=12'}
+@@ -1657,6 +1722,9 @@ packages:
+     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
+     engines: {node: '>= 0.4'}
+ 
++  duplexer@0.1.2:
++    resolution: {integrity: sha512-jtD6YG370ZCIi/9GTaJKQxWTZD045+4R4hTk/x1UyoqadyJ9x9CgSi1RlVDQF8U2sxLLSnFkCaMihqljHIWgMg==}
++
+   eciesjs@0.4.17:
+     resolution: {integrity: sha512-TOOURki4G7sD1wDCjj7NfLaXZZ49dFOeEb5y39IXpb8p0hRzVvfvzZHOi5JcT+PpyAbi/Y+lxPb8eTag2WYH8w==}
+     engines: {bun: '>=1', deno: '>=2', node: '>=16'}
+@@ -2105,6 +2173,10 @@ packages:
+   gsap@3.14.2:
+     resolution: {integrity: sha512-P8/mMxVLU7o4+55+1TCnQrPmgjPKnwkzkXOK1asnR9Jg2lna4tEY5qBJjMmAaOBDDZWtlRjBXjLa0w53G/uBLA==}
+ 
++  gzip-size@6.0.0:
++    resolution: {integrity: sha512-ax7ZYomf6jqPTQ4+XCpUGyXKHk5WweS+e05MBO4/y3WJ5RkmPXNKvX+bx1behVILVwr6JSQvZAku021CHPXG3Q==}
++    engines: {node: '>=10'}
++
+   has-bigints@1.1.0:
+     resolution: {integrity: sha512-R3pbpkcIqv2Pm3dUwgjclDRVmWpTJW2DcMzcIhEXEx1oh/CEMObMm3KLmRJOdvhM7o4uQBnwr8pzRK2sJWIqfg==}
+     engines: {node: '>= 0.4'}
+@@ -2148,9 +2220,15 @@ packages:
+     resolution: {integrity: sha512-3qq+FUBtlTHhtYxbxheZgY8NIFnkkC/MR8u5TTsr7YZ3wixryQ3cCwn3iZbg8p8B88iDBBAYSfZDS75t8MN7Vg==}
+     engines: {node: '>=16.9.0'}
+ 
++  html-escaper@2.0.2:
++    resolution: {integrity: sha512-H2iMtd0I4Mt5eYiapRdIDjp+XzelXQ0tFE4JS7YFwFevXXMmOp9myNrUvCg0D6ws8iqkRPBfKHgbwig1SmlLfg==}
++
+   html-parse-stringify@3.0.1:
+     resolution: {integrity: sha512-KknJ50kTInJ7qIScF3jeaFRpMpE8/lfiTdzf/twXyPBLAGrLRTmkz3AdTnKeh40X8k9L2fdYwEp/42WGXIRGcg==}
+ 
++  htmlparser2@8.0.2:
++    resolution: {integrity: sha512-GYdjWKDkbRLkZ5geuHs5NY1puJ+PXwP7+fHPRz06Eirsb9ugf6d8kkXav6ADhcODhFFPMIXyxkxSuMf3D6NCFA==}
++
+   http-errors@2.0.1:
+     resolution: {integrity: sha512-4FbRdAX+bSdmo4AUFuS0WNiPz8NgFt+r8ThgNWmlrjQjt1Q7ZR9+zTlce2859x4KSXrwIsaeTqDoKQmtP8pLmQ==}
+     engines: {node: '>= 0.8'}
+@@ -2323,6 +2401,10 @@ packages:
+     resolution: {integrity: sha512-+Pgi+vMuUNkJyExiMBt5IlFoMyKnr5zhJ4Uspz58WOhBF5QoIZkFyNHIbBAtHwzVAgk5RtndVNsDRN61/mmDqg==}
+     engines: {node: '>=12'}
+ 
++  is-plain-object@5.0.0:
++    resolution: {integrity: sha512-VRSzKkbMm5jMDoKLbltAkFQ5Qr7VDiTFGXxYFXXowVj387GeGNOCsOH6Msy00SGZ3Fp84b1Naa1psqgcCIEP5Q==}
++    engines: {node: '>=0.10.0'}
++
+   is-promise@4.0.0:
+     resolution: {integrity: sha512-hvpoI6korhJMnej285dSg6nu1+e6uxs7zG3BYAm5byqDsgJNWwxzM6z6iZiAgQR4TJ30JmBTOwqZUw3WlyH3AQ==}
+ 
+@@ -2711,6 +2793,10 @@ packages:
+     resolution: {integrity: sha512-b2KQNsmgtkscfeDgkYMcWGn9vZI9YoXh802VDEwE6qc50zxBFQ0Oo8ROkawbPAsXCY1/Z1yp0MagqsZStPWJjw==}
+     engines: {node: '>=20.19.0'}
+ 
++  mrmime@2.0.1:
++    resolution: {integrity: sha512-Y3wQdFg2Va6etvQ5I82yUhGdsKrcYox6p7FfL1LbK2J4V01F9TGlepTIhnK24t7koZibmg82KGglhA1XK5IsLQ==}
++    engines: {node: '>=10'}
++
+   ms@2.1.3:
+     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
+ 
+@@ -2803,6 +2889,9 @@ packages:
+     resolution: {integrity: sha512-9qny7Z9DsQU8Ou39ERsPU4OZQlSTP47ShQzuKZ6PRXpYLtIFgl/DEBYEXKlvcEa+9tHVcK8CF81Y2V72qaZhWA==}
+     engines: {node: '>=18'}
+ 
++  nth-check@2.1.1:
++    resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
++
+   object-assign@4.1.1:
+     resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
+     engines: {node: '>=0.10.0'}
+@@ -2858,6 +2947,10 @@ packages:
+     resolution: {integrity: sha512-smsWv2LzFjP03xmvFoJ331ss6h+jixfA4UUV/Bsiyuu4YJPfN+FIQGOIiv4w9/+MoHkfkJ22UIaQWRVFRfH6Vw==}
+     engines: {node: '>=20'}
+ 
++  opener@1.5.2:
++    resolution: {integrity: sha512-ur5UIdyw5Y7yEj9wLzhqXiy6GZ3Mwx0yGI+5sMn2r0N0v3cKJvUmFH5yPP+WXh9e0xfyzyJX95D8l088DNFj7A==}
++    hasBin: true
++
+   optionator@0.9.4:
+     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
+     engines: {node: '>= 0.8.0'}
+@@ -2946,6 +3039,9 @@ packages:
+     resolution: {integrity: sha512-/+5VFTchJDoVj3bhoqi6UeymcD00DAwb1nJwamzPvHEszJ4FpF6SNNbUbOS8yI56qHzdV8eK0qEfOSiodkTdxg==}
+     engines: {node: '>= 0.4'}
+ 
++  postcss-media-query-parser@0.2.3:
++    resolution: {integrity: sha512-3sOlxmbKcSHMjlUXQZKQ06jOswE7oVkXPxmZdoB1r5l0q6gTFTQSHxNxOrCccElbW7dxNytifNEo8qidX2Vsig==}
++
+   postcss-selector-parser@7.1.1:
+     resolution: {integrity: sha512-orRsuYpJVw8LdAwqqLykBj9ecS5/cRHlI5+nvTo8LcCKmzDmqVORXtOIYEEQuL9D4BxtA1lm5isAqzQZCoQ6Eg==}
+     engines: {node: '>=4'}
+@@ -3262,6 +3358,10 @@ packages:
+     resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==}
+     engines: {node: '>=14'}
+ 
++  sirv@2.0.4:
++    resolution: {integrity: sha512-94Bdh3cC2PKrbgSOUqTiGPWVZeSiXfKOVZNJniWoqrWrRkB1CJzBU3NEbiTsPcYy1lDsANA/THzS+9WBiy5nfQ==}
++    engines: {node: '>= 10'}
++
+   sisteransi@1.0.5:
+     resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
+ 
+@@ -3418,6 +3518,10 @@ packages:
+     resolution: {integrity: sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA==}
+     engines: {node: '>=0.6'}
+ 
++  totalist@3.0.1:
++    resolution: {integrity: sha512-sf4i37nQ2LBx4m3wB74y+ubopq6W/dIzXg0FDGjsYnZHVa1Da8FH853wlL2gtUhg+xJXjfk3kUZS3BRoQeoQBQ==}
++    engines: {node: '>=6'}
++
+   tough-cookie@6.0.0:
+     resolution: {integrity: sha512-kXuRi1mtaKMrsLUxz3sQYvVl37B0Ns6MzfrtV5DvJceE9bPyspOqk9xxv7XbZWcfLWbFmm997vl83qUWVJA64w==}
+     engines: {node: '>=16'}
+@@ -3566,6 +3670,11 @@ packages:
+     resolution: {integrity: sha512-VwddBukDzu71offAQR975unBIGqfKZpM+8ZX6ySk8nYhVoo5CYaZyzt3YBvYtRtO+aoGlqxPg/B87NGVZ/fu6g==}
+     engines: {node: '>=12'}
+ 
++  webpack-bundle-analyzer@4.10.1:
++    resolution: {integrity: sha512-s3P7pgexgT/HTUSYgxJyn28A+99mmLq4HsJepMPzu0R8ImJc52QNqaFYW1Z2z2uIb1/J3eYgaAWVpaC+v/1aAQ==}
++    engines: {node: '>= 10.13.0'}
++    hasBin: true
++
+   whatwg-url@14.2.0:
+     resolution: {integrity: sha512-De72GdQZzNTUBBChsXueQUnPKDkg/5A5zp7pFDuQAj5UFoENpiACU0wlCvzpAGnTkj++ihpKwKyYewn/XNUbKw==}
+     engines: {node: '>=18'}
+@@ -3614,6 +3723,18 @@ packages:
+   wrappy@1.0.2:
+     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
+ 
++  ws@7.5.10:
++    resolution: {integrity: sha512-+dbF1tHwZpXcbOJdVOkzLDxZP1ailvSxM6ZweXTegylPny803bFhA+vqBYw4s31NSAk4S2Qz+AKXK9a4wkdjcQ==}
++    engines: {node: '>=8.3.0'}
++    peerDependencies:
++      bufferutil: ^4.0.1
++      utf-8-validate: ^5.0.2
++    peerDependenciesMeta:
++      bufferutil:
++        optional: true
++      utf-8-validate:
++        optional: true
++
+   ws@8.19.0:
+     resolution: {integrity: sha512-blAT2mjOEIi0ZzruJfIhb3nps74PRWTCz1IjglWEEpQl5XS/UNama6u2/rjFkDDouqr4L67ry+1aGIALViWjDg==}
+     engines: {node: '>=10.0.0'}
+@@ -3873,6 +3994,8 @@ snapshots:
+       '@babel/helper-string-parser': 7.27.1
+       '@babel/helper-validator-identifier': 7.28.5
+ 
++  '@discoveryjs/json-ext@0.5.7': {}
++
+   '@dotenvx/dotenvx@1.54.1':
+     dependencies:
+       commander: 11.1.0
+@@ -3905,6 +4028,8 @@ snapshots:
+       tslib: 2.8.1
+     optional: true
+ 
++  '@epic-web/invariant@1.0.0': {}
++
+   '@eslint-community/eslint-utils@4.9.1(eslint@9.39.4(jiti@2.6.1))':
+     dependencies:
+       eslint: 9.39.4(jiti@2.6.1)
+@@ -4170,6 +4295,13 @@ snapshots:
+       '@tybys/wasm-util': 0.10.1
+     optional: true
+ 
++  '@next/bundle-analyzer@16.2.1':
++    dependencies:
++      webpack-bundle-analyzer: 4.10.1
++    transitivePeerDependencies:
++      - bufferutil
++      - utf-8-validate
++
+   '@next/env@16.1.6': {}
+ 
+   '@next/eslint-plugin-next@16.1.6':
+@@ -4231,6 +4363,8 @@ snapshots:
+ 
+   '@open-draft/until@2.1.0': {}
+ 
++  '@polka/url@1.0.0-next.29': {}
++
+   '@remirror/core-constants@3.0.0': {}
+ 
+   '@rtsao/scc@1.1.0': {}
+@@ -4796,6 +4930,10 @@ snapshots:
+     dependencies:
+       acorn: 8.16.0
+ 
++  acorn-walk@8.3.5:
++    dependencies:
++      acorn: 8.16.0
++
+   acorn@8.16.0: {}
+ 
+   agent-base@7.1.4: {}
+@@ -4941,6 +5079,8 @@ snapshots:
+     transitivePeerDependencies:
+       - supports-color
+ 
++  boolbase@1.0.0: {}
++
+   brace-expansion@1.1.12:
+     dependencies:
+       balanced-match: 1.0.2
+@@ -5036,6 +5176,8 @@ snapshots:
+ 
+   commander@14.0.3: {}
+ 
++  commander@7.2.0: {}
++
+   concat-map@0.0.1: {}
+ 
+   content-disposition@1.0.1: {}
+@@ -5066,12 +5208,37 @@ snapshots:
+ 
+   crelt@1.0.6: {}
+ 
++  critters@0.0.25:
++    dependencies:
++      chalk: 4.1.2
++      css-select: 5.2.2
++      dom-serializer: 2.0.0
++      domhandler: 5.0.3
++      htmlparser2: 8.0.2
++      postcss: 8.5.8
++      postcss-media-query-parser: 0.2.3
++
++  cross-env@10.1.0:
++    dependencies:
++      '@epic-web/invariant': 1.0.0
++      cross-spawn: 7.0.6
++
+   cross-spawn@7.0.6:
+     dependencies:
+       path-key: 3.1.1
+       shebang-command: 2.0.0
+       which: 2.0.2
+ 
++  css-select@5.2.2:
++    dependencies:
++      boolbase: 1.0.0
++      css-what: 6.2.2
++      domhandler: 5.0.3
++      domutils: 3.2.2
++      nth-check: 2.1.1
++
++  css-what@6.2.2: {}
++
+   cssesc@3.0.0: {}
+ 
+   csstype@3.2.3: {}
+@@ -5098,6 +5265,8 @@ snapshots:
+       es-errors: 1.3.0
+       is-data-view: 1.0.2
+ 
++  debounce@1.2.1: {}
++
+   debug@3.2.7:
+     dependencies:
+       ms: 2.1.3
+@@ -5145,6 +5314,24 @@ snapshots:
+     dependencies:
+       esutils: 2.0.3
+ 
++  dom-serializer@2.0.0:
++    dependencies:
++      domelementtype: 2.3.0
++      domhandler: 5.0.3
++      entities: 4.5.0
++
++  domelementtype@2.3.0: {}
++
++  domhandler@5.0.3:
++    dependencies:
++      domelementtype: 2.3.0
++
++  domutils@3.2.2:
++    dependencies:
++      dom-serializer: 2.0.0
++      domelementtype: 2.3.0
++      domhandler: 5.0.3
++
+   dotenv@17.3.1: {}
+ 
+   dunder-proto@1.0.1:
+@@ -5153,6 +5340,8 @@ snapshots:
+       es-errors: 1.3.0
+       gopd: 1.2.0
+ 
++  duplexer@0.1.2: {}
++
+   eciesjs@0.4.17:
+     dependencies:
+       '@ecies/ciphers': 0.2.5(@noble/ciphers@1.3.0)
+@@ -5789,6 +5978,10 @@ snapshots:
+ 
+   gsap@3.14.2: {}
+ 
++  gzip-size@6.0.0:
++    dependencies:
++      duplexer: 0.1.2
++
+   has-bigints@1.1.0: {}
+ 
+   has-flag@4.0.0: {}
+@@ -5825,10 +6018,19 @@ snapshots:
+ 
+   hono@4.12.5: {}
+ 
++  html-escaper@2.0.2: {}
++
+   html-parse-stringify@3.0.1:
+     dependencies:
+       void-elements: 3.1.0
+ 
++  htmlparser2@8.0.2:
++    dependencies:
++      domelementtype: 2.3.0
++      domhandler: 5.0.3
++      domutils: 3.2.2
++      entities: 4.5.0
++
+   http-errors@2.0.1:
+     dependencies:
+       depd: 2.0.0
+@@ -5984,6 +6186,8 @@ snapshots:
+ 
+   is-plain-obj@4.1.0: {}
+ 
++  is-plain-object@5.0.0: {}
++
+   is-promise@4.0.0: {}
+ 
+   is-regex@1.2.1:
+@@ -6298,6 +6502,8 @@ snapshots:
+ 
+   mquery@6.0.0: {}
+ 
++  mrmime@2.0.1: {}
++
+   ms@2.1.3: {}
+ 
+   msw@2.12.10(@types/node@18.19.130)(typescript@5.9.3):
+@@ -6391,6 +6597,10 @@ snapshots:
+       path-key: 4.0.0
+       unicorn-magic: 0.3.0
+ 
++  nth-check@2.1.1:
++    dependencies:
++      boolbase: 1.0.0
++
+   object-assign@4.1.1: {}
+ 
+   object-inspect@1.13.4: {}
+@@ -6460,6 +6670,8 @@ snapshots:
+       powershell-utils: 0.1.0
+       wsl-utils: 0.3.1
+ 
++  opener@1.5.2: {}
++
+   optionator@0.9.4:
+     dependencies:
+       deep-is: 0.1.4
+@@ -6540,6 +6752,8 @@ snapshots:
+ 
+   possible-typed-array-names@1.1.0: {}
+ 
++  postcss-media-query-parser@0.2.3: {}
++
+   postcss-selector-parser@7.1.1:
+     dependencies:
+       cssesc: 3.0.0
+@@ -7010,6 +7224,12 @@ snapshots:
+ 
+   signal-exit@4.1.0: {}
+ 
++  sirv@2.0.4:
++    dependencies:
++      '@polka/url': 1.0.0-next.29
++      mrmime: 2.0.1
++      totalist: 3.0.1
++
+   sisteransi@1.0.5: {}
+ 
+   source-map-js@1.2.1: {}
+@@ -7161,6 +7381,8 @@ snapshots:
+ 
+   toidentifier@1.0.1: {}
+ 
++  totalist@3.0.1: {}
++
+   tough-cookie@6.0.0:
+     dependencies:
+       tldts: 7.0.25
+@@ -7332,6 +7554,25 @@ snapshots:
+ 
+   webidl-conversions@7.0.0: {}
+ 
++  webpack-bundle-analyzer@4.10.1:
++    dependencies:
++      '@discoveryjs/json-ext': 0.5.7
++      acorn: 8.16.0
++      acorn-walk: 8.3.5
++      commander: 7.2.0
++      debounce: 1.2.1
++      escape-string-regexp: 4.0.0
++      gzip-size: 6.0.0
++      html-escaper: 2.0.2
++      is-plain-object: 5.0.0
++      opener: 1.5.2
++      picocolors: 1.1.1
++      sirv: 2.0.4
++      ws: 7.5.10
++    transitivePeerDependencies:
++      - bufferutil
++      - utf-8-validate
++
+   whatwg-url@14.2.0:
+     dependencies:
+       tr46: 5.1.1
+@@ -7407,6 +7648,8 @@ snapshots:
+ 
+   wrappy@1.0.2: {}
+ 
++  ws@7.5.10: {}
++
+   ws@8.19.0: {}
+ 
+   wsl-utils@0.3.1:
+diff --git a/src/app/page.js b/src/app/page.js
+index 6dd29c3..7dc8610 100644
+--- a/src/app/page.js
++++ b/src/app/page.js
+@@ -4,20 +4,20 @@ import MainHero from "@/components/home/MainHeroServer";
+ import MainInfoSection from "@/components/home/MainInfoServer";
+ import ProgramsServer from "@/components/home/ProgramsServer";
+ import { getTranslations } from "@/lib/i18n-server";
++// Swiper-heavy — client wrapper performs ssr:false dynamic internally
++import TeamsClientLoader from "@/components/home/TeamsClientLoader";
++// GetInTouch has GSAP + reCAPTCHA — client wrapper performs ssr:false dynamic internally
++import GetInTouchLoader from "@/components/common/GetInTouchLoader";
+ 
+-// Below-fold: lazy-loaded to reduce initial JS
++// Below-fold server components: lazy-loaded to reduce initial JS bundle
+ const AIAgentServer = dynamic(() => import("@/components/home/AIAgentServer"));
+ const ImpactSectionServer = dynamic(
+   () => import("@/components/home/ImpactServer"),
+ );
+-const TeamsServer = dynamic(() => import("@/components/home/TeamsServer"));
+ const PartnersServer = dynamic(
+   () => import("@/components/common/PartnersServer"),
+ );
+ const FAQServer = dynamic(() => import("@/components/home/FAQServer"));
+-const GetInTouch = dynamic(() => import("@/components/common/GetInTouch"), {
+-  ssr: true,
+-});
+ 
+ export default async function Home() {
+   const cookieStore = await cookies();
+@@ -37,10 +37,10 @@ export default async function Home() {
+           statsTrans={trans.stats}
+           isRTL={isRTL}
+         />
+-        <TeamsServer t={trans.teams} locale={lang} isRTL={isRTL} />
++        <TeamsClientLoader t={trans.teams} locale={lang} isRTL={isRTL} />
+         <PartnersServer t={trans.partners} isRTL={isRTL} />
+         <FAQServer t={trans.faq} isRTL={isRTL} />
+-        <GetInTouch />
++        <GetInTouchLoader />
+       </div>
+     </div>
+   );
+diff --git a/src/components/common/GetInTouchLoader.jsx b/src/components/common/GetInTouchLoader.jsx
+new file mode 100644
+index 0000000..09a74c5
+--- /dev/null
++++ b/src/components/common/GetInTouchLoader.jsx
+@@ -0,0 +1,10 @@
++"use client";
++// Client-only loader — defers GSAP + reCAPTCHA GetInTouch to the client
++// so its heavy deps never inflate the server bundle or block SSR.
++import dynamic from "next/dynamic";
++
++const GetInTouch = dynamic(() => import("./GetInTouch"), { ssr: false });
++
++export default function GetInTouchLoader(props) {
++  return <GetInTouch {...props} />;
++}
+diff --git a/src/components/home/FAQClient.jsx b/src/components/home/FAQClient.jsx
+index 6c3ed5c..0517642 100644
+--- a/src/components/home/FAQClient.jsx
++++ b/src/components/home/FAQClient.jsx
+@@ -2,7 +2,6 @@
+ 
+ import { useState } from "react";
+ import { ChevronRight, ChevronLeft } from "lucide-react";
+-import Reveal from "@/components/ui/Reveal";
+ import { AnimatePresence, motion } from "framer-motion";
+ 
+ export default function FAQClient({ faqs, isRTL }) {
+@@ -10,22 +9,12 @@ export default function FAQClient({ faqs, isRTL }) {
+   const ArrowIcon = isRTL ? ChevronLeft : ChevronRight;
+   const rotate = (angle) => (isRTL ? -angle : angle);
+ 
+-  const getRevealType = (index, total) => {
+-    // Alternate entry direction for a modern rhythm.
+-    // First/last from left-to-right, second from right-to-left.
+-    if (index === 0 || index === total - 1) return "slide-right";
+-    return index % 2 === 1 ? "slide-left" : "slide-right";
+-  };
+-
+   return (
+     <div className="space-y-4 md:space-y-5 lg:space-y-6">
+       {faqs.map((faq, index) => (
+-        <Reveal
++        <div
+           key={index}
+-          type={getRevealType(index, faqs.length)}
+-          duration={0.42}
+-          delay={index * 0.06}
+-          className={`relative overflow-hidden rounded-2xl md:rounded-3xl border border-brand-sky/15 bg-linear-to-br from-white via-white to-sky-50/50 text-brand-sky flex flex-col shadow-[0_12px_30px_rgba(0,0,0,0.08)] hover:shadow-[0_16px_36px_rgba(14,165,233,0.18)] transition-all duration-300 ${
++          className={`relative overflow-hidden rounded-2xl md:rounded-3xl border border-brand-sky/15 bg-linear-to-br from-white via-white to-sky-50/50 text-brand-sky flex flex-col shadow-[0_12px_30px_rgba(0,0,0,0.08)] ${
+             openIndex === index
+               ? "ring-2 ring-brand-sky/40 border-brand-sky/30"
+               : ""
+@@ -84,7 +73,7 @@ export default function FAQClient({ faqs, isRTL }) {
+               </motion.div>
+             )}
+           </AnimatePresence>
+-        </Reveal>
++        </div>
+       ))}
+     </div>
+   );
+diff --git a/src/components/home/FAQServer.jsx b/src/components/home/FAQServer.jsx
+index ed5a181..eb21805 100644
+--- a/src/components/home/FAQServer.jsx
++++ b/src/components/home/FAQServer.jsx
+@@ -1,36 +1,38 @@
+ import PatternBackground from "../ui/PatternBackground";
+-import Reveal from "../ui/Reveal";
+ import FAQClient from "./FAQClient";
+ 
+ export default function FAQServer({ t, isRTL }) {
+-    const faqs = t.questions || [];
++  const faqs = t.questions || [];
+ 
+-    return (
+-        <section id="faq" className="relative py-16 md:py-20 lg:py-24 overflow-hidden">
+-            <div className="absolute inset-0 pointer-events-none -z-20 opacity-100">
+-                <PatternBackground
+-                    direction="diagonal"
+-                    translateY="-translate-y-30"
+-                    opacity="opacity-100"
+-                />
+-            </div>
++  return (
++    <section
++      id="faq"
++      className="relative py-16 md:py-20 lg:py-24 overflow-hidden"
++    >
++      <div className="absolute inset-0 pointer-events-none -z-20 opacity-100">
++        <PatternBackground
++          direction="diagonal"
++          translateY="-translate-y-30"
++          opacity="opacity-100"
++        />
++      </div>
+ 
+-            <div className="main-container">
+-                <div className="max-w-4xl mx-auto">
+-                    <Reveal type="slide-up" duration={0.6}>
+-                        <div className={`text-center mb-12 md:mb-16 lg:mb-20 ${isRTL ? "rtl" : ""}`}>
+-                            <h2 className="text-white font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-3 md:mb-4 lg:mb-5">
+-                                {t.title}
+-                            </h2>
+-                            <h3 className="font-semibold text-brand-sky text-base sm:text-lg md:text-xl lg:text-2xl">
+-                                {t.subtitle}
+-                            </h3>
+-                        </div>
+-                    </Reveal>
++      <div className="main-container">
++        <div className="max-w-4xl mx-auto">
++          <div
++            className={`text-center mb-12 md:mb-16 lg:mb-20 ${isRTL ? "rtl" : ""}`}
++          >
++            <h2 className="text-white font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-3 md:mb-4 lg:mb-5">
++              {t.title}
++            </h2>
++            <h3 className="font-semibold text-brand-sky text-base sm:text-lg md:text-xl lg:text-2xl">
++              {t.subtitle}
++            </h3>
++          </div>
+ 
+-                    <FAQClient faqs={faqs} isRTL={isRTL} />
+-                </div>
+-            </div>
+-        </section>
+-    );
++          <FAQClient faqs={faqs} isRTL={isRTL} />
++        </div>
++      </div>
++    </section>
++  );
+ }
+diff --git a/src/components/home/TeamsClient.jsx b/src/components/home/TeamsClient.jsx
+index cbeb6d0..dc0a1d1 100644
+--- a/src/components/home/TeamsClient.jsx
++++ b/src/components/home/TeamsClient.jsx
+@@ -22,6 +22,9 @@ export default function TeamsClient({ members, tRoles }) {
+   const [activeIndex, setActiveIndex] = useState(0);
+   const [isMounted, setIsMounted] = useState(false);
+   const swiperRef = useRef(null);
++  const navigationSelectors = isRTL
++    ? { prevEl: ".nav-btn-next", nextEl: ".nav-btn-prev" }
++    : { prevEl: ".nav-btn-prev", nextEl: ".nav-btn-next" };
+ 
+   useEffect(() => {
+     setSwiperKey((prev) => prev + 1);
+@@ -102,14 +105,16 @@ export default function TeamsClient({ members, tRoles }) {
+         ✅ الحل: نحط الأزرار قبل <Swiper> + نستخدم CSS class selectors بدل refs
+         بكذا Swiper يلاقيها موجودة دايماً حتى بعد الـ refresh
+       */}
+-      <button className="nav-btn nav-btn-prev" aria-label="Previous slide">
++      <button
++        className="nav-btn nav-btn-prev"
++        aria-label={isRTL ? "الشريحة السابقة" : "Previous slide"}
++      >
+         <svg
+           width="20"
+           height="20"
+           fill="none"
+           stroke="currentColor"
+           viewBox="0 0 24 24"
+-          style={{ transform: isRTL ? "rotate(180deg)" : "none" }}
+         >
+           <path
+             strokeLinecap="round"
+@@ -120,14 +125,16 @@ export default function TeamsClient({ members, tRoles }) {
+         </svg>
+       </button>
+ 
+-      <button className="nav-btn nav-btn-next" aria-label="Next slide">
++      <button
++        className="nav-btn nav-btn-next"
++        aria-label={isRTL ? "الشريحة التالية" : "Next slide"}
++      >
+         <svg
+           width="20"
+           height="20"
+           fill="none"
+           stroke="currentColor"
+           viewBox="0 0 24 24"
+-          style={{ transform: isRTL ? "rotate(180deg)" : "none" }}
+         >
+           <path
+             strokeLinecap="round"
+@@ -154,10 +161,7 @@ export default function TeamsClient({ members, tRoles }) {
+           modifier: 2.2,
+           slideShadows: true,
+         }}
+-        navigation={{
+-          prevEl: ".nav-btn-prev",
+-          nextEl: ".nav-btn-next",
+-        }}
++        navigation={navigationSelectors}
+         onSwiper={(swiper) => {
+           swiperRef.current = swiper;
+         }}
+@@ -297,13 +301,17 @@ export default function TeamsClient({ members, tRoles }) {
+           align-items: center;
+         }
+         :global(.teams-swiper .swiper-slide) {
+-          transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
++          transition:
++            transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
++            opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
++            filter 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           opacity: 0.5;
+           filter: blur(1.5px) brightness(0.7);
+           transform: scale(0.82);
++          will-change: transform;
+         }
+         :global(.teams-swiper .swiper-slide-active) {
+           opacity: 1;
+@@ -390,17 +398,29 @@ export default function TeamsClient({ members, tRoles }) {
+           inset: 0;
+           border-radius: 20px;
+           pointer-events: none;
++          overflow: hidden;
++        }
++        .active-ring::after {
++          content: "";
++          position: absolute;
++          inset: -4px;
++          border-radius: 24px;
++          border: 2px solid rgba(0, 191, 255, 0.6);
++          transform: scale(0.94);
++          opacity: 0;
+         }
+-        :global(.swiper-slide-active) .active-ring {
++        :global(.swiper-slide-active) .active-ring::after {
+           animation: ring-pulse 2.5s ease-in-out infinite;
+         }
+         @keyframes ring-pulse {
+           0%,
+           100% {
+-            box-shadow: 0 0 0 0 rgba(0, 191, 255, 0.3);
++            transform: scale(1);
++            opacity: 0.6;
+           }
+           50% {
+-            box-shadow: 0 0 0 8px rgba(0, 191, 255, 0);
++            transform: scale(1.04);
++            opacity: 0;
+           }
+         }
+         .card-mobile-info {
+diff --git a/src/components/home/TeamsClientLoader.jsx b/src/components/home/TeamsClientLoader.jsx
+new file mode 100644
+index 0000000..8f44a27
+--- /dev/null
++++ b/src/components/home/TeamsClientLoader.jsx
+@@ -0,0 +1,10 @@
++"use client";
++// Client-only loader — wraps the Swiper-heavy TeamsServer with ssr:false
++// so Swiper's JS is never included in the server bundle.
++import dynamic from "next/dynamic";
++
++const TeamsServer = dynamic(() => import("./TeamsServer"), { ssr: false });
++
++export default function TeamsClientLoader(props) {
++  return <TeamsServer {...props} />;
++}
+diff --git a/src/components/home/TeamsServer.jsx b/src/components/home/TeamsServer.jsx
+index 32f9258..5f45473 100644
+--- a/src/components/home/TeamsServer.jsx
++++ b/src/components/home/TeamsServer.jsx
+@@ -1,6 +1,5 @@
+ import SectionHeader from "../ui/SectionHeader";
+ import TeamsClient from "./TeamsClient";
+-import Reveal from "../ui/Reveal";
+ 
+ const members = [
+   {
+@@ -65,58 +64,54 @@ export default function TeamsServer({ t, locale }) {
+   return (
+     <section id="teams" className="py-24 relative overflow-hidden">
+       <div className="main-container relative z-10">
+-        <Reveal type="slide-up">
+-          <SectionHeader
+-            title={t.title || (currentLocale === "ar" ? "فريقنا" : "Our Teams")}
+-            subtitle={{
+-              highlightedWords: [
+-                {
+-                  text:
+-                    t.subtitle_word1 ||
+-                    (currentLocale === "ar" ? "عندما" : "When"),
+-                  color: "text-brand-sky",
+-                },
+-                {
+-                  text:
+-                    t.subtitle_word2 ||
+-                    (currentLocale === "ar" ? "سقط" : "Everything"),
+-                  color: "text-brand-orange",
+-                },
+-                {
+-                  text:
+-                    t.subtitle_word3 ||
+-                    (currentLocale === "ar" ? "كل شيء،" : "Fell,"),
+-                  color: "text-brand-sky",
+-                },
+-                {
+-                  text:
+-                    t.subtitle_word4 || (currentLocale === "ar" ? "نحن" : "We"),
+-                  color: "text-brand-orange",
+-                },
+-                {
+-                  text:
+-                    t.subtitle_word5 ||
+-                    (currentLocale === "ar" ? "نهضنا" : "Stood"),
+-                  color: "text-brand-sky",
+-                },
+-                {
+-                  text:
+-                    t.subtitle_word6 ||
+-                    (currentLocale === "ar" ? "من جديد." : "Up."),
+-                  color: "text-brand-orange",
+-                },
+-              ],
+-            }}
+-            maxWidth="4xl"
+-            align="center"
+-            starsCount={0}
+-            subtitleClassName="mt-4"
+-          />
+-        </Reveal>
++        <SectionHeader
++          title={t.title || (currentLocale === "ar" ? "فريقنا" : "Our Teams")}
++          subtitle={{
++            highlightedWords: [
++              {
++                text:
++                  t.subtitle_word1 ||
++                  (currentLocale === "ar" ? "عندما" : "When"),
++                color: "text-brand-sky",
++              },
++              {
++                text:
++                  t.subtitle_word2 ||
++                  (currentLocale === "ar" ? "سقط" : "Everything"),
++                color: "text-brand-orange",
++              },
++              {
++                text:
++                  t.subtitle_word3 ||
++                  (currentLocale === "ar" ? "كل شيء،" : "Fell,"),
++                color: "text-brand-sky",
++              },
++              {
++                text:
++                  t.subtitle_word4 || (currentLocale === "ar" ? "نحن" : "We"),
++                color: "text-brand-orange",
++              },
++              {
++                text:
++                  t.subtitle_word5 ||
++                  (currentLocale === "ar" ? "نهضنا" : "Stood"),
++                color: "text-brand-sky",
++              },
++              {
++                text:
++                  t.subtitle_word6 ||
++                  (currentLocale === "ar" ? "من جديد." : "Up."),
++                color: "text-brand-orange",
++              },
++            ],
++          }}
++          maxWidth="4xl"
++          align="center"
++          starsCount={0}
++          subtitleClassName="mt-4"
++        />
+ 
+-        <Reveal type="fade" delay={0.4}>
+-          <TeamsClient members={localizedMembers} tRoles={{}} />
+-        </Reveal>
++        <TeamsClient members={localizedMembers} tRoles={{}} />
+       </div>
+     </section>
+   );
+diff --git a/src/components/layout/Footer.jsx b/src/components/layout/Footer.jsx
+index c9d9c49..238919f 100644
+--- a/src/components/layout/Footer.jsx
++++ b/src/components/layout/Footer.jsx
+@@ -69,9 +69,9 @@ export default function Footer() {
+ 
+           {/* Get in Touch */}
+           <div>
+-            <h4 className="text-white font-bold text-lg mb-8">
++            <h3 className="text-white font-bold text-lg mb-8">
+               {t("footer.get_in_touch", "Get in Touch")}
+-            </h4>
++            </h3>
+             <ul className="space-y-6">
+               <li className="flex items-start gap-3">
+                 <MapPin className="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" />
+@@ -116,9 +116,9 @@ export default function Footer() {
+ 
+           {/* Newsletter */}
+           <div>
+-            <h4 className="text-white font-bold text-lg mb-8">
++            <h3 className="text-white font-bold text-lg mb-8">
+               {t("footer.newsletter.title", "Join our Newsletter")}
+-            </h4>
++            </h3>
+             <div className="space-y-4">
+               <p className="text-white text-sm">
+                 {t("footer.newsletter.label", "Email Address")}
+@@ -136,7 +136,7 @@ export default function Footer() {
+                   <Button
+                     variant="filled"
+                     color="orange"
+-                    className="w-full sm:w-auto"
++                    className="w-full sm:w-auto bg-[#e68900]! text-white!"
+                   >
+                     {t("footer.newsletter.button", "Subscribe")}
+                   </Button>
+diff --git a/src/components/ui/PatternBackground.jsx b/src/components/ui/PatternBackground.jsx
+index a203ce8..512b1d4 100644
+--- a/src/components/ui/PatternBackground.jsx
++++ b/src/components/ui/PatternBackground.jsx
+@@ -21,6 +21,8 @@ export default function PatternBackground({
+           fill
+           className={`object-cover ${translateY}`}
+           priority={priority}
++          quality={60}
++          sizes="(max-width: 640px) 390px, 750px"
+         />
+       </div>
+     </div>
+
+commit ac4a1cd87c9818071b3f3228af67f8fae1ae0952
+Author: Mohamed Salem <mohamed151salem@gmial.com>
+Date:   Wed Mar 18 12:02:26 2026 +0200
+
+    style: improve code formatting and readability in BlogArticleCard component
+
+diff --git a/src/components/techBlog/BlogArticleCard.jsx b/src/components/techBlog/BlogArticleCard.jsx
+index 82251eb..d81adfe 100644
+--- a/src/components/techBlog/BlogArticleCard.jsx
++++ b/src/components/techBlog/BlogArticleCard.jsx
+@@ -71,13 +71,14 @@ export default function BlogArticleCard({
+   const excerptRaw = item[`excerpt_${currentLang}`] || item.excerpt;
+   const excerpt = extractTextFromBlocks(excerptRaw);
+   const identifier = item.documentId || item.id;
+-  const cardHref = href || (identifier ? `/techBlog/${identifier}` : "/techBlog");
++  const cardHref =
++    href || (identifier ? `/techBlog/${identifier}` : "/techBlog");
+ 
+   const categoryName = item.category
+     ? item.category[`name_${currentLang}`] || item.category.name
+     : currentLang === "ar"
+-    ? "غير مصنف"
+-    : "Uncategorized";
++      ? "غير مصنف"
++      : "Uncategorized";
+ 
+   const author = item[`author_${currentLang}`] || item.author || "غير معروف";
+   const authorInitial = author.trim().charAt(0).toUpperCase();
+@@ -86,11 +87,11 @@ export default function BlogArticleCard({
+   const dateFormatted = publishedDate
+     ? new Date(publishedDate).toLocaleDateString(
+         currentLang === "ar" ? "ar-EG" : "en-US",
+-        { year: "numeric", month: "short", day: "numeric" }
++        { year: "numeric", month: "short", day: "numeric" },
+       )
+     : currentLang === "ar"
+-    ? "غير محدد"
+-    : "Unknown";
++      ? "غير محدد"
++      : "Unknown";
+ 
+   const imageUrl = resolveImageUrl(item, mediaBaseUrl);
+   const likes = item.likes || 0;
+@@ -107,7 +108,7 @@ export default function BlogArticleCard({
+ 
+   return (
+     <article
+-      className="group flex flex-col h-full rounded-2xl overflow-hidden border border-white/10 bg-noon-card transition-all duration-500 hover:border-brand-sky/40 hover:-translate-y-1"
++      className="group flex flex-col h-full rounded-2xl overflow-hidden border border-white/10 transition-all duration-500 hover:border-brand-sky/40"
+       style={{
+         boxShadow: "0 4px 24px rgba(0,0,0,0.3)",
+       }}
+@@ -147,7 +148,6 @@ export default function BlogArticleCard({
+           }}
+         />
+ 
+-
+         {/* Reading time */}
+         <span
+           className="absolute bottom-3 right-3 flex items-center gap-1 text-white/80"
+@@ -166,7 +166,6 @@ export default function BlogArticleCard({
+ 
+       {/* ── Body ───────────────────────────────────────────── */}
+       <div className="flex flex-col flex-1 p-5" style={{ gap: "12px" }}>
+-
+         {/* Title — override global h3 with inline styles */}
+         <Link href={cardHref} scroll={scrollOnNavigate} onClick={goTop}>
+           <p
+@@ -278,14 +277,26 @@ export default function BlogArticleCard({
+                 className="flex items-center"
+                 style={{ gap: 4, color: "rgba(255,255,255,0.4)", fontSize: 12 }}
+               >
+-                <Eye style={{ width: 13, height: 13, color: "rgba(77,171,255,0.7)" }} />
++                <Eye
++                  style={{
++                    width: 13,
++                    height: 13,
++                    color: "rgba(77,171,255,0.7)",
++                  }}
++                />
+                 {views + (isViewed ? 1 : 0)}
+               </span>
+               <span
+                 className="flex items-center"
+                 style={{ gap: 4, color: "rgba(255,255,255,0.4)", fontSize: 12 }}
+               >
+-                <MessageCircle style={{ width: 13, height: 13, color: "rgba(77,171,255,0.7)" }} />
++                <MessageCircle
++                  style={{
++                    width: 13,
++                    height: 13,
++                    color: "rgba(77,171,255,0.7)",
++                  }}
++                />
+                 {comments}
+               </span>
+               {typeof onShare === "function" && (
+@@ -294,10 +305,20 @@ export default function BlogArticleCard({
+                   onClick={() => onShare(item)}
+                   disabled={isSharing}
+                   className="flex items-center hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+-                  style={{ gap: 4, color: "rgba(255,255,255,0.4)", fontSize: 12 }}
++                  style={{
++                    gap: 4,
++                    color: "rgba(255,255,255,0.4)",
++                    fontSize: 12,
++                  }}
+                   aria-label="Share"
+                 >
+-                  <Share2 style={{ width: 13, height: 13, color: "rgba(77,171,255,0.7)" }} />
++                  <Share2
++                    style={{
++                      width: 13,
++                      height: 13,
++                      color: "rgba(77,171,255,0.7)",
++                    }}
++                  />
+                   {shares}
+                 </button>
+               )}
+
+commit 3bb2fc8526ca6c3c7639659a045ddaff9abebb96
+Author: Mohamed Salem <mohamed151salem@gmial.com>
+Date:   Wed Mar 18 11:42:31 2026 +0200
+
+    Refactor TabsSection and CommentSection components; introduce BlogArticleCard for improved article rendering
+    
+    - Simplified TabsSection by extracting article card rendering into a new BlogArticleCard component.
+    - Enhanced article sharing functionality with dynamic URLs and improved state management.
+    - Updated CommentSection to streamline comment fetching and submission logic, ensuring better error handling.
+    - Improved UI consistency and responsiveness across components.
+
+diff --git a/next.config.mjs b/next.config.mjs
+index 527f3e5..bd61bb9 100644
+--- a/next.config.mjs
++++ b/next.config.mjs
+@@ -1,5 +1,14 @@
++import path from "path";
++import { fileURLToPath } from "url";
++
++const __filename = fileURLToPath(import.meta.url);
++const __dirname = path.dirname(__filename);
++
+ /** @type {import('next').NextConfig} */
+ const nextConfig = {
++  turbopack: {
++    root: __dirname,
++  },
+   images: {
+     remotePatterns: [
+       {
+diff --git a/package.json b/package.json
+index 34d26e9..4cdceaa 100644
+--- a/package.json
++++ b/package.json
+@@ -10,7 +10,6 @@
+   },
+   "dependencies": {
+     "@gsap/react": "^2.1.2",
+-    "@strapi/blocks-react-renderer": "^1.0.2",
+     "@supabase/ssr": "^0.9.0",
+     "@supabase/supabase-js": "^2.98.0",
+     "@tanstack/react-query": "^5.90.21",
+diff --git a/pnpm-lock.yaml b/pnpm-lock.yaml
+index 3beb241..2a4c708 100644
+--- a/pnpm-lock.yaml
++++ b/pnpm-lock.yaml
+@@ -11,9 +11,6 @@ importers:
+       '@gsap/react':
+         specifier: ^2.1.2
+         version: 2.1.2(gsap@3.14.2)(react@19.2.3)
+-      '@strapi/blocks-react-renderer':
+-        specifier: ^1.0.2
+-        version: 1.0.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+       '@supabase/ssr':
+         specifier: ^0.9.0
+         version: 0.9.0(@supabase/supabase-js@2.98.0)
+@@ -723,12 +720,6 @@ packages:
+     resolution: {integrity: sha512-tlqY9xq5ukxTUZBmoOp+m61cqwQD5pHJtFY3Mn8CA8ps6yghLH/Hw8UPdqg4OLmFW3IFlcXnQNmo/dh8HzXYIQ==}
+     engines: {node: '>=18'}
+ 
+-  '@strapi/blocks-react-renderer@1.0.2':
+-    resolution: {integrity: sha512-pRV/WMreo5wyrLg7J0pw1DM9lg8U8m+QA7Bd8CPN3beUBTdDhYrFTTNZh3XveEdnURZNJu1X0aWXAg4SzVg7QA==}
+-    peerDependencies:
+-      react: ^18.0.0 || ^19.0.0
+-      react-dom: ^18.0.0 || ^19.0.0
+-
+   '@supabase/auth-js@2.98.0':
+     resolution: {integrity: sha512-GBH361T0peHU91AQNzOlIrjUZw9TZbB9YDRiyFgk/3Kvr3/Z1NWUZ2athWTfHhwNNi8IrW00foyFxQD9IO/Trg==}
+     engines: {node: '>=20.0.0'}
+@@ -4248,11 +4239,6 @@ snapshots:
+ 
+   '@sindresorhus/merge-streams@4.0.0': {}
+ 
+-  '@strapi/blocks-react-renderer@1.0.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
+-    dependencies:
+-      react: 19.2.3
+-      react-dom: 19.2.3(react@19.2.3)
+-
+   '@supabase/auth-js@2.98.0':
+     dependencies:
+       tslib: 2.8.1
+diff --git a/src/app/api/articles/[id]/comments/route.js b/src/app/api/articles/[id]/comments/route.js
+index 12f0539..d63a21e 100644
+--- a/src/app/api/articles/[id]/comments/route.js
++++ b/src/app/api/articles/[id]/comments/route.js
+@@ -4,37 +4,65 @@ import { supabaseAdmin } from "@/lib/supabaseAdmin";
+ export async function GET(_req, { params }) {
+   const { id } = await params;
+   try {
++    if (!id) {
++      return NextResponse.json(
++        { success: false, error: "Missing article id" },
++        { status: 400 },
++      );
++    }
++
+     const { data, error } = await supabaseAdmin
+       .from("comments")
+-      .select("*")
++      .select("id, article_id, author_name, author_email, content, created_at")
+       .eq("article_id", id)
+       .order("created_at", { ascending: false });
+ 
+     if (error) {
+-      return NextResponse.json({ success: true, data: [] });
++      return NextResponse.json(
++        { success: false, error: error.message },
++        { status: 500 },
++      );
+     }
+ 
+     return NextResponse.json({ success: true, data: data ?? [] });
+   } catch (error) {
+-    return NextResponse.json({ success: true, data: [] });
++    return NextResponse.json(
++      { success: false, error: error.message || "Unexpected server error" },
++      { status: 500 },
++    );
+   }
+ }
+ 
+ export async function POST(req, { params }) {
+   const { id } = await params;
+   try {
++    if (!id) {
++      return NextResponse.json(
++        { success: false, error: "Missing article id" },
++        { status: 400 },
++      );
++    }
++
+     const body = await req.json();
++    const content = body?.content?.trim();
++
++    if (!content) {
++      return NextResponse.json(
++        { success: false, error: "Content is required" },
++        { status: 400 },
++      );
++    }
+ 
+     const { data, error } = await supabaseAdmin
+       .from("comments")
+       .insert({
+         article_id: id,
+-        content: body.content,
+-        author_name: body.authorName || "Guest",
+-        author_email: body.authorEmail || "",
++        content,
++        author_name: body.authorName?.trim() || "Guest",
++        author_email: body.authorEmail?.trim() || "",
+         created_at: new Date().toISOString(),
+       })
+-      .select()
++      .select("id, article_id, author_name, author_email, content, created_at")
+       .single();
+ 
+     if (error) throw error;
+diff --git a/src/app/api/comments/[commentId]/route.js b/src/app/api/comments/[commentId]/route.js
+index 1b53f4e..152f63f 100644
+--- a/src/app/api/comments/[commentId]/route.js
++++ b/src/app/api/comments/[commentId]/route.js
+@@ -1,50 +1,77 @@
+ import { NextResponse } from "next/server";
++import { supabaseAdmin } from "@/lib/supabaseAdmin";
+ 
+-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL;
+-const API_TOKEN = process.env.STRAPI_API_TOKEN;
+-
+-// --- تعديل تعليق ---
+-export async function PUT(request, { params }) {
++export async function PATCH(request, { params }) {
+   try {
+     const { commentId } = await params;
+     const body = await request.json();
+-    
+-    const res = await fetch(`${STRAPI_URL}/api/comments/${commentId}`, {
+-      method: "PUT",
+-      headers: {
+-        "Content-Type": "application/json",
+-        Authorization: `Bearer ${API_TOKEN}`,
+-      },
+-      body: JSON.stringify({
+-        data: { content: body.content }
+-      }),
+-    });
+-
+-    if (!res.ok) throw new Error("Failed to update comment");
+-    
+-    const data = await res.json();
+-    return NextResponse.json({ success: true, data: data.data });
++    const content = body?.content?.trim();
++
++    if (!commentId) {
++      return NextResponse.json(
++        { success: false, error: "Missing comment id" },
++        { status: 400 },
++      );
++    }
++
++    if (!content) {
++      return NextResponse.json(
++        { success: false, error: "Content is required" },
++        { status: 400 },
++      );
++    }
++
++    const { data, error } = await supabaseAdmin
++      .from("comments")
++      .update({ content })
++      .eq("id", commentId)
++      .select("id, article_id, author_name, author_email, content, created_at")
++      .single();
++
++    if (error) {
++      return NextResponse.json(
++        { success: false, error: error.message },
++        { status: 500 },
++      );
++    }
++
++    return NextResponse.json({ success: true, data });
+   } catch (error) {
+-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
++    return NextResponse.json(
++      { success: false, error: error.message || "Unexpected server error" },
++      { status: 500 },
++    );
+   }
+ }
+ 
+-// --- حذف تعليق ---
+-export async function DELETE(request, { params }) {
++export async function DELETE(_request, { params }) {
+   try {
+     const { commentId } = await params;
+-    
+-    const res = await fetch(`${STRAPI_URL}/api/comments/${commentId}`, {
+-      method: "DELETE",
+-      headers: {
+-        Authorization: `Bearer ${API_TOKEN}`,
+-      },
+-    });
+ 
+-    if (!res.ok) throw new Error("Failed to delete comment");
++    if (!commentId) {
++      return NextResponse.json(
++        { success: false, error: "Missing comment id" },
++        { status: 400 },
++      );
++    }
++
++    const { error } = await supabaseAdmin
++      .from("comments")
++      .delete()
++      .eq("id", commentId);
++
++    if (error) {
++      return NextResponse.json(
++        { success: false, error: error.message },
++        { status: 500 },
++      );
++    }
+ 
+-    return NextResponse.json({ success: true });
++    return NextResponse.json({ success: true, data: { id: commentId } });
+   } catch (error) {
+-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
++    return NextResponse.json(
++      { success: false, error: error.message || "Unexpected server error" },
++      { status: 500 },
++    );
+   }
+ }
+diff --git a/src/app/techBlog/[slug]/page.jsx b/src/app/techBlog/[slug]/page.jsx
+index 64eaac0..8b15962 100644
+--- a/src/app/techBlog/[slug]/page.jsx
++++ b/src/app/techBlog/[slug]/page.jsx
+@@ -3,9 +3,23 @@ import Link from "next/link";
+ import { getArticleBySlug } from "@/lib/articlesApi.server";
+ import { getPublishedArticles } from "@/lib/articlesApi.client";
+ 
++async function getArticleByIdentifier(identifier) {
++  const articles = await getPublishedArticles();
++  if (!Array.isArray(articles) || articles.length === 0) return null;
++
++  return (
++    articles.find(
++      (article) =>
++        article.id === identifier || article.documentId === identifier,
++    ) ||
++    articles.find((article) => article.slug === identifier) ||
++    null
++  );
++}
++
+ export async function generateMetadata({ params }) {
+   const { slug } = await params;
+-  const article = await getArticleBySlug(slug);
++  const article = await getArticleByIdentifier(slug);
+ 
+   if (!article) {
+     return { title: "Article Not Found | Anoon Blog" };
+@@ -27,7 +41,9 @@ export async function generateMetadata({ params }) {
+ export async function generateStaticParams() {
+   try {
+     const articles = await getPublishedArticles();
+-    return articles.map((a) => ({ slug: a.slug }));
++    return articles
++      .map((a) => ({ slug: a.documentId || a.id }))
++      .filter((item) => !!item.slug);
+   } catch {
+     return [];
+   }
+@@ -35,11 +51,12 @@ export async function generateStaticParams() {
+ 
+ export default async function ArticlePage({ params }) {
+   const { slug } = await params;
+-  const article = await getArticleBySlug(slug);
++  const article =
++    (await getArticleByIdentifier(slug)) || (await getArticleBySlug(slug));
+ 
+   if (!article) {
+     return (
+-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-black">
++      <div className="min-h-screen flex items-center justify-center bg-linear-to-b from-gray-900 to-black">
+         <div className="text-center">
+           <h1 className="text-5xl font-bold text-white mb-4">
+             المقال غير موجود
+diff --git a/src/components/techBlog/BlogArticleCard.jsx b/src/components/techBlog/BlogArticleCard.jsx
+new file mode 100644
+index 0000000..82251eb
+--- /dev/null
++++ b/src/components/techBlog/BlogArticleCard.jsx
+@@ -0,0 +1,345 @@
++"use client";
++
++import Image from "next/image";
++import Link from "next/link";
++import {
++  Heart,
++  MessageCircle,
++  Eye,
++  Share2,
++  Clock,
++  ArrowRight,
++  ArrowLeft,
++} from "lucide-react";
++
++/* ── helpers ──────────────────────────────────────────────── */
++
++function extractTextFromBlocks(blocks) {
++  if (!blocks) return "";
++  if (typeof blocks === "string") return blocks.trim();
++  if (!Array.isArray(blocks)) return "";
++  let text = "";
++  blocks.forEach((block) => {
++    block?.children?.forEach((child) => {
++      if (child?.text) text += `${child.text} `;
++    });
++  });
++  return text.trim();
++}
++
++function resolveImageUrl(item, mediaBaseUrl) {
++  const fallback = "/images/blogImage.png";
++  if (!item) return fallback;
++  const rawUrl =
++    item.image?.[0]?.formats?.medium?.url ||
++    item.image?.[0]?.formats?.small?.url ||
++    item.image?.[0]?.url ||
++    item.cover_image;
++  if (!rawUrl) return fallback;
++  if (rawUrl.startsWith("http")) return rawUrl;
++  return `${mediaBaseUrl || ""}${rawUrl}`;
++}
++
++function calcReadingTime(raw, lang) {
++  const text = typeof raw === "string" ? raw : JSON.stringify(raw ?? "");
++  const mins = Math.max(1, Math.ceil(text.trim().split(/\s+/).length / 200));
++  return `${mins} ${lang === "ar" ? "د" : "min"}`;
++}
++
++/* ── component ────────────────────────────────────────────── */
++
++export default function BlogArticleCard({
++  item,
++  currentLang,
++  isRTL = false,
++  href,
++  scrollOnNavigate,
++  mediaBaseUrl,
++  readMoreLabel,
++  isLiked = false,
++  isViewed = false,
++  shareCount,
++  onShare,
++  isSharing = false,
++  showExcerpt = true,
++  showMeta = true,
++  showActions = true,
++}) {
++  if (!item) return null;
++
++  const title = item[`title_${currentLang}`] || item.title || "بدون عنوان";
++  const excerptRaw = item[`excerpt_${currentLang}`] || item.excerpt;
++  const excerpt = extractTextFromBlocks(excerptRaw);
++  const identifier = item.documentId || item.id;
++  const cardHref = href || (identifier ? `/techBlog/${identifier}` : "/techBlog");
++
++  const categoryName = item.category
++    ? item.category[`name_${currentLang}`] || item.category.name
++    : currentLang === "ar"
++    ? "غير مصنف"
++    : "Uncategorized";
++
++  const author = item[`author_${currentLang}`] || item.author || "غير معروف";
++  const authorInitial = author.trim().charAt(0).toUpperCase();
++
++  const publishedDate = item.publishedAt || item.published_at;
++  const dateFormatted = publishedDate
++    ? new Date(publishedDate).toLocaleDateString(
++        currentLang === "ar" ? "ar-EG" : "en-US",
++        { year: "numeric", month: "short", day: "numeric" }
++      )
++    : currentLang === "ar"
++    ? "غير محدد"
++    : "Unknown";
++
++  const imageUrl = resolveImageUrl(item, mediaBaseUrl);
++  const likes = item.likes || 0;
++  const views = item.views || 0;
++  const comments = item.comments_count || 0;
++  const shares = shareCount ?? item.shares ?? 0;
++
++  const contentRaw =
++    item[`content_${currentLang}`] || item.content || excerptRaw || "";
++  const readTime = calcReadingTime(contentRaw, currentLang);
++
++  const Arrow = isRTL ? ArrowLeft : ArrowRight;
++  const goTop = () => window.scrollTo({ top: 0, behavior: "instant" });
++
++  return (
++    <article
++      className="group flex flex-col h-full rounded-2xl overflow-hidden border border-white/10 bg-noon-card transition-all duration-500 hover:border-brand-sky/40 hover:-translate-y-1"
++      style={{
++        boxShadow: "0 4px 24px rgba(0,0,0,0.3)",
++      }}
++      onMouseEnter={(e) => {
++        e.currentTarget.style.boxShadow =
++          "0 8px 40px rgba(77,171,255,0.15), 0 4px 24px rgba(0,0,0,0.4)";
++      }}
++      onMouseLeave={(e) => {
++        e.currentTarget.style.boxShadow = "0 4px 24px rgba(0,0,0,0.3)";
++      }}
++    >
++      {/* ── Image ──────────────────────────────────────────── */}
++      <Link
++        href={cardHref}
++        scroll={scrollOnNavigate}
++        onClick={goTop}
++        className="block relative overflow-hidden"
++        style={{ height: "200px", flexShrink: 0 }}
++      >
++        <Image
++          src={imageUrl}
++          alt={title}
++          fill
++          unoptimized
++          className="object-cover transition-transform duration-700 group-hover:scale-110"
++          onError={(e) => {
++            e.currentTarget.src = "/images/blogImage.png";
++          }}
++        />
++
++        {/* Bottom gradient */}
++        <div
++          className="absolute inset-0"
++          style={{
++            background:
++              "linear-gradient(to top, rgba(10,10,10,0.8) 0%, transparent 60%)",
++          }}
++        />
++
++
++        {/* Reading time */}
++        <span
++          className="absolute bottom-3 right-3 flex items-center gap-1 text-white/80"
++          style={{
++            fontSize: "11px",
++            padding: "3px 10px",
++            borderRadius: "999px",
++            background: "rgba(0,0,0,0.6)",
++            backdropFilter: "blur(6px)",
++          }}
++        >
++          <Clock style={{ width: 11, height: 11, color: "#4dabff" }} />
++          {readTime}
++        </span>
++      </Link>
++
++      {/* ── Body ───────────────────────────────────────────── */}
++      <div className="flex flex-col flex-1 p-5" style={{ gap: "12px" }}>
++
++        {/* Title — override global h3 with inline styles */}
++        <Link href={cardHref} scroll={scrollOnNavigate} onClick={goTop}>
++          <p
++            className={`font-bold text-white transition-colors duration-300 group-hover:text-brand-sky ${
++              isRTL ? "text-right" : "text-left"
++            }`}
++            style={{
++              fontSize: "16px",
++              lineHeight: "1.45",
++              display: "-webkit-box",
++              WebkitLineClamp: 2,
++              WebkitBoxOrient: "vertical",
++              overflow: "hidden",
++            }}
++          >
++            {title}
++          </p>
++        </Link>
++
++        {/* Excerpt */}
++        {showExcerpt && excerpt && (
++          <p
++            className={isRTL ? "text-right" : "text-left"}
++            style={{
++              color: "rgba(255,255,255,0.55)",
++              fontSize: "13.5px",
++              lineHeight: "1.6",
++              display: "-webkit-box",
++              WebkitLineClamp: 2,
++              WebkitBoxOrient: "vertical",
++              overflow: "hidden",
++            }}
++          >
++            {excerpt}
++          </p>
++        )}
++
++        {/* Spacer */}
++        <div style={{ flex: 1 }} />
++
++        {/* ── Footer ─────────────────────────────────────── */}
++        <div
++          className="flex flex-col"
++          style={{
++            gap: "10px",
++            paddingTop: "12px",
++            borderTop: "1px solid rgba(255,255,255,0.08)",
++          }}
++        >
++          {/* Author + date */}
++          {showMeta && (
++            <div
++              className={`flex items-center ${isRTL ? "flex-row-reverse" : ""}`}
++              style={{ gap: "8px" }}
++            >
++              {/* Avatar */}
++              <span
++                className="flex items-center justify-center font-bold text-brand-sky shrink-0"
++                style={{
++                  width: 28,
++                  height: 28,
++                  borderRadius: "50%",
++                  background: "rgba(77,171,255,0.12)",
++                  border: "1px solid rgba(77,171,255,0.3)",
++                  fontSize: "11px",
++                }}
++              >
++                {authorInitial}
++              </span>
++              <span
++                className="text-white/70 truncate font-medium"
++                style={{ fontSize: "12px" }}
++              >
++                {author}
++              </span>
++              <span
++                className={`text-white/40 shrink-0 tabular-nums ${
++                  isRTL ? "mr-auto" : "ml-auto"
++                }`}
++                style={{ fontSize: "11px" }}
++              >
++                {dateFormatted}
++              </span>
++            </div>
++          )}
++
++          {/* Stats */}
++          {showActions && (
++            <div
++              className={`flex items-center ${isRTL ? "flex-row-reverse" : ""}`}
++              style={{ gap: "14px" }}
++            >
++              <span
++                className="flex items-center"
++                style={{ gap: 4, color: "rgba(255,255,255,0.4)", fontSize: 12 }}
++              >
++                <Heart
++                  style={{
++                    width: 13,
++                    height: 13,
++                    color: isLiked ? "#f87171" : "rgba(248,113,113,0.6)",
++                    fill: isLiked ? "#f87171" : "none",
++                    transition: "all 0.3s",
++                  }}
++                />
++                {likes + (isLiked ? 1 : 0)}
++              </span>
++              <span
++                className="flex items-center"
++                style={{ gap: 4, color: "rgba(255,255,255,0.4)", fontSize: 12 }}
++              >
++                <Eye style={{ width: 13, height: 13, color: "rgba(77,171,255,0.7)" }} />
++                {views + (isViewed ? 1 : 0)}
++              </span>
++              <span
++                className="flex items-center"
++                style={{ gap: 4, color: "rgba(255,255,255,0.4)", fontSize: 12 }}
++              >
++                <MessageCircle style={{ width: 13, height: 13, color: "rgba(77,171,255,0.7)" }} />
++                {comments}
++              </span>
++              {typeof onShare === "function" && (
++                <button
++                  type="button"
++                  onClick={() => onShare(item)}
++                  disabled={isSharing}
++                  className="flex items-center hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
++                  style={{ gap: 4, color: "rgba(255,255,255,0.4)", fontSize: 12 }}
++                  aria-label="Share"
++                >
++                  <Share2 style={{ width: 13, height: 13, color: "rgba(77,171,255,0.7)" }} />
++                  {shares}
++                </button>
++              )}
++            </div>
++          )}
++
++          {/* CTA button */}
++          <Link
++            href={cardHref}
++            scroll={scrollOnNavigate}
++            onClick={goTop}
++            className={`group/btn flex items-center justify-center font-semibold transition-all duration-300 ${
++              isRTL ? "flex-row-reverse" : ""
++            }`}
++            style={{
++              gap: "8px",
++              padding: "10px 16px",
++              borderRadius: "12px",
++              fontSize: "13.5px",
++              color: "#4dabff",
++              border: "1px solid rgba(77,171,255,0.3)",
++              background: "rgba(77,171,255,0.06)",
++            }}
++            onMouseEnter={(e) => {
++              e.currentTarget.style.background = "#4dabff";
++              e.currentTarget.style.color = "#ffffff";
++              e.currentTarget.style.border = "1px solid #4dabff";
++            }}
++            onMouseLeave={(e) => {
++              e.currentTarget.style.background = "rgba(77,171,255,0.06)";
++              e.currentTarget.style.color = "#4dabff";
++              e.currentTarget.style.border = "1px solid rgba(77,171,255,0.3)";
++            }}
++          >
++            {readMoreLabel}
++            <Arrow
++              style={{ width: 15, height: 15 }}
++              className="transition-transform duration-300 group-hover/btn:translate-x-1"
++            />
++          </Link>
++        </div>
++      </div>
++    </article>
++  );
++}
+diff --git a/src/components/techBlog/FullBlog.jsx b/src/components/techBlog/FullBlog.jsx
+index 37f108a..c40bab4 100644
+--- a/src/components/techBlog/FullBlog.jsx
++++ b/src/components/techBlog/FullBlog.jsx
+@@ -1,10 +1,146 @@
+ "use client";
+ import Image from "next/image";
+ import { useTranslation } from "react-i18next";
+-import { BlocksRenderer } from "@strapi/blocks-react-renderer";
+ import { Heart, Calendar, Eye, Share2, Clock } from "lucide-react";
+ import { useState, useEffect, useMemo } from "react";
+ import CommentSection from "./comments/CommentSection";
++import BlogArticleCard from "./BlogArticleCard";
++
++const mediaBaseUrl = process.env.NEXT_PUBLIC_MEDIA_BASE_URL || "";
++
++function resolveMediaUrl(url) {
++  if (!url) return "/images/blogImage.png";
++  return url.startsWith("http") ? url : `${mediaBaseUrl}${url}`;
++}
++
++function renderInlineNodes(nodes, keyPrefix = "node") {
++  if (!Array.isArray(nodes)) return null;
++
++  return nodes.map((node, index) => {
++    const key = `${keyPrefix}-${index}`;
++    const text = node?.text || "";
++
++    if (!text) return null;
++    if (node.bold) return <strong key={key}>{text}</strong>;
++    if (node.italic) return <em key={key}>{text}</em>;
++    if (node.underline) return <u key={key}>{text}</u>;
++    if (node.strikethrough) return <s key={key}>{text}</s>;
++    if (node.code) return <code key={key}>{text}</code>;
++
++    return <span key={key}>{text}</span>;
++  });
++}
++
++function renderRichContent(content) {
++  if (!Array.isArray(content)) return null;
++
++  return content.map((block, index) => {
++    const key = `${block?.type || "block"}-${index}`;
++
++    if (block?.type === "paragraph") {
++      return (
++        <p key={key} className="text-white/80 leading-relaxed text-lg mb-5">
++          {renderInlineNodes(block.children, key)}
++        </p>
++      );
++    }
++
++    if (block?.type === "heading") {
++      const level = block.level || 2;
++      if (level === 1) {
++        return (
++          <h1
++            key={key}
++            className="text-4xl md:text-5xl font-bold text-white mt-10 mb-4"
++          >
++            {renderInlineNodes(block.children, key)}
++          </h1>
++        );
++      }
++      if (level === 2) {
++        return (
++          <h2 key={key} className="text-3xl font-bold text-white mt-10 mb-4">
++            {renderInlineNodes(block.children, key)}
++          </h2>
++        );
++      }
++
++      return (
++        <h3 key={key} className="text-2xl font-bold text-white mt-8 mb-3">
++          {renderInlineNodes(block.children, key)}
++        </h3>
++      );
++    }
++
++    if (block?.type === "list") {
++      const ListTag = block.format === "ordered" ? "ol" : "ul";
++      return (
++        <ListTag
++          key={key}
++          className="list-inside mb-6 space-y-2 text-white/80 text-lg"
++        >
++          {(block.children || []).map((item, itemIndex) => (
++            <li key={`${key}-item-${itemIndex}`}>
++              {renderInlineNodes(item.children, `${key}-item-${itemIndex}`)}
++            </li>
++          ))}
++        </ListTag>
++      );
++    }
++
++    if (block?.type === "quote") {
++      return (
++        <blockquote
++          key={key}
++          className="border-s-4 border-brand-sky/60 ps-4 italic text-white/70 my-8"
++        >
++          {renderInlineNodes(block.children, key)}
++        </blockquote>
++      );
++    }
++
++    if (block?.type === "code") {
++      return (
++        <pre
++          key={key}
++          className="my-8 p-5 rounded-2xl bg-black/30 border border-white/10 overflow-x-auto"
++        >
++          <code>{block.children?.[0]?.text || ""}</code>
++        </pre>
++      );
++    }
++
++    if (block?.type === "image") {
++      const src = block.image?.url || block.url || block.src;
++      const alt =
++        block.image?.alternativeText || block.alternativeText || "صورة المقال";
++      const width = block.image?.width || block.width || 1200;
++      const height = block.image?.height || block.height || 700;
++
++      if (!src) return null;
++
++      return (
++        <div key={key} className="my-12">
++          <Image
++            src={resolveMediaUrl(src)}
++            alt={alt}
++            width={width}
++            height={height}
++            unoptimized
++            className="rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] mx-auto object-cover border border-white/5"
++          />
++          {alt && (
++            <p className="text-center text-sm text-white/40 mt-4 italic">
++              {alt}
++            </p>
++          )}
++        </div>
++      );
++    }
++
++    return null;
++  });
++}
+ 
+ export default function FullBlog({ article, similarArticles }) {
+   const [likes, setLikes] = useState(article?.likes || 0);
+@@ -127,7 +263,7 @@ export default function FullBlog({ article, similarArticles }) {
+ 
+   const handleShare = async () => {
+     const identifier = article.documentId || article.id;
+-    const articleUrl = `${window.location.origin}/techBlog/${article.slug}`;
++    const articleUrl = `${window.location.origin}/techBlog/${identifier}`;
+     const shareTitle =
+       article[`title_${lang}`] || article.title || "Anoon Blog";
+ 
+@@ -209,9 +345,7 @@ export default function FullBlog({ article, similarArticles }) {
+       imageData.formats?.medium?.url ||
+       imageData.url;
+     if (rawUrl) {
+-      heroImageUrl = rawUrl.startsWith("http")
+-        ? rawUrl
+-        : `${process.env.NEXT_PUBLIC_STRAPI_URL}${rawUrl}`;
++      heroImageUrl = resolveMediaUrl(rawUrl);
+     }
+   }
+ 
+@@ -226,6 +360,27 @@ export default function FullBlog({ article, similarArticles }) {
+       )
+     : "غير محدد";
+ 
++  const relatedArticles = (similarArticles || [])
++    .filter((item) => {
++      if (!item) return false;
++      if ((item.documentId || item.id) === (article.documentId || article.id)) {
++        return false;
++      }
++
++      const itemCategory =
++        item.category?.id || item.category?.name || item.category || null;
++      const currentCategory =
++        article.category?.id ||
++        article.category?.name ||
++        article.category ||
++        null;
++
++      return (
++        itemCategory && currentCategory && itemCategory === currentCategory
++      );
++    })
++    .slice(0, 3);
++
+   return (
+     <main className="min-h-screen pb-20">
+       {/* Hero Section */}
+@@ -286,32 +441,7 @@ export default function FullBlog({ article, similarArticles }) {
+                 dangerouslySetInnerHTML={{ __html: content }}
+               />
+             ) : (
+-              <BlocksRenderer
+-                content={content}
+-                blocks={{
+-                  image: ({ src, alt, width, height }) => (
+-                    <div className="my-12">
+-                      <Image
+-                        src={
+-                          src.startsWith("http")
+-                            ? src
+-                            : `${process.env.NEXT_PUBLIC_STRAPI_URL}${src}`
+-                        }
+-                        alt={alt || "صورة المقال"}
+-                        width={width || 1200}
+-                        height={height || 700}
+-                        unoptimized
+-                        className="rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] mx-auto object-cover border border-white/5"
+-                      />
+-                      {alt && (
+-                        <p className="text-center text-sm text-white/40 mt-4 italic">
+-                          {alt}
+-                        </p>
+-                      )}
+-                    </div>
+-                  ),
+-                }}
+-              />
++              renderRichContent(content)
+             )}
+           </div>
+ 
+@@ -420,7 +550,7 @@ export default function FullBlog({ article, similarArticles }) {
+         </aside>
+       </div>
+ 
+-      {similarArticles?.length > 0 && (
++      {relatedArticles.length > 0 && (
+         <section className="max-w-7xl mx-auto px-6 mt-32">
+           <div className="flex items-center gap-4 mb-12">
+             <h2 className="text-3xl md:text-5xl font-bold text-white">
+@@ -428,8 +558,25 @@ export default function FullBlog({ article, similarArticles }) {
+             </h2>
+             <div className="h-0.5 flex-1 bg-linear-to-r from-brand-sky/30 to-transparent" />
+           </div>
+-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+-            {/* Similar articles list could go here */}
++          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
++            {relatedArticles.map((item) => {
++              const identifier = item.documentId || item.id;
++
++              return (
++                <div key={identifier} className="rounded-2xl overflow-hidden h-full">
++                  <BlogArticleCard
++                    item={item}
++                    currentLang={lang}
++                    isRTL={lang === "ar"}
++                    href={`/techBlog/${identifier}`}
++                    scrollOnNavigate={true}
++                    mediaBaseUrl={mediaBaseUrl}
++                    readMoreLabel={lang === "ar" ? "اقرأ المزيد" : "Read More"}
++                    showActions={false}
++                  />
++                </div>
++              );
++            })}
+           </div>
+         </section>
+       )}
+diff --git a/src/components/techBlog/TabsSection.jsx b/src/components/techBlog/TabsSection.jsx
+index bd7c651..7d699d4 100644
+--- a/src/components/techBlog/TabsSection.jsx
++++ b/src/components/techBlog/TabsSection.jsx
+@@ -1,11 +1,9 @@
+ "use client";
+ import { useState, useEffect } from "react";
+-import Image from "next/image";
+-import Link from "next/link";
+-import { Heart, MessageCircle, Eye, Share2 } from "lucide-react";
+ import { useTranslation } from "react-i18next";
+ import { useRTL } from "@/hooks/useRTL";
+ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
++import BlogArticleCard from "./BlogArticleCard";
+ 
+ const tabContentVariants = {
+   initial: { opacity: 0, y: 14 },
+@@ -59,12 +57,19 @@ export default function TabsSection() {
+   const [localViews, setLocalViews] = useState({}); // لتخزين المشاهدات المحلية
+   const [localShares, setLocalShares] = useState({});
+   const [sharingById, setSharingById] = useState({});
++  const mediaBaseUrl = process.env.NEXT_PUBLIC_MEDIA_BASE_URL || "";
++
++  const getArticleIdentifier = (item) => item?.documentId || item?.id;
++  const getArticleHref = (item) => {
++    const identifier = getArticleIdentifier(item);
++    return identifier ? `/techBlog/${identifier}` : "/techBlog";
++  };
+ 
+   const handleShare = async (item) => {
+-    const identifier = item.documentId || item.id;
++    const identifier = getArticleIdentifier(item);
+     if (!identifier || sharingById[identifier]) return;
+ 
+-    const articleUrl = `${window.location.origin}/techBlog/${item.slug}`;
++    const articleUrl = `${window.location.origin}${getArticleHref(item)}`;
+     const title = item[`title_${currentLang}`] || item.title || "Anoon Blog";
+     const previousShares = localShares[identifier] ?? item.shares ?? 0;
+ 
+@@ -120,20 +125,6 @@ export default function TabsSection() {
+     }
+   };
+ 
+-  // دالة لاستخراج النص من blocks
+-  const extractTextFromBlocks = (blocks) => {
+-    if (!blocks || !Array.isArray(blocks)) return "";
+-    let text = "";
+-    blocks.forEach((block) => {
+-      if (block.children) {
+-        block.children.forEach((child) => {
+-          if (child.text) text += child.text + " ";
+-        });
+-      }
+-    });
+-    return text.trim();
+-  };
+-
+   // تحميل حالات الإعجاب من localStorage
+   useEffect(() => {
+     const loadLocalData = () => {
+@@ -211,8 +202,8 @@ export default function TabsSection() {
+         console.error("Error loading data:", err);
+         setError(
+           currentLang === "ar"
+-            ? "غير قادر على الاتصال بالسيرفر. تأكد من تشغيل خادم Strapi."
+-            : "Unable to connect to the server. Please ensure Strapi is running.",
++            ? "غير قادر على الاتصال بالسيرفر."
++            : "Unable to connect to the server.",
+         );
+       } finally {
+         setIsLoading(false);
+@@ -314,171 +305,43 @@ export default function TabsSection() {
+               initial={prefersReducedMotion ? false : "initial"}
+               animate={prefersReducedMotion ? undefined : "animate"}
+               exit={prefersReducedMotion ? undefined : "exit"}
+-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
++              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch"
+             >
+               {articlesByTab[activeTab]?.length > 0 ? (
+                 articlesByTab[activeTab].map((item) => {
+-                  const title =
+-                    item[`title_${currentLang}`] || item.title || "بدون عنوان";
+-
+-                  const excerptBlocks =
+-                    item[`excerpt_${currentLang}`] || item.excerpt;
+-                  const excerpt = excerptBlocks
+-                    ? extractTextFromBlocks(excerptBlocks)
+-                    : "";
+-
+-                  let imageUrl = "/images/blogImage.png";
+-
+-                  if (
+-                    item.image &&
+-                    Array.isArray(item.image) &&
+-                    item.image.length > 0
+-                  ) {
+-                    const imageData = item.image[0];
+-                    let rawUrl =
+-                      imageData.formats?.medium?.url ||
+-                      imageData.formats?.small?.url ||
+-                      imageData.url;
+-                    if (rawUrl) {
+-                      imageUrl = rawUrl.startsWith("http")
+-                        ? rawUrl
+-                        : `${process.env.NEXT_PUBLIC_STRAPI_URL}${rawUrl}`;
+-                    }
+-                  }
+-
+-                  const categoryName = item.category
+-                    ? item.category[`name_${currentLang}`] || item.category.name
+-                    : currentLang === "ar"
+-                      ? "غير مصنف"
+-                      : "Uncategorized";
+-
+-                  const author =
+-                    item[`author_${currentLang}`] || item.author || "غير معروف";
+-
+-                  const dateFormatted = item.publishedAt
+-                    ? new Date(item.publishedAt).toLocaleDateString(
+-                        currentLang === "ar" ? "ar-EG" : "en-US",
+-                        {
+-                          year: "numeric",
+-                          month: "long",
+-                          day: "numeric",
+-                        },
+-                      )
+-                    : t("common.unknown_date", "غير محدد");
+-
+-                  // التحقق مما إذا كان المستخدم معجب بهذه المقالة
+-                  const isLiked = localLikes[item.id] || false;
+-
+-                  // التحقق مما إذا كانت المشاهدة مسجلة محلياً
+-                  const isViewed = localViews[item.id] || false;
+-                  const shareCount = localShares[item.id] ?? item.shares ?? 0;
++                  const identifier = getArticleIdentifier(item);
++                  if (!identifier) return null;
++                  const isLiked = localLikes[identifier] || false;
++                  const isViewed = localViews[identifier] || false;
++                  const shareCount =
++                    localShares[identifier] ?? item.shares ?? 0;
+ 
+                   return (
+                     <motion.div
+-                      key={item.id}
++                      key={identifier}
+                       variants={prefersReducedMotion ? undefined : itemVariants}
+                       initial={prefersReducedMotion ? false : "initial"}
+                       animate={prefersReducedMotion ? undefined : "animate"}
+                       exit={prefersReducedMotion ? undefined : "exit"}
+                       layout
+-                      className="group bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-500 hover:shadow-xl hover:shadow-brand-sky/5"
++                      className="h-full"
+                     >
+-                      <Link
+-                        href={`/techBlog/${item.slug}`}
+-                        className="block relative h-48 overflow-hidden"
+-                      >
+-                        <Image
+-                          src={imageUrl}
+-                          alt={title}
+-                          fill
+-                          unoptimized
+-                          className="object-cover group-hover:scale-110 transition-transform duration-700"
+-                          onError={(e) => {
+-                            e.currentTarget.src = "/images/blogImage.png";
+-                          }}
+-                        />
+-                      </Link>
+-
+-                      <div className="p-5 space-y-4">
+-                        <Link href={`/techBlog/${item.slug}`}>
+-                          <h3
+-                            className={`text-xl font-semibold text-white group-hover:text-brand-sky transition-colors line-clamp-2 ${
+-                              isRTL ? "text-right" : "text-left"
+-                            }`}
+-                          >
+-                            {title}
+-                          </h3>
+-                        </Link>
+-
+-                        {excerpt && (
+-                          <p
+-                            className={`text-white/70 text-sm leading-relaxed line-clamp-3 ${
+-                              isRTL ? "text-right" : "text-left"
+-                            }`}
+-                          >
+-                            {excerpt}
+-                          </p>
++                      <BlogArticleCard
++                        item={item}
++                        currentLang={currentLang}
++                        isRTL={isRTL}
++                        href={getArticleHref(item)}
++                        mediaBaseUrl={mediaBaseUrl}
++                        readMoreLabel={t(
++                          "blog.article.read_more",
++                          "اقرأ المزيد",
+                         )}
+-
+-                        <div
+-                          className={`flex flex-wrap items-center gap-2 text-xs text-white/50 ${
+-                            isRTL ? "flex-row-reverse" : ""
+-                          }`}
+-                        >
+-                          <span className="px-2 py-1 bg-white/10 rounded-full">
+-                            {categoryName}
+-                          </span>
+-                          <span>•</span>
+-                          <span>{dateFormatted}</span>
+-                          <span>•</span>
+-                          <span>{author}</span>
+-                        </div>
+-
+-                        <div
+-                          className={`flex items-center gap-4 text-sm ${
+-                            isRTL ? "flex-row-reverse" : ""
+-                          }`}
+-                        >
+-                          <div className="flex items-center gap-1 text-white/60">
+-                            <Heart
+-                              className={`w-4 h-4 transition-all duration-300 ${
+-                                isLiked
+-                                  ? "fill-red-400 text-red-400"
+-                                  : "text-red-400"
+-                              }`}
+-                            />
+-                            <span>{(item.likes || 0) + (isLiked ? 1 : 0)}</span>
+-                          </div>
+-
+-                          <div className="flex items-center gap-1 text-white/60">
+-                            <Eye className="w-4 h-4 text-brand-sky" />
+-                            <span>{(item.views || 0) + (isViewed ? 1 : 0)}</span>
+-                          </div>
+-
+-                          <div className="flex items-center gap-1 text-white/60">
+-                            <MessageCircle className="w-4 h-4 text-brand-sky" />
+-                            <span>{item.comments_count || 0}</span>
+-                          </div>
+-
+-                          <button
+-                            type="button"
+-                            onClick={() => handleShare(item)}
+-                            disabled={sharingById[item.id]}
+-                            className="flex items-center gap-1 text-white/60 hover:text-white transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+-                            aria-label="Share article"
+-                          >
+-                            <Share2 className="w-4 h-4 text-brand-sky" />
+-                            <span>{shareCount}</span>
+-                          </button>
+-                        </div>
+-
+-                        <Link
+-                          href={`/techBlog/${item.slug}`}
+-                          className="block w-full py-2.5 px-4 rounded-xl border border-brand-sky/30 text-brand-sky hover:bg-brand-sky hover:text-white transition-all duration-300 font-medium text-center"
+-                        >
+-                          {t("blog.article.read_more", "اقرأ المزيد")}
+-                        </Link>
+-                      </div>
++                        isLiked={isLiked}
++                        isViewed={isViewed}
++                        shareCount={shareCount}
++                        onShare={handleShare}
++                        isSharing={sharingById[identifier]}
++                      />
+                     </motion.div>
+                   );
+                 })
+diff --git a/src/components/techBlog/comments/CommentSection.jsx b/src/components/techBlog/comments/CommentSection.jsx
+index 38dbcb5..7a10390 100644
+--- a/src/components/techBlog/comments/CommentSection.jsx
++++ b/src/components/techBlog/comments/CommentSection.jsx
+@@ -1,9 +1,23 @@
+ "use client";
+ import { useState, useEffect } from "react";
+ import { useTranslation } from "react-i18next";
+-import { MessageCircle, Send, User, Clock, Trash2, Edit3, X, Check, MoreVertical } from "lucide-react";
+-
+-export default function CommentSection({ articleId, articleDocumentId, onCommentAdded }) {
++import {
++  MessageCircle,
++  Send,
++  User,
++  Clock,
++  Trash2,
++  Edit3,
++  X,
++  Check,
++  MoreVertical,
++} from "lucide-react";
++
++export default function CommentSection({
++  articleId,
++  articleDocumentId,
++  onCommentAdded,
++}) {
+   const [comments, setComments] = useState([]);
+   const [newComment, setNewComment] = useState("");
+   const [isLoading, setIsLoading] = useState(true);
+@@ -20,6 +34,25 @@ export default function CommentSection({ articleId, articleDocumentId, onComment
+ 
+   const contentId = articleDocumentId || articleId;
+ 
++  const fetchComments = async () => {
++    if (!contentId) return;
++
++    try {
++      const res = await fetch(`/api/articles/${contentId}/comments`);
++      const data = await res.json();
++
++      if (!res.ok || !data.success) {
++        throw new Error(data.error || "Failed to fetch comments");
++      }
++
++      setComments(data.data || []);
++    } catch (error) {
++      console.error("Error fetching comments:", error);
++    } finally {
++      setIsLoading(false);
++    }
++  };
++
+   useEffect(() => {
+     const savedName = localStorage.getItem("comment_author_name");
+     const savedEmail = localStorage.getItem("comment_author_email");
+@@ -28,21 +61,6 @@ export default function CommentSection({ articleId, articleDocumentId, onComment
+   }, []);
+ 
+   useEffect(() => {
+-    const fetchComments = async () => {
+-      if (!contentId) return;
+-
+-      try {
+-        const res = await fetch(`/api/articles/${contentId}/comments`);
+-        if (!res.ok) return;
+-        const data = await res.json();
+-        setComments(data.data || []);
+-      } catch (error) {
+-        console.error("Error fetching comments:", error);
+-      } finally {
+-        setIsLoading(false);
+-      }
+-    };
+-
+     fetchComments();
+   }, [contentId]);
+ 
+@@ -63,22 +81,21 @@ export default function CommentSection({ articleId, articleDocumentId, onComment
+           content: newComment,
+           authorName,
+           authorEmail,
+-          currentCommentsCount: comments.length
++          currentCommentsCount: comments.length,
+         }),
+       });
+ 
+-      if (!res.ok) throw new Error(`Failed to post comment`);
+-
+       const data = await res.json();
++      if (!res.ok || !data.success) {
++        throw new Error(data.error || "Failed to post comment");
++      }
+ 
+       localStorage.setItem("comment_author_name", authorName);
+       localStorage.setItem("comment_author_email", authorEmail);
+ 
+-      const reFetchRes = await fetch(`/api/articles/${contentId}/comments`);
+-      const reFetchData = await reFetchRes.json();
+-      setComments(reFetchData.data || []);
++      await fetchComments();
+ 
+-      if (typeof onCommentAdded === 'function') onCommentAdded();
++      if (typeof onCommentAdded === "function") onCommentAdded();
+ 
+       setNewComment("");
+       setShowGuestForm(false);
+@@ -90,13 +107,27 @@ export default function CommentSection({ articleId, articleDocumentId, onComment
+   };
+ 
+   const handleDelete = async (commentId) => {
+-    if (!confirm(lang === "ar" ? "هل أنت متأكد من حذف هذا التعليق؟" : "Are you sure you want to delete this comment?")) return;
++    if (
++      !confirm(
++        lang === "ar"
++          ? "هل أنت متأكد من حذف هذا التعليق؟"
++          : "Are you sure you want to delete this comment?",
++      )
++    )
++      return;
+ 
+     try {
+-      const res = await fetch(`/api/comments/${commentId}`, { method: "DELETE" });
+-      if (res.ok) {
+-        setComments(prev => prev.filter(c => (c.documentId || c.id) !== commentId));
++      const res = await fetch(`/api/comments/${commentId}`, {
++        method: "DELETE",
++      });
++      const data = await res.json();
++      if (!res.ok || !data.success) {
++        throw new Error(data.error || "Failed to delete comment");
+       }
++
++      setComments((prev) =>
++        prev.filter((c) => (c.documentId || c.id) !== commentId),
++      );
+     } catch (error) {
+       console.error("Delete error:", error);
+     }
+@@ -107,17 +138,24 @@ export default function CommentSection({ articleId, articleDocumentId, onComment
+ 
+     try {
+       const res = await fetch(`/api/comments/${commentId}`, {
+-        method: "PUT",
++        method: "PATCH",
+         headers: { "Content-Type": "application/json" },
+         body: JSON.stringify({ content: editContent }),
+       });
+ 
+-      if (res.ok) {
+-        setComments(prev => prev.map(c =>
+-          (c.documentId || c.id) === commentId ? { ...c, content: editContent } : c
+-        ));
+-        setEditingId(null);
++      const data = await res.json();
++      if (!res.ok || !data.success) {
++        throw new Error(data.error || "Failed to update comment");
+       }
++
++      setComments((prev) =>
++        prev.map((c) =>
++          (c.documentId || c.id) === commentId
++            ? { ...c, content: data.data?.content ?? editContent }
++            : c,
++        ),
++      );
++      setEditingId(null);
+     } catch (error) {
+       console.error("Update error:", error);
+     }
+@@ -138,7 +176,13 @@ export default function CommentSection({ articleId, articleDocumentId, onComment
+ 
+   // Generate a consistent color based on name
+   const getAvatarColor = (name = "G") => {
+-    const colors = ["bg-orange-500", "bg-purple-500", "bg-blue-500", "bg-emerald-500", "bg-rose-500"];
++    const colors = [
++      "bg-orange-500",
++      "bg-purple-500",
++      "bg-blue-500",
++      "bg-emerald-500",
++      "bg-rose-500",
++    ];
+     const index = name.charCodeAt(0) % colors.length;
+     return colors[index];
+   };
+@@ -176,12 +220,12 @@ export default function CommentSection({ articleId, articleDocumentId, onComment
+               </div>
+               <div className="flex-1 space-y-3 pt-2">
+                 <div className="flex justify-between">
+-                   <div className="h-4 bg-white/10 rounded-md w-32" />
+-                   <div className="h-3 bg-white/5 rounded-md w-24" />
++                  <div className="h-4 bg-white/10 rounded-md w-32" />
++                  <div className="h-3 bg-white/5 rounded-md w-24" />
+                 </div>
+                 <div className="space-y-2">
+-                   <div className="h-3 bg-white/5 rounded-md w-full" />
+-                   <div className="h-3 bg-white/5 rounded-md w-5/6" />
++                  <div className="h-3 bg-white/5 rounded-md w-full" />
++                  <div className="h-3 bg-white/5 rounded-md w-5/6" />
+                 </div>
+               </div>
+             </div>
+@@ -197,48 +241,69 @@ export default function CommentSection({ articleId, articleDocumentId, onComment
+         <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+           <MessageCircle className="w-6 h-6 text-brand-sky" />
+           {lang === "ar" ? "التعليقات" : "Comments"}
+-          <span className="text-white/20 text-lg font-light">({comments.length})</span>
++          <span className="text-white/20 text-lg font-light">
++            ({comments.length})
++          </span>
+         </h2>
+       </div>
+ 
+       <div className="grid grid-cols-1 gap-8">
+         {/* Comment Input - More Compact */}
+         <div className="bg-white/5 p-5 md:p-6 rounded-2xl border border-white/10 backdrop-blur-md relative overflow-hidden group">
+-          <form onSubmit={handleSubmitComment} className="relative z-10 space-y-4">
++          <form
++            onSubmit={handleSubmitComment}
++            className="relative z-10 space-y-4"
++          >
+             <div className="flex gap-3">
+-                <div className="w-10 h-10 rounded-xl bg-linear-to-br from-brand-sky to-purple-500 flex items-center justify-center shrink-0">
+-                    <User className="w-5 h-5 text-white" />
+-                </div>
+-                <div className="flex-1 space-y-3">
+-                    <textarea
+-                        value={newComment}
+-                        onChange={(e) => setNewComment(e.target.value)}
+-                        placeholder={lang === "ar" ? "ماذا يدور في ذهنك؟" : "Share your thoughts..."}
+-                        className="w-full bg-transparent border-none p-0 text-white placeholder-white/20 focus:outline-none focus:ring-0 text-base md:text-lg resize-none min-h-[80px]"
+-                        required
+-                    />
+-                    
+-                    <div className="h-px bg-white/5 w-full" />
+-                    
+-                    <div className="flex flex-wrap items-center justify-between gap-3">
+-                        <button
+-                            type="button"
+-                            onClick={() => setShowGuestForm(!showGuestForm)}
+-                            className={`text-xs py-1.5 px-3 rounded-full border transition-all ${showGuestForm ? 'bg-white/10 border-white/20 text-white' : 'border-white/5 text-white/40 hover:border-white/20'}`}
+-                        >
+-                            {showGuestForm ? (lang === "ar" ? "إغلاق" : "Close") : (lang === "ar" ? "تعريف الهوية" : "Identify")}
+-                        </button>
+-                        
+-                        <button
+-                            type="submit"
+-                            disabled={isSubmitting || !newComment.trim()}
+-                            className="bg-brand-sky hover:bg-brand-sky/90 text-white px-6 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all transform active:scale-95 shadow-lg shadow-brand-sky/10"
+-                        >
+-                            <Send className="w-3.5 h-3.5" />
+-                            {isSubmitting ? (lang === "ar" ? "جاري..." : "...") : (lang === "ar" ? "نشر" : "Post")}
+-                        </button>
+-                    </div>
++              <div className="w-10 h-10 rounded-xl bg-linear-to-br from-brand-sky to-purple-500 flex items-center justify-center shrink-0">
++                <User className="w-5 h-5 text-white" />
++              </div>
++              <div className="flex-1 space-y-3">
++                <textarea
++                  value={newComment}
++                  onChange={(e) => setNewComment(e.target.value)}
++                  placeholder={
++                    lang === "ar"
++                      ? "ماذا يدور في ذهنك؟"
++                      : "Share your thoughts..."
++                  }
++                  className="w-full bg-transparent border-none p-0 text-white placeholder-white/20 focus:outline-none focus:ring-0 text-base md:text-lg resize-none min-h-20"
++                  required
++                />
++
++                <div className="h-px bg-white/5 w-full" />
++
++                <div className="flex flex-wrap items-center justify-between gap-3">
++                  <button
++                    type="button"
++                    onClick={() => setShowGuestForm(!showGuestForm)}
++                    className={`text-xs py-1.5 px-3 rounded-full border transition-all ${showGuestForm ? "bg-white/10 border-white/20 text-white" : "border-white/5 text-white/40 hover:border-white/20"}`}
++                  >
++                    {showGuestForm
++                      ? lang === "ar"
++                        ? "إغلاق"
++                        : "Close"
++                      : lang === "ar"
++                        ? "تعريف الهوية"
++                        : "Identify"}
++                  </button>
++
++                  <button
++                    type="submit"
++                    disabled={isSubmitting || !newComment.trim()}
++                    className="bg-brand-sky hover:bg-brand-sky/90 text-white px-6 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all transform active:scale-95 shadow-lg shadow-brand-sky/10"
++                  >
++                    <Send className="w-3.5 h-3.5" />
++                    {isSubmitting
++                      ? lang === "ar"
++                        ? "جاري..."
++                        : "..."
++                      : lang === "ar"
++                        ? "نشر"
++                        : "Post"}
++                  </button>
+                 </div>
++              </div>
+             </div>
+ 
+             {showGuestForm && (
+@@ -267,84 +332,92 @@ export default function CommentSection({ articleId, articleDocumentId, onComment
+           {comments.length > 0 ? (
+             comments.map((comment) => {
+               const cId = comment.documentId || comment.id;
+-              const isAuthor = guestEmail && (comment.authorEmail === guestEmail);
++              const isAuthor =
++                guestEmail && comment.author_email === guestEmail;
+ 
+               return (
+                 <div key={cId} className="group relative">
+                   <div className="flex gap-6">
+                     {/* Avatar with dynamic color */}
+                     <div className="shrink-0">
+-                        <div className={`w-14 h-14 rounded-2xl ${getAvatarColor(comment.authorName)} flex items-center justify-center text-white text-xl font-black shadow-lg shadow-black/20 relative z-10`}>
+-                            {comment.authorName?.[0]?.toUpperCase() || <User />}
+-                        </div>
+-                        <div className="w-0.5 h-full bg-linear-to-b from-white/10 to-transparent mx-auto -mt-2 opacity-50 transition-opacity group-hover:opacity-100" />
++                      <div
++                        className={`w-14 h-14 rounded-2xl ${getAvatarColor(comment.author_name)} flex items-center justify-center text-white text-xl font-black shadow-lg shadow-black/20 relative z-10`}
++                      >
++                        {comment.author_name?.[0]?.toUpperCase() || <User />}
++                      </div>
++                      <div className="w-0.5 h-full bg-linear-to-b from-white/10 to-transparent mx-auto -mt-2 opacity-50 transition-opacity group-hover:opacity-100" />
+                     </div>
+ 
+                     <div className="flex-1 space-y-3">
+-                         <div className="flex items-center justify-between">
+-                            <div className="flex items-center gap-3">
+-                                <h4 className="font-bold text-lg text-white group-hover:text-brand-sky transition-colors">
+-                                    {comment.authorName || "Guest User"}
+-                                </h4>
+-                                <span className="w-1 h-1 rounded-full bg-white/20" />
+-                                <span className="text-white/30 text-xs flex items-center gap-1.5 font-medium uppercase tracking-wider">
+-                                    <Clock className="w-3.5 h-3.5 text-purple-400" />
+-                                    {formatDate(comment.createdAt)}
+-                                </span>
+-                            </div>
++                      <div className="flex items-center justify-between">
++                        <div className="flex items-center gap-3">
++                          <h4 className="font-bold text-lg text-white group-hover:text-brand-sky transition-colors">
++                            {comment.author_name || "Guest User"}
++                          </h4>
++                          <span className="w-1 h-1 rounded-full bg-white/20" />
++                          <span className="text-white/30 text-xs flex items-center gap-1.5 font-medium uppercase tracking-wider">
++                            <Clock className="w-3.5 h-3.5 text-purple-400" />
++                            {formatDate(comment.created_at)}
++                          </span>
++                        </div>
+ 
+-                            {isAuthor && editingId !== cId && (
+-                                <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+-                                    <button
+-                                        onClick={() => { setEditingId(cId); setEditContent(comment.content); }}
+-                                        className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-brand-sky transition-all"
+-                                        title={lang === "ar" ? "تعديل" : "Edit"}
+-                                    >
+-                                        <Edit3 className="w-4 h-4" />
+-                                    </button>
+-                                    <button
+-                                        onClick={() => handleDelete(cId)}
+-                                        className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-red-400 transition-all"
+-                                        title={lang === "ar" ? "حذف" : "Delete"}
+-                                    >
+-                                        <Trash2 className="w-4 h-4" />
+-                                    </button>
+-                                </div>
+-                            )}
+-                         </div>
+-
+-                         <div className="bg-white/5 border border-white/5 p-6 rounded-3xl rounded-tl-none group-hover:border-white/10 transition-all relative overflow-hidden">
+-                            {editingId === cId ? (
+-                                <div className="space-y-4">
+-                                    <textarea
+-                                        value={editContent}
+-                                        onChange={(e) => setEditContent(e.target.value)}
+-                                        className="w-full bg-transparent border-none p-0 text-white focus:outline-none text-lg resize-none min-h-[80px]"
+-                                        rows="3"
+-                                        autoFocus
+-                                    />
+-                                    <div className="flex justify-end gap-3 pt-2">
+-                                        <button
+-                                            onClick={() => setEditingId(null)}
+-                                            className="px-4 py-2 rounded-xl text-white/40 hover:text-white text-sm font-medium"
+-                                        >
+-                                            {lang === "ar" ? "إلغاء" : "Cancel"}
+-                                        </button>
+-                                        <button
+-                                            onClick={() => handleUpdate(cId)}
+-                                            className="bg-brand-sky text-white px-6 py-2 rounded-xl text-sm font-bold flex items-center gap-2"
+-                                        >
+-                                            <Check className="w-4 h-4" />
+-                                            {lang === "ar" ? "حفظ التغييرات" : "Save Changes"}
+-                                        </button>
+-                                    </div>
+-                                </div>
+-                            ) : (
+-                                <p className="text-white/70 leading-relaxed text-lg whitespace-pre-wrap">
+-                                    {comment.content}
+-                                </p>
+-                            )}
+-                         </div>
++                        {isAuthor && editingId !== cId && (
++                          <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
++                            <button
++                              onClick={() => {
++                                setEditingId(cId);
++                                setEditContent(comment.content);
++                              }}
++                              className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-brand-sky transition-all"
++                              title={lang === "ar" ? "تعديل" : "Edit"}
++                            >
++                              <Edit3 className="w-4 h-4" />
++                            </button>
++                            <button
++                              onClick={() => handleDelete(cId)}
++                              className="p-2 hover:bg-white/5 rounded-lg text-white/40 hover:text-red-400 transition-all"
++                              title={lang === "ar" ? "حذف" : "Delete"}
++                            >
++                              <Trash2 className="w-4 h-4" />
++                            </button>
++                          </div>
++                        )}
++                      </div>
++
++                      <div className="bg-white/5 border border-white/5 p-6 rounded-3xl rounded-tl-none group-hover:border-white/10 transition-all relative overflow-hidden">
++                        {editingId === cId ? (
++                          <div className="space-y-4">
++                            <textarea
++                              value={editContent}
++                              onChange={(e) => setEditContent(e.target.value)}
++                              className="w-full bg-transparent border-none p-0 text-white focus:outline-none text-lg resize-none min-h-20"
++                              rows="3"
++                              autoFocus
++                            />
++                            <div className="flex justify-end gap-3 pt-2">
++                              <button
++                                onClick={() => setEditingId(null)}
++                                className="px-4 py-2 rounded-xl text-white/40 hover:text-white text-sm font-medium"
++                              >
++                                {lang === "ar" ? "إلغاء" : "Cancel"}
++                              </button>
++                              <button
++                                onClick={() => handleUpdate(cId)}
++                                className="bg-brand-sky text-white px-6 py-2 rounded-xl text-sm font-bold flex items-center gap-2"
++                              >
++                                <Check className="w-4 h-4" />
++                                {lang === "ar"
++                                  ? "حفظ التغييرات"
++                                  : "Save Changes"}
++                              </button>
++                            </div>
++                          </div>
++                        ) : (
++                          <p className="text-white/70 leading-relaxed text-lg whitespace-pre-wrap">
++                            {comment.content}
++                          </p>
++                        )}
++                      </div>
+                     </div>
+                   </div>
+                 </div>
+@@ -352,17 +425,17 @@ export default function CommentSection({ articleId, articleDocumentId, onComment
+             })
+           ) : (
+             <div className="text-center py-20 bg-white/5 rounded-[40px] border border-dashed border-white/10">
+-                <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
+-                    <MessageCircle className="w-10 h-10 text-white/10" />
+-                </div>
+-                <h3 className="text-xl font-bold text-white mb-2">
+-                    {lang === "ar" ? "لا توجد تعليقات بعد" : "No comments yet"}
+-                </h3>
+-                <p className="text-white/30 max-w-xs mx-auto">
+-                    {lang === "ar" 
+-                        ? "كن أول من يشارك رأيه في هذا الموضوع!" 
+-                        : "Be the first to share your thoughts on this topic!"}
+-                </p>
++              <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
++                <MessageCircle className="w-10 h-10 text-white/10" />
++              </div>
++              <h3 className="text-xl font-bold text-white mb-2">
++                {lang === "ar" ? "لا توجد تعليقات بعد" : "No comments yet"}
++              </h3>
++              <p className="text-white/30 max-w-xs mx-auto">
++                {lang === "ar"
++                  ? "كن أول من يشارك رأيه في هذا الموضوع!"
++                  : "Be the first to share your thoughts on this topic!"}
++              </p>
+             </div>
+           )}
+         </div>
