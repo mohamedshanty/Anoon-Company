@@ -215,7 +215,7 @@ export default function TabsSection() {
 
   if (isLoading) {
     return (
-      <section className="py-24 relative overflow-hidden">
+      <section id="stories" className="py-16 md:py-20 lg:py-24 bg-transparent relative overflow-hidden">
         <div className="main-container relative z-10">
           <div className="flex flex-wrap gap-3 mb-12 justify-center">
             {[1, 2, 3, 4].map((i) => (
@@ -265,7 +265,7 @@ export default function TabsSection() {
   }
 
   return (
-    <section className="py-24 relative overflow-hidden" dir={dir}>
+    <section className="py-16 md:py-20 lg:py-24 relative overflow-hidden" dir={dir}>
       <div className="absolute inset-0 bg-linear-to-b from-transparent via-brand-sky/5 to-transparent" />
       <div className="absolute inset-0">
         <div className="absolute top-40 left-10 w-72 h-72 bg-brand-sky/20 rounded-full blur-3xl animate-pulse" />

@@ -23,13 +23,13 @@ const ImpactSection = () => {
     {
       id: "roadmap-courses",
       icon: <MapPin className="text-brand-orange" />,
-      value: "3",
+      value: "3 Programs",
       label: t("stats.courses"),
     },
     {
       id: "yearly-student",
       icon: <Award className="text-brand-orange" />,
-      value: "400",
+      value: "11",
       label: t("tamkeen.impact.stats.yearly_student"),
     },
   ];
@@ -49,9 +49,6 @@ const ImpactSection = () => {
         </span>
       </Impact.Title>
 
-      <Impact.AdditionalText>
-        {t("impact_page.additional_text")}
-      </Impact.AdditionalText>
 
       <Impact.Subtitle>
         <h4>{t("impact_page.subtitle.line1")}</h4>

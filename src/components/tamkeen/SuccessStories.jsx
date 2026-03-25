@@ -10,7 +10,7 @@ const SuccessStories = () => {
   const { isRTL } = useRTL();
 
   return (
-    <section className="py-24 bg-transparent relative overflow-hidden">
+    <section id="stories" className="py-16 md:py-20 lg:py-24 bg-transparent relative overflow-hidden">
       <div className="main-container">
         <SectionHeader
           title={t("success_stories.title")}

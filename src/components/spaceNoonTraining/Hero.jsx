@@ -38,7 +38,7 @@ export default function SpaceNoonTrainingHero() {
         <p className="text-sm md:text-base text-white/80 text-center leading-relaxed px-2 md:px-0">
           {t(
             "tech_training.hero.subtitle",
-            "Empowering students and professionals with cutting-edge skills to shape the digital future inside Palestine & Gaza.",
+            "Empowering students and professionals with cutting-edge skills to shape the digital future inside Palestine & Gaza .skills to shape the digital future inside ",
           )}
         </p>
       </Hero.Subtitle>
@@ -46,7 +46,7 @@ export default function SpaceNoonTrainingHero() {
       <Hero.Buttons>
         <Link href="/spaceNoonTraining#tech" onClick={scrollToSection}>
           <Button variant="outline" color="orange">
-            {t("tech_training.hero.button1", "Explore Our Services")}
+            {t("tech_training.hero.button1", "Explore Our Courses")}
           </Button>
         </Link>
         <Link

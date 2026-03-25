@@ -31,7 +31,7 @@ const TechBlogHero = () => {
   });
 
   return (
-    <section className="py-24 relative overflow-hidden" dir={dir}>
+    <section className="py-16 md:py-20 lg:py-24 relative overflow-hidden" dir={dir}>
       <Stars />
 
       {/* Ambient glow blobs */}
@@ -58,7 +58,7 @@ const TechBlogHero = () => {
 
             {/* Title — own ref */}
             <div ref={titleRef}>
-              <h2 className="font-semibold mb-2 leading-tight text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-white/90">
+              <h2 className="font-semibold mb-2 leading-tight text-xl sm:text-2xl md:text-3xl lg:text-4xl text-white/90">
                 {isRTL ? (
                   <>
                     {t("blog.hero.title_part1", "تعلم أكثر")}
@@ -77,7 +77,7 @@ const TechBlogHero = () => {
                 className={`bg-linear-to-br from-[#64B9FF] via-[#3C6F99] to-[#64B9FF] bg-clip-text text-transparent font-black leading-tight mb-6 ${
                   isRTL
                     ? "text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl"
-                    : "italic tracking-[1px] text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl"
+                    : "italic tracking-[1px] text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-5xl"
                 }`}
               >
                 {t("blog.hero.title_highlight", "Artificial Intelligence")}

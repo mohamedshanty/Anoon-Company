@@ -1,64 +1,67 @@
 {
   "nav": {
-    "about": "About Us",
-    "programs": "Programs",
-    "agency": "Tech Solutions",
-    "impact": "Our Impact",
-    "team": "Our Team",
-    "partner": "Our Partner",
-    "contact": "Contact Us",
+    "home": "Home",
+    "about": "About",
+    "ourWork": "Our Work",
+    "impact": "Impact",
+    "blog": "Blog",
+    "contact": "Contact",
     "support": "Support Us",
     "dropdown": {
-      "tamkeen": "Tamkeen",
-      "anoon": "Anoon"
+      "mission": "Our Mission",
+      "impact": "Our Impact",
+      "team": "Our Team",
+      "partners": "Our Partners",
+      "stories": "Success Stories",
+      "forBusinesses": "For Businesses",
+      "forStudents": "For Students",
+      "aiAgent": "AI Agent Solutions",
+      "tamkeen": "Tamkeen Education",
+      "spaceNoon": "Space Noon Hub",
+      "training": "Tech Training"
     }
   },
   "hero": {
-    "title_rising": "Rising",
-    "title_ashes": "From The Ashes",
-    "title_build": "To Build",
-    "title_future": "Better Future",
-    "subtitle_spirit": "We Don't Just Build Software, ",
-    "subtitle_spirit_highlight": "We Build The Human Spirit",
-    "subtitle_ours": "The Past is behind and the ",
-    "subtitle_ours_highlight": "Future Is Ours",
-    "subtitle_rise": "We Don't make excuses ",
-    "subtitle_rise_highlight": "We Rise",
-    "button_services": "Explore Our Services",
-    "button_meeting": "Book A Free Meeting"
+    "title_rising": "Empowering",
+    "title_ashes": " Gaza With AI Solutions",
+    "title_build": "",
+    "title_future": "& Tech Solutions",
+    "subtitle_spirit": "We're a social enterprise delivering AI development services while training the next generation of Palestinian tech talent.",
+    "button_services": "Hire Us For AI Solution",
+    "button_meeting": "Book Free Consultation"
   },
   "programs_page": {
     "title": "Our Programs",
     "subtitle_words": [
-      { "text": "Tailor", "color": "text-brand-sky" },
-      { "text": "Crafted", "color": "text-brand-orange" },
-      { "text": "For The", "color": "text-brand-sky" },
-      { "text": "Tech Sector", "color": "text-brand-orange" }
+      { "text": "Building", "color": "text-brand-sky" },
+      { "text": "Skills", "color": "text-brand-orange" },
+      { "text": "Creating", "color": "text-brand-sky" },
+      { "text": "Opportunities", "color": "text-brand-orange" }
     ],
     "description": [
-      "At Anoon LLC, we believe there is no shame in falling.",
-      "only in staying down. We help people rise by giving them the skills to build again.",
-      "We don't just offer a second chance, we offer the tools to create a new life."
+      "At Anoon, we believe there is no shame in falling ,only in staying down. ",
+      "We help people rise by giving them the skills to build again. ",
+      "We don't just offer a second chance.  We offer the tools to create a new life."
     ],
     "cards": [
       {
-        "title_prefix": "The Future is",
-        "title_highlight1": "Built",
-        "title_middle": "by Those Who",
-        "title_highlight2": "Learn",
+        "title_prefix": "When The Light",
+        "title_highlight1": "Go Out",
+        "title_middle": "We Keep",
+        "title_highlight2": "Learning Alive",
         "logo_alt": "Tamkeen Logo",
-        "description": "We Believe That Knowledge can't be taken away and student is the future. With Our Work & our partner We make a change and still do.",
+        "description": "Tamkeen Provides Free electricity, internet, and study space for Palestinian students, We've served 11,000+ students, ensuring they can study, research, and build  their futures no matter what happens outside",
         "primary_btn": "Support Us",
         "secondary_btn": "Know More"
       },
       {
         "title_prefix": "The Building Can",
         "title_highlight1": "Fall",
-        "title_middle": "But your Skills",
-        "title_highlight2": "Won't",
+        "title_middle": "But Your Work Won’t",
+        "title_highlight2": "Stop",
         "logo_alt": "Noon Hub Logo",
-        "description": "Knowledge is the only thing that they can't take away from us. We can be destroyed but our mind will shape the future, our thoughts fly high without a limit.",
-        "primary_btn": "Book A Meeting",
+        "description": "Space Noon is where Gaza's freelancers & entrepreneurs work,  collaborate, and build. Professional workspace with the infrastructure  you need internet, electricity, community—to compete globally",
+        "primary_btn": "Visit Us",
         "secondary_btn": "Know More"
       }
     ]
@@ -72,9 +75,7 @@
       "rise_again": "Rise Again"
     },
     "description": [
-      "Because it's important to celebrate our student & freelancer who have suffered",
-      "but kept going and surpass their limit and kept moving toward the light",
-      "in the dark days"
+      "Celebrating students and freelancers who suffered but kept going, surpassed their limits, and are now ,thriving in the global tech market."
     ]
   },
   "testimonials": {
@@ -96,19 +97,17 @@
       "second_word": "Impact"
     },
     "subtitle": {
-      "line1": "Our 2 years of",
+      "line1": "Two years of Building ",
       "line2": {
         "prefix": "",
-        "highlight": "Achievements"
+        "highlight": "Against All Odds"
       }
     },
-    "description": "We didn't wait for permission. While the world watched in silence, we chose to build. Alongside those who truly stood by us, we carved a path through the impossible. We didn't just bring frameworks; we brought the tools for our people to reclaim their own future. We are still here, we are still building, and our will is stronger than any struggle.",
-    "additional_text": "We Are Going To Be The Different"
+    "description": "We didn't wait for permission. While the world watched, we chose to build.  Alongside those who truly stood by us, we carved a path through the impossible.  We didn't just bring frameworks we brought the tools for our people to reclaim  their own future. We are still here, still building, and our will is stronger  than any struggle."
   },
 
   "tamkeen_impact": {
-    "description": "Fly So High , We Reach The Sky and now its time to go beyond We are , we help , we care and we are proud of that.",
-    "additional_text": "Building The Next Generation"
+    "description": "We didn't wait for permission. While the world watched, we chose to build.  Alongside those who truly stood by us, we carved a path through the impossible.  We didn't just bring frameworks we brought the tools for our people to reclaim  their own future. We are still here, still building, and our will is stronger  than any struggle."
   },
 
   "noon_hub_impact": {
@@ -126,40 +125,41 @@
     "additional_text": "Your Space To Shine"
   },
   "stats": {
-    "freelancers": "Freelancer & Student",
-    "success": "Freelancer Success",
-    "courses": "Technical Courses",
-    "workspace": "Work Space",
+    "freelancers": "Freelancer & Student Served",
+    "success": "Successfully Lunched Careers",
+    "courses": " Tech Training For Student",
+    "workspace": "Professional WorkSpaces",
     "roadmaps": "Roadmap"
   },
   "who_we_are_page": {
-    "subtitle": "Who We Are",
-    "title_line1_text": "We Don't Just Build",
-    "title_line1_highlight": "Software",
-    "title_line2_text": "We Help People",
-    "title_line2_highlight": "Dream",
-    "description": "Anoon LLC doesn't just build software. When the world went dark, we stayed. We met our mission head-on in Gaza by offering a future. We equipped students with the technical mastery to rise, because they can take everything else, but they can't take what you know.",
+    "subtitle": "About Anoon",
+    "title_line1_text": "Professional AI Development &",
+    "title_line2_text": "Social Impact Programs",
+    "description": "We're a Gaza-based social enterprise with a dual mission:  Professional AI agent development for international clients Free tech training and co-working space for Palestinian youth Every client project funds our education programs. Every graduate strengthens  Gaza's tech ecosystem. We build software & we build futures.",
     "feature1_title": "Tech Solution",
-    "feature1_desc": "We deliver scalable, secure & impact-oriented digital systems specializing in AI Agent",
+    "feature1_desc": "We deliver scalable, secure AI agent development and  custom digital solutions for businesses worldwide.",
     "feature2_title": "Social",
-    "feature2_desc": "Our Programs Provides the infrastructure and skills freelancers need to remain economically active.",
+    "feature2_desc": "We train students in cutting-edge tech skills and provide  the infrastructure they need to compete globally.",
     "feature1_cta": "Know More",
     "feature2_cta": "Know More"
   },
   "ai_agent": {
-    "title_main": "AI Agent",
-    "title_sub": "Development",
-    "intelligent": "Intelligent",
-    "software": "Software",
-    "for_better": "For Better",
-    "business": "Business",
+    "title_main": "Enterprise AI",
+    "title_sub": "Age Development",
+    "intelligent": "Scalable,Secure",
+    "software": "AI Solutions",
+    "for_better": "From",
+    "for_gaza": "Gaza",
+    "to_the": "To The",
+    "business": "World",
     "features": [
-      "Quick Service",
-      "AI Agent Development",
-      "Data-driven decision support"
+      "Custom AI agent development and deployment",
+      "Process automation and workflow optimization ",
+      "Natural language processing and chatbot systems",
+      "Data-Driven Intelligence and analytics"
     ],
-    "btn_meeting": "Book A Meeting",
-    "btn_more": "Know More"
+    "btn_meeting": "Hire Us",
+    "btn_more": "Learn More"
   },
   "faq": {
     "title": "FAQ",
@@ -180,9 +180,9 @@
     ]
   },
   "get_in_touch": {
-    "title": "Get in",
-    "title_highlight": "Touch",
-    "subtitle": "Your Opinion is what makes the difference",
+    "title": "Get",
+    "title_highlight": "Involved",
+    "subtitle": "Support Anoon Mission",
     "form": {
       "name": "Name *",
       "email": "Email",
@@ -202,7 +202,7 @@
   },
   "partners": {
     "title": "Our Partner",
-    "subtitle": "Working Together to Make Progress"
+    "subtitle": "Working Together to Create Impact"
   },
   "teams": {
     "title": "Our Teams",
@@ -223,13 +223,20 @@
     }
   },
   "newsletter": {
-    "badge": "Get Our Weekly",
-    "title": "Newsletter",
-    "description": "Get weekly updates on the newest design stories, case studies and tips right in your mailbox.",
-    "cta": "Subscribe now!",
+    "badge": "Stay Updated On",
+    "title": "Our Impact",
+    "description": "By subscribing, you'll receive:",
+    "benefits": [
+      "Student success stories and testimonials",
+      "Program updates and milestones",
+      "Ways to support and make an impact",
+      "Behind-the-scenes from Tamkeen"
+    ],
     "placeholder": "Email Address",
     "button": "Subscribe",
-    "footer": "Your email is safe with us, we don't spam."
+    "footer": "We Respect Your Inbox , Unsubscribe Anytime",
+    "close": "Close",
+    "imageAlt": "Illustration of a person reading"
   },
   "tamkeen": {
     "hero": {
@@ -237,13 +244,13 @@
       "title_highlight": "The Future Generation",
       "title_part2": "With",
       "logo_alt": "Tamkeen",
-      "subtitle": "Buildings can be broken, but the human Spirit remain Ignited. We didn't wait, We just did it because while aid sustains the body, knowledge reclaims the future. The war took Everything, but couldn't take our skills. We are building the minds that will rebuild this land.",
-      "button1": "Visit Our Website",
-      "button2": "Donate Now"
+      "subtitle": "Tamkeen is a social program providing free workspace and internet while empowering the next generation of Palestinian students.",
+      "button1": "Support Tamkeen",
+      "button2": "Learn More"
     },
     "who_we_are": {
       "image_alt": "Tamkeen illustration",
-      "subtitle": "Who We Are",
+      "subtitle": "About Tamkeen",
       "title_line1": {
         "text": "When",
         "highlight": "Everybody",
@@ -254,8 +261,14 @@
         "highlight": "Were",
         "after": "There"
       },
-      "description": "Tamkeen is dedicated to providing clarity and hope. We strive to help every student recognize their worth, go beyond their limits and become the best version of themselves for the sake of a better future by providing work space that is modern, high quality and saves their time & money.",
-      "cta": "Know More"
+      "description": "Tamkeen is dedicated to providing clarity and hope. We help students recognize their worth and go beyond their limits.",
+      "provide_title": "We provide :",
+      "provide_items": [
+        "Free workspace with reliable electricity",
+        "Professional environment for learning",
+        "High-speed internet access"
+      ],
+      "cta": "Visit tamkeeninsan.org"
     },
     "impact": {
       "additional": "We Are Going To Be The Different",
@@ -281,13 +294,14 @@
     },
     "info": {
       "image_alt": "Network illustration",
-      "title_line1": "We Provide More",
-      "title_line2_prefix": "Than A",
-      "title_highlight": "Space",
-      "title_line2_suffix": "We Offer",
-      "title_line3": "Your Future Network",
-      "description": "Your Network is everything, no matter how Professional you are if you don't have the right people it doesn't matter, with us we give you the network of your dream",
-      "cta": "Visit Our Location"
+      "title_line1": "Providing a professional workSpace for",
+      "title_line2_prefix": "",
+      "title_highlight": "Everyone",
+      "title_line2_suffix": "",
+      "title_line3": "with Space Noon",
+      "description": "Space Noon is a co-working hub designed for freelancers and entrepreneurs in Gaza, offering professional infrastructure, reliable internet, and a thriving community all in one place.",
+      "cta1": "Book A tour",
+      "cta2": "View Pricing"
     },
     "our_space": {
       "title": "Our Space",
@@ -311,22 +325,20 @@
   },
   "space_noon": {
     "hero": {
-      "title_part1": "Enabling",
-      "title_highlight": "The Future Generation",
+      "title_part1": "Providing",
+      "title_highlight": "A Professional Workspace",
       "title_part2": "With",
-      "title_brand": "Space Noon",
-      "subtitle": "Empowering students and professionals with the tools and the platform by providing a co-working space that they can work in safe, quiet space with the ability to network.",
-      "button1": "Explore Our Services",
-      "button2": "Visit Our Space"
+      "subtitle": "Space Noon is a co-working hub  designed for freelancers and entrepreneurs in Gaza. Professional infrastructure, reliable internet, and a thriving community all in one place.",
+      "button1": "Join Our Space",
+      "button2": "Learn More"
     },
     "problem": {
       "image_alt": "Problem illustration",
-      "title_line1": "What is",
       "title_line2_part1": "The",
       "title_line2_part2": "That Face Us",
       "highlight": "Problem",
       "question_mark": "??",
-      "description": "We don't have the place that have all what student & Freelancer needs, starting from quiet place, to standard electricity, we don't have the networking event in good prices."
+      "description": "We don't have a place that has everything students and freelancers need from a quiet workspace and reliable electricity to affordable networking events."
     },
     "our_space": {
       "title": "Our Space",
@@ -338,11 +350,13 @@
   "tech_training": {
     "hero": {
       "title_part1": "Enabling",
-      "title_part2": "With",
       "title_part3_prefix": "",
       "title_highlight": "The Future Generation",
-      "prompt_placeholder": "Ask about our services, projects, or how we can help you!",
-      "prompt_button": "Ask Now"
+      "title_part2": "With",
+      "prompt_placeholder": "Empowering students and professionals with cutting-edge skills to shape the digital future inside Palestine & Gaza .skills to shape the digital future inside",
+      "prompt_button": "Ask Now",
+      "button1": "Explore Our Courses",
+      "button2": "Visit Our Space"
     },
     "ai_prompt": {
       "placeholder": "Ask The AI Anything",
@@ -366,8 +380,8 @@
       "description": "We have a generation that have suffered from the war financially and don't have any skill but the desire and the capability to learn."
     },
     "training": {
-      "title": "Our Training Programs",
-      "subtitle_words": ["Tailor", "Crafted", "For The", "Tech Sector"],
+      "title": "Training Programs",
+      "subtitle_words": ["Your", "Path", "For The", "Market Ready Skills"],
       "description": "We give you the tools you need to start your journey as graphic design, from the design fundamental, using the professional software for the business, and we give you the guidance for showcasing your portfolio and the freelance to start your journey not just a skills.",
       "card": {
         "title": "Graphic Design Course",
@@ -404,20 +418,42 @@
     },
     "our_services": {
       "image_alt": "Our Services",
-      "title_prefix": "Our",
-      "title_highlight": "Services",
-      "subtitle": "AI Agents Development",
+      "title_prefix": "What",
+      "title_highlight": "We Build",
+      "subtitle": "AI Solutions We’ve Delivered",
       "description": "As business complexity grows, developing AI agents has become essential for building scalable and efficient operations. Investing in AI agent development enables organizations to automate tasks, optimize decision-making, and create sustainable competitive advantages.",
-      "button": "Book A Meeting"
+      "button": "Book A Free Consultation",
+      "services": [
+        {
+          "icon": "🤖",
+          "title": "Customer Service Automation",
+          "desc": "Intelligent chatbots that handle 80% of customer inquiries automatically"
+        },
+        {
+          "icon": "⚡",
+          "title": "Process Automation",
+          "desc": "Workflow automation that saves 20+ hours per week for small businesses"
+        },
+        {
+          "icon": "📊",
+          "title": "Data Analysis Agents",
+          "desc": "AI systems that analyze data and provide actionable business insights"
+        },
+        {
+          "icon": "🎯",
+          "title": "Custom AI Integrations",
+          "desc": "Tailored AI solutions for your specific business needs"
+        }
+      ]
     }
   },
   "blog": {
     "hero": {
-      "title_part1": "Learn More",
-      "title_part2": "Everyday About",
+      "title_part1": "Learn Something",
+      "title_part2": "New EveryDay About",
       "title_highlight": "Artificial Intelligence",
       "badge": "Tech Blog",
-      "subtitle": "Stay ahead with expert insights, deep dives, and the latest breakthroughs in AI and technology."
+      "subtitle": "Practical insights, tutorials, and real-world strategies for building powerful AI systems and intelligent agents."
     },
     "tabs": {
       "section": "Section",

@@ -11,7 +11,7 @@ const SpaceNoonProblemSection = () => {
   return (
     <InfoSection
       id="space-noon-problem"
-      layout="image-right"
+      layout="image-left"
       backgroundGlow="orange"
       image="/images/problem.png"
       imageAlt={t("space_noon.problem.image_alt", "Problem illustration")}
@@ -19,9 +19,6 @@ const SpaceNoonProblemSection = () => {
       <InfoSection.Header>
         <InfoSection.Title>
           <div className={`space-y-6 pt-10 ${isRTL ? 'text-right' : ''}`}>
-            <h1 className="text-5xl md:text-6xl font-semibold text-brand-white">
-              {t("space_noon.problem.title_line1", "What is")}
-            </h1>
             <h1 className={`text-5xl md:text-6xl font-semibold leading-17 text-brand-sky ${isRTL ? 'text-right' : ''}`}>
               {isRTL ? (
                 <>

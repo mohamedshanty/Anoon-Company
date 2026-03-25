@@ -189,6 +189,7 @@ InfoSection.CTA = ({
   className = "",
   href,
   onClick,
+  delay = 0.4,
 }) => {
   const buttonSize =
     "px-4 md:px-6 lg:px-8 xl:px-10 py-1.5 md:py-2 lg:py-2.5 xl:py-3 text-xs md:text-sm lg:text-base";
@@ -200,7 +201,7 @@ InfoSection.CTA = ({
   };
 
   return (
-    <Reveal type="fade" delay={0.4} className={`pt-3 md:pt-4 ${className}`}>
+    <Reveal type="fade" delay={delay} className={`pt-3 md:pt-4 ${className}`}>
       {variant === "outline" ? (
         <Link href={href || "#"} onClick={handleClick}>
           <Button variant="outline" color={color} className={buttonSize}>

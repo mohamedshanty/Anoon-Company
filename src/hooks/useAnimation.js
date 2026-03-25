@@ -32,15 +32,17 @@ export const useAnimation = ({
 } = {}) => {
   useGSAP(
     () => {
-      if (disabled || !ref.current) return;
+      if (disabled || !ref?.current) return;
+
+      const element = ref.current;
 
       // Determine the target: either the element itself or its children if staggering is requested
       const target =
-        stagger > 0 && ref.current.children.length > 0
-          ? ref.current.children
-          : ref.current;
+        stagger > 0 && element.children?.length > 0
+          ? Array.from(element.children)
+          : element;
 
-      if (!target) return;
+      if (!target || (Array.isArray(target) && target.length === 0)) return;
 
       const vars = {
         opacity: 0,
@@ -86,7 +88,25 @@ export const useAnimation = ({
           break;
       }
 
-      gsap.from(target, vars);
+      let tween;
+
+      try {
+        tween = gsap.from(target, vars);
+      } catch (error) {
+        // In iframe previews, ScrollTrigger can fail due to cross-origin window access.
+        const fallbackVars = { ...vars };
+        delete fallbackVars.scrollTrigger;
+
+        try {
+          tween = gsap.from(target, fallbackVars);
+        } catch {
+          return;
+        }
+      }
+
+      return () => {
+        if (tween) tween.kill();
+      };
     },
     {
       scope: ref,

@@ -9,6 +9,13 @@ export default function TamkeenHelpSection() {
   const { t, i18n } = useTranslation();
   const { isRTL } = useRTL();
 
+  const provideItems = t("tamkeen.who_we_are.provide_items", {
+    returnObjects: true,
+    defaultValue: [],
+  });
+
+  const provideList = Array.isArray(provideItems) ? provideItems : [];
+
   const handleScroll = (e) => {
     e.preventDefault();
     const element = document.getElementById("contact");
@@ -29,7 +36,7 @@ export default function TamkeenHelpSection() {
       id="tamkeen"
       layout="image-right"
       backgroundGlow="default"
-      image="/images/whoWeAre1.png"
+      image="/images/tamkeen-info.png"
       imageAlt={t("tamkeen.who_we_are.image_alt")}
       className="animate-fade-in"
     >
@@ -39,7 +46,7 @@ export default function TamkeenHelpSection() {
             {t("tamkeen.who_we_are.subtitle")}
           </span>
         </InfoSection.Subtitle>
-        <InfoSection.Title className="my-10">
+        <InfoSection.Title className="">
           <InfoSection.TitleLine
             text={t("tamkeen.who_we_are.title_line1.text")}
             highlight={t("tamkeen.who_we_are.title_line1.highlight")}
@@ -62,6 +69,19 @@ export default function TamkeenHelpSection() {
       >
         {t("tamkeen.who_we_are.description")}
       </InfoSection.Description>
+
+      <div
+        className={`mt-6 text-white max-w-xl ${isRTL ? "text-right" : "text-left"}`}
+      >
+        <h3 className="text-brand-orange text-2xl md:text-3xl font-bold mb-4">
+          {t("tamkeen.who_we_are.provide_title")}
+        </h3>
+        <ol className="space-y-2 text-base text-white/90 list-decimal list-inside">
+          {provideList.map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
+        </ol>
+      </div>
 
       <InfoSection.CTA
         ctaText={t("tamkeen.who_we_are.cta")}

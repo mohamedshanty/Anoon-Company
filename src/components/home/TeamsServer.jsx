@@ -62,7 +62,7 @@ export default function TeamsServer({ t, locale }) {
   }));
 
   return (
-    <section id="teams" className="py-24 relative overflow-hidden">
+    <section id="teams" className="py-16 md:py-20 lg:py-24 relative overflow-hidden">
       <div className="main-container relative z-10">
         <SectionHeader
           title={t.title || (currentLocale === "ar" ? "فريقنا" : "Our Teams")}

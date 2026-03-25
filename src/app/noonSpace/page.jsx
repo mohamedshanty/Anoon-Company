@@ -7,6 +7,8 @@ import ImpactSection from "@/components/noonSpace/Impact";
 import SpaceNoonProblemSection from "@/components/noonSpace/SpaceNoonProblem";
 import { getTranslations } from "@/lib/i18n-server";
 import React from "react";
+import WorkSpace from "@/components/noonSpace/WorkSpace";
+import PricingSection from "@/components/noonSpace/Price";
 
 const NoonSapce = async () => {
   const cookieStore = await cookies();
@@ -18,9 +20,11 @@ const NoonSapce = async () => {
     <>
       <SpaceNoonHero />
       <SpaceNoonProblemSection />
+      <WorkSpace />
       <OurSpace />
+      <PricingSection />
       <ImpactSection />
-      <PartnersServer t={trans.partners} isRTL={isRTL} />
+      {/* <PartnersServer t={trans.partners} isRTL={isRTL} /> */}
       <GetInTouch />
     </>
   );

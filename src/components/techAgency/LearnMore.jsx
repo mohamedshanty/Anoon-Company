@@ -32,7 +32,7 @@ export default function LearnMore() {
   });
 
   return (
-    <section className="py-24 relative overflow-hidden" dir={dir}>
+    <section className="py-16 md:py-20 lg:py-24 relative overflow-hidden" dir={dir}>
       <div className={`flex flex-col lg:flex-row items-center ${isRTL ? 'lg:flex-row-reverse' : ''}`}>
         <div
           ref={leftSide}

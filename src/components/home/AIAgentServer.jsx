@@ -20,7 +20,11 @@ export default function AIAgentServer({ t }) {
       </div>
 
       {/* Background Pattern */}
-      <PatternBackground priority direction="default" translateY="-translate-y-30" />
+      <PatternBackground
+        priority
+        direction="default"
+        translateY="-translate-y-30"
+      />
 
       <div className="main-container">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-8 md:gap-10 lg:gap-12">
@@ -42,18 +46,19 @@ export default function AIAgentServer({ t }) {
             />
             <div className="space-y-3 md:space-y-4 relative z-10">
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-semibold leading-[1.1] tracking-tight">
-                <span className="text-brand-orange">{t.title_main}</span>{" "}
+                <span className="text-brand-orange">{t.title_main}</span>
+                <br className="hidden sm:block" />
                 <span className="text-brand-sky opacity-80">{t.title_sub}</span>
               </h2>
               <div className="space-y-1 md:space-y-2">
                 <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-light leading-snug tracking-[0.05em] text-white/90">
-                  <span className="text-brand-orange/80">{t.intelligent}</span>{" "}
-                  <span className="text-brand-sky/60">{t.software}</span>
+                  <span className="text-brand-sky/80">{t.intelligent}</span>{" "}
+                  <span className="text-brand-orange/60">{t.software}</span>
                   <br className="hidden sm:block" />
                   <span className="text-brand-sky/60">{t.for_better}</span>{" "}
-                  <span className="text-brand-orange/80 font-medium tracking-[0.02em]">
-                    {t.business}
-                  </span>
+                  <span className="text-brand-orange/60">{t.for_gaza}</span>{" "}
+                  <span className="text-brand-sky/60">{t.to_the}</span>{" "}
+                  <span className="text-brand-orange/60">{t.business}</span>
                 </h3>
               </div>
             </div>
@@ -69,13 +74,13 @@ export default function AIAgentServer({ t }) {
                   key={i}
                   className="flex items-center gap-3 sm:gap-4 md:gap-5 lg:gap-6 group"
                 >
-                  <div className="shrink-0 w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-full bg-brand-sky flex items-center justify-center shadow-[0_0_20px_rgba(96,180,255,0.3)]">
+                  <div className="shrink-0 w-6 h-6 sm:w-7 sm:h-7 md:w-7 md:h-7 rounded-full bg-brand-sky flex items-center justify-center shadow-[0_0_20px_rgba(96,180,255,0.3)]">
                     <Check
-                      className="w-4 h-4 sm:w-5 sm:h-5 md:w-5 md:h-5 text-brand-blue"
+                      className="w-4 h-4 sm:w-5 sm:h-5 md:w-4 md:h-4 text-brand-blue"
                       strokeWidth={4}
                     />
                   </div>
-                  <span className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl text-brand-sky font-medium tracking-[0.03em] opacity-90">
+                  <span className="text-sm sm:text-base md:text-md lg:text-lg xl:text-xl text-brand-sky font-medium tracking-[0.03em] opacity-90">
                     {item}
                   </span>
                 </div>

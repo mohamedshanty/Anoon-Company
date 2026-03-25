@@ -1,7 +1,7 @@
 // components/partners/PartnersSection.jsx
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useRTL } from "@/hooks/useRTL";
 import Stars from "../ui/Stars";
@@ -23,51 +23,63 @@ export default function PartnersSection({
   const titleRef = useRef(null);
   const cardRef = useRef(null);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        titleRef.current,
-        {
-          y: 50,
-          opacity: 0,
-        },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.8,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: titleRef.current,
-            start: "top 80%",
-            toggleActions: "play none none reverse",
-          },
-        },
-      );
+  const [isMounted, setIsMounted] = useState(false);
 
-      gsap.fromTo(
-        cardRef.current,
-        {
-          y: 60,
-          opacity: 0,
-          scale: 0.95,
-        },
-        {
-          y: 0,
-          opacity: 1,
-          scale: 1,
-          duration: 0.8,
-          ease: "back.out(1.2)",
-          scrollTrigger: {
-            trigger: cardRef.current,
-            start: "top 75%",
-            toggleActions: "play none none reverse",
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isMounted) return;
+
+    const ctx = gsap.context(() => {
+      if (titleRef.current) {
+        gsap.fromTo(
+          titleRef.current,
+          {
+            y: 50,
+            opacity: 0,
           },
-        },
-      );
-    }, sectionRef);
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: titleRef.current,
+              start: "top 80%",
+              toggleActions: "play none none reverse",
+            },
+          },
+        );
+      }
+
+      if (cardRef.current) {
+        gsap.fromTo(
+          cardRef.current,
+          {
+            y: 60,
+            opacity: 0,
+            scale: 0.95,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 0.8,
+            ease: "back.out(1.2)",
+            scrollTrigger: {
+              trigger: cardRef.current,
+              start: "top 75%",
+              toggleActions: "play none none reverse",
+            },
+          },
+        );
+      }
+    });
 
     return () => ctx.revert();
-  }, []);
+  }, [isMounted]);
 
   const partner = {
     id: "scot-aid",

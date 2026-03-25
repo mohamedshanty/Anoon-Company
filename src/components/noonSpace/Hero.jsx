@@ -5,6 +5,7 @@ import Button from "@/components/ui/Button";
 import { useTranslation } from "react-i18next";
 import { useRTL } from "@/hooks/useRTL";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function SpaceNoonHero() {
   const { t } = useTranslation();
@@ -18,11 +19,18 @@ export default function SpaceNoonHero() {
           {t("space_noon.hero.title_highlight", "The Future Generation")}
         </span>
         <span className="flex items-center gap-2 md:gap-4 flex-wrap justify-center">
-          <span>{t("space_noon.hero.title_part2", "With")}</span>
+          <span className="text-brand-sky">{t("space_noon.hero.title_part2", "With")}</span>
           <span className="font-thin">
-            <span className="text-brand-orange">
-              {t("space_noon.hero.title_brand", "Space Noon")}
-            </span>
+
+            <div className="relative w-24 h-10 md:w-48 md:h-20">
+              <Image
+                src="/images/spaceNoonLogo1.webp"
+                alt={t("space_noon.hero.logo_alt", "Space Noon Logo")}
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
           </span>
         </span>
       </Hero.Title>

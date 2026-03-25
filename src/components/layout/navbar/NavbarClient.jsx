@@ -17,12 +17,11 @@ export default function NavbarClient() {
     const router = useRouter();
     const [scrolled, setScrolled] = useState(false);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const [programsDropdownOpen, setProgramsDropdownOpen] = useState(false);
+    const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false);
+    const [workDropdownOpen, setWorkDropdownOpen] = useState(false);
 
     useEffect(() => {
-        const handleScroll = () => {
-            setScrolled(window.scrollY > 20);
-        };
+        const handleScroll = () => setScrolled(window.scrollY > 20);
         window.addEventListener("scroll", handleScroll, { passive: true });
         handleScroll();
         return () => window.removeEventListener("scroll", handleScroll);
@@ -43,6 +42,8 @@ export default function NavbarClient() {
     const handleSectionClick = (e, sectionId) => {
         e.preventDefault();
         setMobileMenuOpen(false);
+        setAboutDropdownOpen(false);
+        setWorkDropdownOpen(false);
 
         if (pathname === "/" || pathname === "/ar") {
             const element = document.getElementById(sectionId);
@@ -50,44 +51,70 @@ export default function NavbarClient() {
                 const offset = 80;
                 const elementPosition = element.getBoundingClientRect().top;
                 const offsetPosition = elementPosition + window.pageYOffset - offset;
-
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: "smooth",
-                });
+                window.scrollTo({ top: offsetPosition, behavior: "smooth" });
             }
         } else {
             router.push(`/#${sectionId}`);
         }
     };
 
-    const handleProgramClick = (e, href) => {
+    const handlePageClick = (e, href) => {
         e.preventDefault();
         setMobileMenuOpen(false);
-        setProgramsDropdownOpen(false);
+        setAboutDropdownOpen(false);
+        setWorkDropdownOpen(false);
         router.push(href);
     };
 
     const navLinks = [
-        { name: t("nav.about"), href: "#about", sectionId: "about" },
         {
-            name: t("nav.programs"),
-            href: "#programs",
-            hasDropdown: true,
-            sectionId: "programs",
+            name: t("nav.home"),
+            href: "/",
+            isPage: true,
         },
-        { name: t("nav.agency"), href: "/techAgency", isPage: true },
+        {
+            name: t("nav.about"),
+            hasDropdown: true,
+            dropdownKey: "about",
+            items: [
+                { name: t("nav.dropdown.mission"), sectionId: "about" },
+                { name: t("nav.dropdown.impact"), sectionId: "impact" },
+                { name: t("nav.dropdown.team"), sectionId: "teams" },
+                { name: t("nav.dropdown.partners"), sectionId: "partner" },
+                { name: t("nav.dropdown.stories"), href: "/tamkeen#stories", isPage: true },
+            ],
+        },
+        {
+            name: t("nav.ourWork"),
+            hasDropdown: true,
+            dropdownKey: "work",
+            items: [
+                {
+                    groupLabel: t("nav.dropdown.forBusinesses"),
+                    children: [
+                        { name: t("nav.dropdown.aiAgent"), href: "/techAgency", isPage: true },
+                    ],
+                },
+                {
+                    groupLabel: t("nav.dropdown.forStudents"),
+                    children: [
+                        { name: t("nav.dropdown.tamkeen"), href: "/tamkeen", isPage: true },
+                        { name: t("nav.dropdown.spaceNoon"), href: "/noonSpace", isPage: true },
+                        { name: t("nav.dropdown.training"), href: "/spaceNoonTraining", isPage: true },
+                    ],
+                },
+            ],
+        },
         { name: t("nav.impact"), href: "#impact", sectionId: "impact" },
-        { name: t("nav.team"), href: "#teams", sectionId: "teams" },
-        { name: t("nav.partner"), href: "#partner", sectionId: "partner" },
+        { name: t("nav.blog"), href: "/techBlog", isPage: true },
         { name: t("nav.contact"), href: "#contact", sectionId: "contact" },
     ];
 
     return (
         <nav
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${scrolled
-                ? "backdrop-blur-xl border-b border-white/10 py-2 md:py-3 shadow-2xl"
-                : "bg-transparent py-3 md:py-5"
+                    ? "backdrop-blur-xl border-b border-white/10 py-2 md:py-3 shadow-2xl"
+                    : "bg-transparent py-3 md:py-5"
                 }`}
             style={scrolled ? { background: PREMIUM_GRADIENT } : {}}
         >
@@ -97,14 +124,17 @@ export default function NavbarClient() {
                 <NavDesktop
                     navLinks={navLinks}
                     handleSectionClick={handleSectionClick}
-                    handleProgramClick={handleProgramClick}
+                    handlePageClick={handlePageClick}
+                    aboutDropdownOpen={aboutDropdownOpen}
+                    setAboutDropdownOpen={setAboutDropdownOpen}
+                    workDropdownOpen={workDropdownOpen}
+                    setWorkDropdownOpen={setWorkDropdownOpen}
                 />
 
                 <div className="flex-1 2xl:hidden h-px" />
 
                 <div className="flex items-center gap-2 md:gap-3 shrink-0">
                     <NavActions scrolled={scrolled} />
-
                     <NavMobileToggle
                         mobileMenuOpen={mobileMenuOpen}
                         setMobileMenuOpen={setMobileMenuOpen}
@@ -116,10 +146,12 @@ export default function NavbarClient() {
                 navLinks={navLinks}
                 mobileMenuOpen={mobileMenuOpen}
                 setMobileMenuOpen={setMobileMenuOpen}
-                programsDropdownOpen={programsDropdownOpen}
-                setProgramsDropdownOpen={setProgramsDropdownOpen}
+                aboutDropdownOpen={aboutDropdownOpen}
+                setAboutDropdownOpen={setAboutDropdownOpen}
+                workDropdownOpen={workDropdownOpen}
+                setWorkDropdownOpen={setWorkDropdownOpen}
                 handleSectionClick={handleSectionClick}
-                handleProgramClick={handleProgramClick}
+                handlePageClick={handlePageClick}
                 scrolled={scrolled}
             />
         </nav>

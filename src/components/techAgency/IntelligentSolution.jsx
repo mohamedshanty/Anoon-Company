@@ -34,7 +34,7 @@ export default function IntelligentSolution() {
   });
 
   return (
-    <section className="py-24 relative overflow-hidden" dir={dir}>
+    <section className="py-16 md:py-20 lg:py-24 relative overflow-hidden" dir={dir}>
       <Stars />
 
       {/* main-container */}
