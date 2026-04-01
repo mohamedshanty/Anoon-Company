@@ -5,13 +5,7 @@ import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useRTL } from "@/hooks/useRTL";
 import Stars from "../ui/Stars";
-import { gsap } from "@/lib/gsap-setup";
-import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
 import PartnerCard from "../ui/PartnerCard";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 export default function PartnersSection({
   variant = "medium",
@@ -19,67 +13,35 @@ export default function PartnersSection({
 }) {
   const { t } = useTranslation();
   const { isRTL, dir } = useRTL();
-  const sectionRef = useRef(null);
   const titleRef = useRef(null);
   const cardRef = useRef(null);
+  const [titleVisible, setTitleVisible] = useState(false);
+  const [cardVisible, setCardVisible] = useState(false);
 
-  const [isMounted, setIsMounted] = useState(false);
-
+  // Use IntersectionObserver instead of GSAP for entrance animations
   useEffect(() => {
-    setIsMounted(true);
+    const titleEl = titleRef.current;
+    const cardEl = cardRef.current;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.target === titleEl && entry.isIntersecting) {
+            setTitleVisible(true);
+          }
+          if (entry.target === cardEl && entry.isIntersecting) {
+            setCardVisible(true);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    if (titleEl) observer.observe(titleEl);
+    if (cardEl) observer.observe(cardEl);
+
+    return () => observer.disconnect();
   }, []);
-
-  useEffect(() => {
-    if (!isMounted) return;
-
-    const ctx = gsap.context(() => {
-      if (titleRef.current) {
-        gsap.fromTo(
-          titleRef.current,
-          {
-            y: 50,
-            opacity: 0,
-          },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: titleRef.current,
-              start: "top 80%",
-              toggleActions: "play none none reverse",
-            },
-          },
-        );
-      }
-
-      if (cardRef.current) {
-        gsap.fromTo(
-          cardRef.current,
-          {
-            y: 60,
-            opacity: 0,
-            scale: 0.95,
-          },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 0.8,
-            ease: "back.out(1.2)",
-            scrollTrigger: {
-              trigger: cardRef.current,
-              start: "top 75%",
-              toggleActions: "play none none reverse",
-            },
-          },
-        );
-      }
-    });
-
-    return () => ctx.revert();
-  }, [isMounted]);
 
   const partner = {
     id: "scot-aid",
@@ -87,24 +49,23 @@ export default function PartnersSection({
     logo: "/images/partner.png",
     description: t(
       "partner.description_en",
-      "A registered Scottish charity providing humanitarian aid worldwide.",
+      "A registered Scottish charity providing humanitarian aid worldwide."
     ),
     supportMessage: t(
       "partner.supports_anoon",
-      "Scot Aid proudly supports Anoon's mission to empower youth in Gaza through technology education and sustainable development programs.",
+      "Scot Aid proudly supports Anoon's mission to empower youth in Gaza through technology education and sustainable development programs."
     ),
     website: "https://scotaid.org.uk",
     registrationNumber: "SC050319",
     location: t("partner.location_scotland", "Edinburgh, Scotland"),
     charityType: t(
       "partner.charity_type",
-      "Scottish Charitable Incorporated Organisation",
+      "Scottish Charitable Incorporated Organisation"
     ),
   };
 
   return (
     <section
-      ref={sectionRef}
       id="partner"
       className="relative py-16 md:py-20 overflow-hidden"
       dir={dir}
@@ -118,7 +79,15 @@ export default function PartnersSection({
 
       <div className="main-container">
         {/* Section Header */}
-        <div ref={titleRef} className="text-center mb-10">
+        <div
+          ref={titleRef}
+          className="text-center mb-10"
+          style={{
+            opacity: titleVisible ? 1 : 0,
+            transform: titleVisible ? "none" : "translateY(50px)",
+            transition: "opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
+          }}
+        >
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-3">
             <span className="text-brand-orange">
               {t("partners.title", "Our")}
@@ -134,12 +103,16 @@ export default function PartnersSection({
           <div
             ref={cardRef}
             className={`
-              transition-all duration-500
               ${variant === "full" ? "w-full" : ""}
               ${variant === "large" ? "w-full lg:w-5/6" : ""}
               ${variant === "medium" ? "w-full md:w-3/4 lg:w-2/3 xl:w-1/2" : ""}
               ${variant === "small" ? "w-full md:w-1/2 lg:w-2/5" : ""}
             `}
+            style={{
+              opacity: cardVisible ? 1 : 0,
+              transform: cardVisible ? "none" : "translateY(60px) scale(0.95)",
+              transition: "opacity 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1)",
+            }}
           >
             <PartnerCard {...partner} isRTL={isRTL} variant={detailLevel} />
           </div>
@@ -150,7 +123,7 @@ export default function PartnersSection({
           <p className="text-white/40 text-xs">
             {t(
               "partner.more_info",
-              "Registered with OSCR • Scottish Charity No: SC050319",
+              "Registered with OSCR • Scottish Charity No: SC050319"
             )}
           </p>
         </div>

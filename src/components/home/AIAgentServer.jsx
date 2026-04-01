@@ -21,7 +21,7 @@ export default function AIAgentServer({ t }) {
 
       {/* Background Pattern */}
       <PatternBackground
-        priority
+        priority={true}
         direction="default"
         translateY="-translate-y-30"
       />

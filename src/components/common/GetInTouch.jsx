@@ -98,114 +98,63 @@ const GetInTouch = () => {
   };
 
   useEffect(() => {
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top 80%",
-        end: "bottom 20%",
-        toggleActions: "play none none reverse",
-      },
-    });
-
-    tl.fromTo(
-      titleRef.current,
-      { y: 30, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" },
-    )
-      .fromTo(
-        subtitleRef.current,
-        { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" },
-        "-=0.2",
-      )
-      .fromTo(
-        formInputsRef.current,
-        { x: -30, opacity: 0 },
-        { x: 0, opacity: 1, duration: 0.3, stagger: 0.08, ease: "power2.out" },
-        "-=0.1",
-      )
-      .fromTo(
-        buttonRef.current,
-        { scale: 0.95, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.5)" },
-      )
-      .fromTo(
-        contactInfoRef.current,
-        { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" },
-        "-=0.1",
-      )
-      .fromTo(
-        mapRef.current,
-        { rotationY: 10, scale: 0.9, opacity: 0 },
-        {
-          rotationY: 0,
-          scale: 1,
-          opacity: 1,
-          duration: 0.5,
-          ease: "power2.out",
+    // Use requestAnimationFrame to batch DOM reads and avoid forced reflow
+    const rafId = requestAnimationFrame(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 80%",
+          end: "bottom 20%",
+          toggleActions: "play none none reverse",
         },
-        "-=0.2",
-      );
+      });
 
-    // Add input animations
-    formInputsRef.current.forEach((input) => {
-      if (!input) return;
-
-      const onFocus = () => {
-        gsap.to(input, {
-          scale: 1.01,
-          opacity: 0.95,
-          duration: 0.15,
-          ease: "power1.out",
-        });
-      };
-
-      const onBlur = () => {
-        gsap.to(input, {
-          scale: 1,
-          opacity: 1,
-          duration: 0.15,
-          ease: "power1.out",
-        });
-      };
-
-      input.addEventListener("focus", onFocus);
-      input.addEventListener("blur", onBlur);
-
-      // Cleanup
-      return () => {
-        input.removeEventListener("focus", onFocus);
-        input.removeEventListener("blur", onBlur);
-      };
+      tl.fromTo(
+        titleRef.current,
+        { y: 30, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" },
+      )
+        .fromTo(
+          subtitleRef.current,
+          { y: 20, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" },
+          "-=0.2",
+        )
+        .fromTo(
+          formInputsRef.current,
+          { x: -30, opacity: 0 },
+          { x: 0, opacity: 1, duration: 0.3, stagger: 0.08, ease: "power2.out" },
+          "-=0.1",
+        )
+        .fromTo(
+          buttonRef.current,
+          { scale: 0.95, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(1.5)" },
+        )
+        .fromTo(
+          contactInfoRef.current,
+          { y: 20, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.3, ease: "power2.out" },
+          "-=0.1",
+        )
+        .fromTo(
+          mapRef.current,
+          { rotationY: 10, scale: 0.9, opacity: 0 },
+          {
+            rotationY: 0,
+            scale: 1,
+            opacity: 1,
+            duration: 0.5,
+            ease: "power2.out",
+          },
+          "-=0.2",
+        );
     });
 
-    // Button animations
-    if (buttonRef.current) {
-      const onMouseEnter = () => {
-        gsap.to(buttonRef.current, {
-          scale: 1.03,
-          duration: 0.15,
-          ease: "power1.out",
-        });
-      };
+    // Input focus/blur animations are now handled via CSS transitions
+    // (see className "transition-transform" on inputs) — avoids forced reflow
 
-      const onMouseLeave = () => {
-        gsap.to(buttonRef.current, {
-          scale: 1,
-          duration: 0.15,
-          ease: "power1.out",
-        });
-      };
-
-      buttonRef.current.addEventListener("mouseenter", onMouseEnter);
-      buttonRef.current.addEventListener("mouseleave", onMouseLeave);
-
-      return () => {
-        buttonRef.current?.removeEventListener("mouseenter", onMouseEnter);
-        buttonRef.current?.removeEventListener("mouseleave", onMouseLeave);
-      };
-    }
+    return () => cancelAnimationFrame(rafId);
   }, []);
 
   return (
@@ -251,27 +200,27 @@ const GetInTouch = () => {
                 type="text"
                 placeholder={t("get_in_touch.form.name")}
                 required
-                className="w-full p-3 md:p-4 rounded-md bg-transparent border border-white/30 placeholder-gray-400 outline-none text-sm md:text-base focus:border-brand-sky focus:ring-1 focus:ring-brand-sky transition-[border-color,box-shadow] duration-300"
+                className="w-full p-3 md:p-4 rounded-md bg-transparent border border-white/30 placeholder-gray-400 outline-none text-sm md:text-base focus:border-brand-sky focus:ring-1 focus:ring-brand-sky focus:scale-[1.01] transition-all duration-200"
               />
               <input
                 ref={(el) => (formInputsRef.current[1] = el)}
                 type="email"
                 placeholder={t("get_in_touch.form.email")}
                 required
-                className="w-full p-3 md:p-4 rounded-md bg-transparent border border-white/30 placeholder-gray-400 outline-none text-sm md:text-base focus:border-brand-sky focus:ring-1 focus:ring-brand-sky transition-[border-color,box-shadow] duration-300"
+                className="w-full p-3 md:p-4 rounded-md bg-transparent border border-white/30 placeholder-gray-400 outline-none text-sm md:text-base focus:border-brand-sky focus:ring-1 focus:ring-brand-sky focus:scale-[1.01] transition-all duration-200"
               />
               <input
                 ref={(el) => (formInputsRef.current[2] = el)}
                 type="tel"
                 placeholder={t("get_in_touch.form.phone")}
-                className="w-full p-3 md:p-4 rounded-md bg-transparent border border-white/30 placeholder-gray-400 outline-none text-sm md:text-base focus:border-brand-sky focus:ring-1 focus:ring-brand-sky transition-[border-color,box-shadow] duration-300"
+                className="w-full p-3 md:p-4 rounded-md bg-transparent border border-white/30 placeholder-gray-400 outline-none text-sm md:text-base focus:border-brand-sky focus:ring-1 focus:ring-brand-sky focus:scale-[1.01] transition-all duration-200"
               />
               <textarea
                 ref={(el) => (formInputsRef.current[3] = el)}
                 placeholder={t("get_in_touch.form.find_us")}
                 rows={4}
                 required
-                className="w-full p-3 md:p-4 rounded-md bg-transparent border border-white/30 placeholder-gray-400 outline-none text-sm md:text-base focus:border-brand-sky focus:ring-1 focus:ring-brand-sky transition-[border-color,box-shadow] duration-300 resize-none"
+                className="w-full p-3 md:p-4 rounded-md bg-transparent border border-white/30 placeholder-gray-400 outline-none text-sm md:text-base focus:border-brand-sky focus:ring-1 focus:ring-brand-sky focus:scale-[1.01] transition-all duration-200 resize-none"
               />
 
               {/* reCAPTCHA - Lazy loaded on form focus */}
@@ -288,7 +237,7 @@ const GetInTouch = () => {
                 ref={buttonRef}
                 type="submit"
                 disabled={status.loading || !siteKey}
-                className="w-full py-3 md:py-4 bg-brand-sky hover:bg-brand-sky/90 rounded-md font-semibold text-sm md:text-base transition-all duration-300 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-3 md:py-4 bg-brand-sky hover:bg-brand-sky/90 hover:scale-[1.03] active:scale-[0.98] rounded-md font-semibold text-sm md:text-base transition-all duration-200 relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <span className="relative z-10">
                   {status.loading

@@ -1,7 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
 
-export async function middleware(req) {
+export async function proxy(req) {
   // طبع كل الكوكيز عشان نشوفها
   console.log("🍪 All cookies:", req.cookies.getAll());
 

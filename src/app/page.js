@@ -4,18 +4,20 @@ import MainHero from "@/components/home/MainHeroServer";
 import MainInfoSection from "@/components/home/MainInfoServer";
 import ProgramsServer from "@/components/home/ProgramsServer";
 import { getTranslations } from "@/lib/i18n-server";
-// Swiper-heavy — client wrapper performs ssr:false dynamic internally
+
+// ── Below-fold sections: dynamic imports reduce initial JS payload ────────────
+// These are NOT visible on initial viewport, so we can safely defer them.
+
 import TeamsClientLoader from "@/components/home/TeamsClientLoader";
-// GetInTouch has GSAP + reCAPTCHA — client wrapper performs ssr:false dynamic internally
 import GetInTouchLoader from "@/components/common/GetInTouchLoader";
 
-// Below-fold server components: lazy-loaded to reduce initial JS bundle
+// ── Below-fold sections: dynamic imports reduce initial JS payload ────────────
 const AIAgentServer = dynamic(() => import("@/components/home/AIAgentServer"));
 const ImpactSectionServer = dynamic(
-  () => import("@/components/home/ImpactServer"),
+  () => import("@/components/home/ImpactServer")
 );
 const PartnersServer = dynamic(
-  () => import("@/components/common/PartnersServer"),
+  () => import("@/components/common/PartnersServer")
 );
 const FAQServer = dynamic(() => import("@/components/home/FAQServer"));
 

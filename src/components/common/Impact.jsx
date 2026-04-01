@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
-import { useAnimation } from "@/hooks/useAnimation";
 import { useRTL } from "@/hooks/useRTL";
 import PatternBackground from "../ui/PatternBackground";
 import { useTranslation } from "react-i18next";
@@ -21,42 +20,52 @@ export default function Impact({
   additionalText,
   stats,
 }) {
-  const { i18n, ready } = useTranslation();
   const { isRTL, dir } = useRTL();
   const [mounted, setMounted] = useState(false);
+  const leftSide = useRef(null);
+  const statsContainerRef = useRef(null);
+  const [leftVisible, setLeftVisible] = useState(false);
+  const [statsVisible, setStatsVisible] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const leftSide = useRef(null);
-  const statsContainerRef = useRef(null);
+  // IntersectionObserver-based animations instead of GSAP
+  useEffect(() => {
+    if (!mounted) return;
 
-  // Only run animations after mount — but refs are always attached to the DOM
-  // so stats are never hidden waiting for animation setup
-  useAnimation({
-    ref: leftSide,
-    type: mounted ? "slide-up" : "none",
-    stagger: 0.15,
-    disabled: !mounted,
-  });
+    const leftEl = leftSide.current;
+    const statsEl = statsContainerRef.current;
 
-  useAnimation({
-    ref: statsContainerRef,
-    type: mounted ? (isRTL ? "slide-right" : "slide-left") : "none",
-    stagger: 0.15,
-    start: "top 70%",
-    disabled: !mounted,
-  });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.target === leftEl && entry.isIntersecting) {
+            setLeftVisible(true);
+          }
+          if (entry.target === statsEl && entry.isIntersecting) {
+            setStatsVisible(true);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    if (leftEl) observer.observe(leftEl);
+    if (statsEl) observer.observe(statsEl);
+
+    return () => observer.disconnect();
+  }, [mounted]);
 
   const childrenArray = React.Children.toArray(children);
   const titleChild = childrenArray.find((c) => c.type === Impact.Title);
   const additionalTextChild = childrenArray.find(
-    (c) => c.type === Impact.AdditionalText,
+    (c) => c.type === Impact.AdditionalText
   );
   const subtitleChild = childrenArray.find((c) => c.type === Impact.Subtitle);
   const descriptionChild = childrenArray.find(
-    (c) => c.type === Impact.Description,
+    (c) => c.type === Impact.Description
   );
   const statsChild = childrenArray.find((c) => c.type === Impact.Stats);
 
@@ -66,15 +75,12 @@ export default function Impact({
   const finalAdditionalText = additionalText || additionalTextChild;
   const finalStats = stats || statsChild;
 
-  // Single render path — refs always attach to real DOM nodes.
-  // Pattern + animations are skipped pre-mount but content is always visible.
   return (
     <section
       id="impact"
       className={`relative overflow-hidden ${className}`}
       suppressHydrationWarning
     >
-      {/* Pattern only after mount to avoid SSR mismatch */}
       {mounted && (
         <div className="absolute inset-0 pointer-events-none -z-20 opacity-100">
           <PatternBackground
@@ -103,10 +109,15 @@ export default function Impact({
           className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-8 md:gap-10 lg:gap-12"
           suppressHydrationWarning
         >
-          {/* Left: Subtitle & Description — ref always attached */}
+          {/* Left: Subtitle & Description */}
           <div
             ref={leftSide}
             className={`w-full lg:w-1/2 ${isRTL ? "text-right" : "text-left"}`}
+            style={{
+              opacity: leftVisible ? 1 : 0,
+              transform: leftVisible ? "none" : "translateY(50px)",
+              transition: "opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
+            }}
             suppressHydrationWarning
           >
             {finalSubtitle && (
@@ -121,10 +132,17 @@ export default function Impact({
             )}
           </div>
 
-          {/* Right: Stats — ref always attached, never conditionally hidden */}
+          {/* Right: Stats */}
           <div
             ref={statsContainerRef}
             className="w-full lg:w-1/2"
+            style={{
+              opacity: statsVisible ? 1 : 0,
+              transform: statsVisible
+                ? "none"
+                : `translateX(${isRTL ? "-80px" : "80px"})`,
+              transition: "opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)",
+            }}
             suppressHydrationWarning
           >
             {finalStats}
@@ -231,7 +249,7 @@ Impact.Stats = function ImpactStats({ stats, className = "" }) {
   const rafRef = useRef(null);
   const hasAnimatedRef = useRef(false);
   const [displayValues, setDisplayValues] = useState(() =>
-    (stats || []).map((stat) => String(stat?.value ?? "")),
+    (stats || []).map((stat) => String(stat?.value ?? ""))
   );
 
   useEffect(() => {
@@ -241,7 +259,7 @@ Impact.Stats = function ImpactStats({ stats, className = "" }) {
 
   useEffect(() => {
     const parsedStats = (stats || []).map((stat) =>
-      parseStatValue(stat?.value),
+      parseStatValue(stat?.value)
     );
 
     const hasNumericStats = parsedStats.some(Boolean);
@@ -282,7 +300,7 @@ Impact.Stats = function ImpactStats({ stats, className = "" }) {
         }
 
         setDisplayValues(
-          (stats || []).map((stat) => String(stat?.value ?? "")),
+          (stats || []).map((stat) => String(stat?.value ?? ""))
         );
       };
 
@@ -302,7 +320,7 @@ Impact.Stats = function ImpactStats({ stats, className = "" }) {
       },
       {
         threshold: 0.35,
-      },
+      }
     );
 
     observer.observe(statsRef.current);

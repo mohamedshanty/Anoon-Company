@@ -1,14 +1,8 @@
-import Image from "next/image";
-import {
-  BarChart3,
-  ShieldCheck,
-  LayoutGrid,
-  MessageSquare,
-} from "lucide-react";
+import { BarChart3, ShieldCheck, LayoutGrid, MessageSquare } from "lucide-react";
 import Stars from "../ui/Stars";
 import Reveal from "../ui/Reveal";
 
-export default function HeroSection({ children, translations }) {
+export default function HeroSection({ children }) {
   const floatingIcons = [
     {
       Icon: ShieldCheck,
@@ -33,7 +27,7 @@ export default function HeroSection({ children, translations }) {
         <Stars count={20} zIndex={-5} opacity={0.8} />
       </div>
 
-      {/* Floating Icons - Client reveal */}
+      {/* Floating Icons - hidden on mobile to reduce DOM elements */}
       {floatingIcons.map((item, idx) => (
         <Reveal
           key={idx}

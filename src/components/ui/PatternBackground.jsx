@@ -1,18 +1,19 @@
-// components/ui/PatternBackground.tsx
+// components/ui/PatternBackground.jsx
 import Image from "next/image";
+import React from "react";
 
-export default function PatternBackground({
+const PatternBackground = React.memo(function PatternBackground({
   direction = "default",
   opacity = "opacity-70",
   className = "",
   translateY = "-translate-y-30",
-  priority = true,
+  priority = false,
 }) {
   const directionClass = direction === "diagonal" ? "rotate-[160deg]" : "";
 
   return (
     <div
-      className={`absolute inset-0 pointer-events-none -z-20 ${opacity} overflow-hidden ${className} animate-fade-in`}
+      className={`absolute inset-0 pointer-events-none -z-20 ${opacity} overflow-hidden ${className}`}
     >
       <div className={`relative w-full h-full ${directionClass}`}>
         <Image
@@ -20,12 +21,15 @@ export default function PatternBackground({
           alt=""
           fill
           className={`object-cover ${translateY}`}
-          priority={true}
-          fetchPriority="high"
-          quality={50}
-          sizes="(max-width: 640px) 390px, 750px"
+          priority={priority}
+          fetchPriority={priority ? "high" : "auto"}
+          quality={40}
+          sizes="(max-width: 640px) 100vw, 100vw"
+          loading={priority ? "eager" : "lazy"}
         />
       </div>
     </div>
   );
-}
+});
+
+export default PatternBackground;

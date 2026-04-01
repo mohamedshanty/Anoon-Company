@@ -1,34 +1,36 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React from "react";
 
-export default function Stars({
+// Pre-compute star positions at module level (no client-side computation on mount)
+const computeStars = (count) => {
+  const stars = [];
+  for (let i = 0; i < count; i++) {
+    const seed = i * 1.5;
+    const x = Math.abs((Math.sin(seed) * 10000) % 100);
+    const y = Math.abs((Math.cos(seed) * 10000) % 100);
+    const s = 2 + (i % 10);
+    const d = (i % 4) * 0.5;
+    const dur = 3 + (i % 5);
+    stars.push({ x, y, s, d, dur });
+  }
+  return stars;
+};
+
+// Cache star configurations
+const starCache = new Map();
+
+const Stars = React.memo(function Stars({
   count = 20,
   className = "",
   zIndex = -10,
   opacity = 1,
 }) {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Basic pseudo-random generator
-  const getStarData = (idx) => {
-    const seed = idx * 1.5;
-    const x = (Math.sin(seed) * 10000) % 100;
-    const y = (Math.cos(seed) * 10000) % 100;
-    const s = 2 + (idx % 10);
-    const d = (idx % 4) * 0.5;
-    const dur = 3 + (idx % 5);
-    return { x: Math.abs(x), y: Math.abs(y), s, d, dur };
-  };
-
-  const stars = Array.from({ length: count }).map((_, i) => getStarData(i));
-
-  // Only render on client to avoid hydration mismatch from random values/rounding
-  if (!mounted) return null;
+  // Use cached stars to avoid re-computation
+  if (!starCache.has(count)) {
+    starCache.set(count, computeStars(count));
+  }
+  const stars = starCache.get(count);
 
   return (
     <div
@@ -53,4 +55,6 @@ export default function Stars({
       ))}
     </div>
   );
-}
+});
+
+export default Stars;

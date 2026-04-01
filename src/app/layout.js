@@ -8,11 +8,13 @@ import { AppProviders } from "./providers";
 import "../i18n";
 import ChatWidgetClient from "@/components/chat/ChatWidgetClient";
 
+// Only load font weights that are actually used — eliminates ~60% of font data
 const alexandria = Alexandria({
   subsets: ["latin", "arabic"],
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  weight: ["300", "400", "500", "600", "700"],
   display: "swap",
   variable: "--font-alexandria",
+  preload: true,
 });
 
 export const metadata = {
@@ -56,12 +58,16 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" dir="ltr" className={alexandria.variable}>
       <head>
+        {/* Preload the LCP image — pattern background */}
         <link
           rel="preload"
           as="image"
           href="/_next/image?url=%2Fimages%2Fpattern-v2.webp&w=750&q=50"
           fetchPriority="high"
         />
+        {/* DNS prefetch for external resources */}
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+        <link rel="dns-prefetch" href="https://www.google.com" />
       </head>
       <body
         className={`${alexandria.className} antialiased overflow-x-hidden`}
