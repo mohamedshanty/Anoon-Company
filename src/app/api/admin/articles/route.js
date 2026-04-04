@@ -47,16 +47,13 @@ export async function POST(req) {
     }
 
     const body = await req.json();
-    console.log("Received article data:", body);
 
     if (!body.slug && body.title) {
       body.slug = generateSlug(body.title);
-      console.log("Generated slug:", body.slug);
     }
 
     try {
       const article = await createArticle(body);
-      console.log("Article created successfully:", article.id);
       return NextResponse.json({ success: true, article }, { status: 201 });
     } catch (innerError) {
       console.error("Article creation error details:", {

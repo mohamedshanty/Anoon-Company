@@ -4,10 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build --webpack",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "analyze": "cross-env ANALYZE=true next build --webpack"
+    "analyze": "cross-env ANALYZE=true next build",
+    "analyze:server": "cross-env ANALYZE_SERVER=true next build",
+    "clean": "rm -rf .next",
+    "rebuild": "pnpm clean && pnpm build"
   },
   "browserslist": {
     "production": [
@@ -57,6 +60,7 @@
     "react-google-recaptcha": "^3.1.0",
     "react-i18next": "^16.5.4",
     "react-icons": "^5.5.0",
+    "resend": "^6.10.0",
     "server-only": "^0.0.1",
     "swiper": "^12.1.2",
     "tailwind-merge": "^3.4.1"

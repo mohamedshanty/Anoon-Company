@@ -20,13 +20,11 @@ function LoginForm() {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
-    console.log("Login attempt:", { email });
 
     const { data, error: authError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
-    console.log("Login response:", { authError, data });
 
     if (authError) {
       setError(authError.message);
@@ -40,11 +38,9 @@ function LoginForm() {
         access_token: data.session.access_token,
         refresh_token: data.session.refresh_token,
       });
-      console.log("Session set for Supabase.");
     }
 
     setIsLoading(false);
-    console.log("Login successful, redirecting:", redirect);
     router.push(redirect);
     router.refresh();
   }

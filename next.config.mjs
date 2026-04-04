@@ -1,22 +1,20 @@
-import bundleAnalyzer from "@next/bundle-analyzer";
+import withBundleAnalyzer from "@next/bundle-analyzer";
 
-const withBundleAnalyzer = bundleAnalyzer({
+const bundleAnalyzer = withBundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // ── Performance: remove console.log in production ──────────────────────────
   compiler: {
-    removeConsole: process.env.NODE_ENV === "production"
-      ? { exclude: ["error", "warn"] }
-      : false,
+    removeConsole:
+      process.env.NODE_ENV === "production"
+        ? { exclude: ["error", "warn"] }
+        : false,
   },
 
   experimental: {
-    // Inline critical CSS to eliminate render-blocking stylesheets
-    optimizeCss: true,
-    // Tree-shake specific heavy packages to reduce bundle size
+    // optimizeCss: true, // Causing issues, disabled for now.
     optimizePackageImports: [
       "lucide-react",
       "react-icons",
@@ -53,85 +51,20 @@ const nextConfig = {
         pathname: "/storage/v1/object/public/**",
       },
     ],
-    // Serve AVIF first (smaller), then WebP
     formats: ["image/avif", "image/webp"],
-    // Optimized device sizes to reduce generated variants
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],
     imageSizes: [16, 32, 48, 64, 96, 128, 256],
-    // Minimize quality for background/decorative images
     minimumCacheTTL: 31536000,
   },
 
   compress: true,
   poweredByHeader: false,
   reactStrictMode: true,
-  // Disable source maps in production to reduce bundle size
   productionBrowserSourceMaps: false,
-
-  // ── Turbopack Compatibility ────────────────────────────────────────────────
-  turbopack: {},
-
-  // ── Webpack splitChunks for optimal code splitting ─────────────────────────
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.optimization.splitChunks = {
-        chunks: "all",
-        maxInitialRequests: 25,
-        minSize: 20000,
-        maxSize: 60000, // Force chunks under 60KB to avoid long tasks
-        cacheGroups: {
-          // React core — cached separately, rarely changes
-          react: {
-            test: /[\\/]node_modules[\\/](react|react-dom|scheduler)[\\/]/,
-            name: "react-vendor",
-            priority: 40,
-            reuseExistingChunk: true,
-          },
-          // Animation libs (GSAP, framer-motion) — heavy, deferred
-          animations: {
-            test: /[\\/]node_modules[\\/](gsap|@gsap|framer-motion)[\\/]/,
-            name: "animations-vendor",
-            priority: 35,
-            reuseExistingChunk: true,
-          },
-          // Swiper — only loaded when Teams section is visible
-          swiper: {
-            test: /[\\/]node_modules[\\/]swiper[\\/]/,
-            name: "swiper-vendor",
-            priority: 35,
-            reuseExistingChunk: true,
-          },
-          // i18n — loaded once, cached for all pages
-          i18n: {
-            test: /[\\/]node_modules[\\/](i18next|react-i18next|i18next-browser-languagedetector)[\\/]/,
-            name: "i18n-vendor",
-            priority: 30,
-            reuseExistingChunk: true,
-          },
-          // All other vendor code
-          vendors: {
-            test: /[\\/]node_modules[\\/]/,
-            name: "vendors",
-            priority: 10,
-            reuseExistingChunk: true,
-          },
-          // Shared app code used across 2+ chunks
-          common: {
-            minChunks: 2,
-            priority: 5,
-            name: "common",
-            reuseExistingChunk: true,
-          },
-        },
-      };
-    }
-    return config;
-  },
 
   async headers() {
     return [
       {
-        // Security headers for all routes
         source: "/(.*)",
         headers: [
           {
@@ -153,7 +86,6 @@ const nextConfig = {
         ],
       },
       {
-        // Static assets — immutable long cache (JS/CSS chunks with hashes)
         source: "/_next/static/(.*)",
         headers: [
           {
@@ -163,7 +95,6 @@ const nextConfig = {
         ],
       },
       {
-        // Optimized images from next/image
         source: "/_next/image(.*)",
         headers: [
           {
@@ -173,7 +104,6 @@ const nextConfig = {
         ],
       },
       {
-        // Public images and fonts — long cache with revalidation
         source: "/images/(.*)",
         headers: [
           {
@@ -183,7 +113,6 @@ const nextConfig = {
         ],
       },
       {
-        // HTML pages — bfcache-compatible (no no-store)
         source: "/((?!_next|images|api).*)",
         headers: [
           {
@@ -196,4 +125,4 @@ const nextConfig = {
   },
 };
 
-export default withBundleAnalyzer(nextConfig);
+export default bundleAnalyzer(nextConfig);
